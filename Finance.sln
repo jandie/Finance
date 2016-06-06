@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance", "Finance\Finance.csproj", "{BA2E90DB-6BAB-4B98-A77D-0FF758BEEFCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance.Tests", "Finance.Tests\Finance.Tests.csproj", "{2553A33A-511D-4805-A109-EA453418A17E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA2E90DB-6BAB-4B98-A77D-0FF758BEEFCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA2E90DB-6BAB-4B98-A77D-0FF758BEEFCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA2E90DB-6BAB-4B98-A77D-0FF758BEEFCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA2E90DB-6BAB-4B98-A77D-0FF758BEEFCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2553A33A-511D-4805-A109-EA453418A17E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2553A33A-511D-4805-A109-EA453418A17E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2553A33A-511D-4805-A109-EA453418A17E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2553A33A-511D-4805-A109-EA453418A17E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
