@@ -1,0 +1,25 @@
+﻿@using Library.Classes
+
+@{
+    ViewBag.Title = "_LoginPartial";
+}
+
+
+@if (Session["user"] is User)
+{
+    var user = Session["user"] as User;
+
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink($"Hallo {user.Name}", "Index", "Account")</li>
+        <li>@Html.ActionLink("Log uit", "Loguit", "Account")</li>
+    </ul>
+
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Log in", "Login", "Account")</li>
+        <li>@Html.ActionLink("Register", "Register", "Account")</li>
+    </ul>
+}
+

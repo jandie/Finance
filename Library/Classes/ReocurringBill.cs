@@ -2,7 +2,7 @@
 
 namespace Library.Classes
 {
-    class ReocurringBill : Payment, IPayment
+    public class ReocurringBill : Payment, IPayment
     {
         public ReocurringBill(int id, string name, decimal amount) : base(id, name, amount)
         {

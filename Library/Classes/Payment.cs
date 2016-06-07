@@ -2,7 +2,7 @@
 
 namespace Library.Classes
 {
-    abstract class Payment
+    public abstract class Payment
     {
         protected List<Transaction> Transactions;
         public int Id { get; set; }
