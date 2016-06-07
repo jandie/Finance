@@ -45,11 +45,11 @@ namespace Database
             string name = reader.GetString(1);
             string lastName = reader.GetString(2);
 
-            User user = new User(id, name, lastName, password);
+            User user = new User(id, name, lastName, email);
 
-            user.AddBankAccounts(GetBankAccountsOfUser(id)); 
+            if (loadBankAccounts) user.AddBankAccounts(GetBankAccountsOfUser(id)); 
 
-            user.AddPayment(GetPaymentsOfUser(id));
+            if (loadPayments) user.AddPayment(GetPaymentsOfUser(id));
 
             return user;
         }
@@ -61,6 +61,8 @@ namespace Database
             OracleConnection conneciton = Database.Instance.Connection;
             OracleCommand command = new OracleCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = :userId", conneciton)
                 { CommandType = CommandType.Text};
+
+            command.Parameters.Add(new OracleParameter(":userId", userId));
 
             OracleDataReader reader = command.ExecuteReader();
 
@@ -123,6 +125,8 @@ namespace Database
             OracleConnection connecion = Database.Instance.Connection;
             OracleCommand command = new OracleCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = :paymentId", connecion)
                 {CommandType =  CommandType.Text};
+
+            command.Parameters.Add(new OracleParameter(":paymentId", paymentId));
 
             OracleDataReader reader = command.ExecuteReader();
 
