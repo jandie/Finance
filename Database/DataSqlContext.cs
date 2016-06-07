@@ -4,6 +4,7 @@ using System.Data;
 using Database.Interfaces;
 using Library.Classes;
 using Library.Enums;
+using Library.Exceptions;
 using Library.Interfaces;
 using Oracle.ManagedDataAccess.Client;
 
@@ -30,7 +31,7 @@ namespace Database
         public User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments, bool loadTransactions)
         {
             OracleConnection connection = Database.Instance.Connection;
-            OracleCommand command = new OracleCommand("SELECT ID, NAME, LASTNAME FROM \"USER\" WHERE PASSWORD = :password AND EMAIL = :email", connection);
+            OracleCommand command = new OracleCommand("SELECT ID, NAME, LASTNAME FROM \"USER\" WHERE EMAIL = :email AND PASSWORD = :password", connection);
             command.CommandType = CommandType.Text;
 
             command.Parameters.Add(new OracleParameter(":email", email));
@@ -38,22 +39,19 @@ namespace Database
 
             OracleDataReader reader = command.ExecuteReader();
 
-            if (reader.Read())
-            {
-                int id = reader.GetInt32(0);
-                string name = reader.GetString(1);
-                string lastName = reader.GetString(2);
+            if (!reader.Read()) throw new WrongUsernameOrPasswordException();
 
-                User user = new User(id, name, lastName, password);
+            int id = reader.GetInt32(0);
+            string name = reader.GetString(1);
+            string lastName = reader.GetString(2);
 
-                user.AddBankAccounts(GetBankAccountsOfUser(id)); 
+            User user = new User(id, name, lastName, password);
 
-                user.AddPayment(GetPaymentsOfUser(id));
+            user.AddBankAccounts(GetBankAccountsOfUser(id)); 
 
-                return user;
-            }
+            user.AddPayment(GetPaymentsOfUser(id));
 
-            return null;
+            return user;
         }
 
         public List<BankAccount> GetBankAccountsOfUser(int userId)

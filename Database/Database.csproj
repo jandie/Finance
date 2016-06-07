@@ -47,8 +47,10 @@
     <Compile Include="Database.cs" />
     <Compile Include="DatabaseConfiguration.cs" />
     <Compile Include="DataSqlContext.cs" />
+    <Compile Include="DeleteSqlContext.cs" />
     <Compile Include="InsertSqlContext.cs" />
     <Compile Include="Interfaces\IDataContext.cs" />
+    <Compile Include="Interfaces\IDeleteContext.cs" />
     <Compile Include="Interfaces\IInsertContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

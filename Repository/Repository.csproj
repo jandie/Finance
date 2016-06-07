@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataRepository.cs" />
+    <Compile Include="DeleteRepository.cs" />
     <Compile Include="InsertRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

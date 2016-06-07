@@ -24,15 +24,23 @@ namespace Repository
             {
                 return _context.LoginUser(email, password, loadBankAccounts, loadPayments, loadTransactions);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw new WrongUsernameOrPasswordException("Wrong username or password!");
             }
         }
 
-        public User CreateUser(string password, string name, string lastName, string email)
+        public User CreateUser(string name, string lastName, string email, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return _context.CreateUser(name, lastName, email, password);
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
         }
     }
 }
