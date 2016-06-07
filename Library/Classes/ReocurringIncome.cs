@@ -4,6 +4,8 @@ namespace Library.Classes
 {
     public class ReocurringIncome : Payment, IPayment
     {
+        public bool MayAddPayment => Transactions.Count == 0;
+
         public ReocurringIncome(int id, string name, decimal amount) : base(id, name, amount)
         {
             

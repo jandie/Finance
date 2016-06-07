@@ -4,6 +4,8 @@
     {
         int Id { get; set; }
 
+        bool MayAddPayment { get; }
+
         decimal GetSum();
     }
 }

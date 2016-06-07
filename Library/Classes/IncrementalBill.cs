@@ -2,8 +2,10 @@
 
 namespace Library.Classes
 {
-    class IncrementalBill : Payment, IPayment
+    public class IncrementalBill : Payment, IPayment
     {
+        public bool MayAddPayment => true;
+
         public IncrementalBill(int id, string name, decimal amount) : base(id, name, amount)
         {
             

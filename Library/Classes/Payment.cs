@@ -14,12 +14,13 @@ namespace Library.Classes
             Id = id;
             Amount = amount;
             Name = name;
+
             Transactions = new List<Transaction>();
         }
 
-        public void AddTransaction(int id, decimal amount)
+        public void AddTransactions(List<Transaction> transactions)
         {
-            Transactions.Add(new Transaction(id, amount));
+            Transactions = new List<Transaction>(transactions);
         }
     }
 }

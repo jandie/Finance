@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Library.Classes
+﻿namespace Library.Classes
 {
     public class BankAccount
     {

@@ -47,6 +47,7 @@
     <Compile Include="Classes\ReocurringIncome.cs" />
     <Compile Include="Classes\Transaction.cs" />
     <Compile Include="Classes\User.cs" />
+    <Compile Include="Enums\PaymentType.cs" />
     <Compile Include="Exceptions\WrongUsernameOrPasswordException.cs" />
     <Compile Include="Interfaces\IPayment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

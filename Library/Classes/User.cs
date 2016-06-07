@@ -28,5 +28,15 @@ namespace Library.Classes
             _bakBankAccounts = new List<BankAccount>();
             _payments = new List<IPayment>();
         }
+
+        public void AddBankAccounts(List<BankAccount> bankAccounts)
+        {
+            _bakBankAccounts = new List<BankAccount>(bankAccounts);
+        }
+
+        public void AddPayment(List<IPayment> payments)
+        {
+            _payments = new List<IPayment>(payments);
+        }
     }
 }

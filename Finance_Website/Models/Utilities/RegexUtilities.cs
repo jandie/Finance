@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Dynamic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -9,20 +8,7 @@ namespace Finance_Website.Models.Utilities
     {
         private static RegexUtilities _instance;
 
-        public static RegexUtilities Instance
-        {
-            get
-            {
-                if (_instance != null)
-                {
-                    return _instance;
-                }
-
-                _instance =  new RegexUtilities();
-
-                return _instance;
-            }
-        }
+        public static RegexUtilities Instance => _instance ?? (_instance = new RegexUtilities());
 
         private bool _invalid = false;
 
