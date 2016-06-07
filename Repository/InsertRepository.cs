@@ -1,7 +1,9 @@
-﻿using Database;
+﻿using System;
+using Database;
 using Database.Interfaces;
 using Library.Classes;
 using Library.Enums;
+using Library.Interfaces;
 
 namespace Repository
 {
@@ -17,17 +19,41 @@ namespace Repository
         }
         public void AddBankAccount(int userId, string name, decimal balance)
         {
-
+            try
+            {
+                _context.AddBankAccount(userId, name, balance);
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
         }
 
         public void AddPayment(int userId, string name, decimal amount, PaymentType type)
         {
-            
+            try
+            {
+                _context.AddPayment(userId, name, amount, type);
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
         }
 
-        public void AddTransaction(Payment payment, decimal amount, string description)
+        public void AddTransaction(IPayment payment, decimal amount, string description)
         {
-            
+            try
+            {
+                if (payment.MayAddPayment) _context.AddTransaction(payment.Id, amount, description);
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
         }
     }
 }
