@@ -11,18 +11,26 @@ namespace Finance_Website.Controllers
     {
         public ActionResult Index()
         {
-            User user = Session["user"] as User;
+            if (!UserUtility.UserIsValid(Session["User"] as User))
+                return RedirectToAction("Login", "Account");
 
-            if (user != null)
+            try
             {
-                ViewBag.User = DataRepository.Instance.Login(user.Email, Session["pass"] as string, true, true, true);
+                User user = Session["User"] as User;
 
-                Session["user"] = ViewBag.User;
+                if (user == null) return RedirectToAction("Login", "Account");
 
-                return View();
+                user = DataRepository.Instance.Login(user.Email, Session["Password"] as string, true, true, true);
+
+                ViewBag.User = user;
+                Session["User"] = user;
+            }
+            catch (Exception)
+            {
+                Session["Exception"] = "Kon gegevens niet laden";
             }
 
-            return RedirectToAction("Login", "Account");
+            return View();
         }
 
         // GET: Account
@@ -38,17 +46,17 @@ namespace Finance_Website.Controllers
             {
                 User user = DataRepository.Instance.Login(email, password, false, false, false);
 
-                Session["user"] = user;
+                Session["User"] = user;
 
-                Session["pass"] = password;
+                Session["Password"] = password;
 
-                Session["message"] = "Gebruiker is ingelogd!";
+                Session["Message"] = "Gebruiker is ingelogd!";
 
                 return RedirectToAction("Index", "Account");
             }
             catch (WrongUsernameOrPasswordException ex)
             {
-                Session["badError"] = ex.Message;
+                Session["Exception"] = ex.Message;
 
                 return View();
             }
@@ -62,11 +70,11 @@ namespace Finance_Website.Controllers
 
         public ActionResult Loguit()
         {
-            Session["user"] = null;
+            Session["User"] = null;
 
-            Session["message"] = "Gebruiker is uitgelogd!";
+            Session["Message"] = "Gebruiker is uitgelogd!";
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         // GET: Account
@@ -83,47 +91,44 @@ namespace Finance_Website.Controllers
             ViewBag.Email = email;
 
             if (string.IsNullOrWhiteSpace(name))
-            {
-                Session["badError"] = "Naam moet ingevuld zijn.";
-            }
+                Session["Exception"] = "Naam moet ingevuld zijn.";
+
             else if (string.IsNullOrWhiteSpace(lastName))
-            {
-                Session["badError"] = "Achternaam moet ingevuld zijn.";
-            }
+                Session["Exception"] = "Achternaam moet ingevuld zijn.";
+
             else if (string.IsNullOrWhiteSpace(email))
-            {
-                Session["badError"] = "Email moet ingevuld zijn.";
-            }
+                Session["Exception"] = "Email moet ingevuld zijn.";
+
             else if (!RegexUtilities.Instance.IsValidEmail(email))
-            {
-                Session["badError"] = "Email moet een geldig email adres zijn.";
-            }
+                Session["Exception"] = "Email moet een geldig email adres zijn.";
+
             else if (password.Length < 8)
-            {
-                Session["badError"] = "Het wachtwoord moet een minimale lengte van 8 hebben.";
-            }
+                Session["Exception"] = "Het wachtwoord moet een minimale lengte van 8 hebben.";
+
             else if (password.Contains(" "))
-            {
-                Session["badError"] = "Het wachtwoord mag geen spaties hebben.";
-            }
+                Session["Exception"] = "Het wachtwoord mag geen spaties hebben.";
+
             else if (password != password2)
-            {
-                Session["badError"] = "De 2 wachtwoorden moeten gelijk zijn aan elkaar";
-            }
+                Session["Exception"] = "De 2 wachtwoorden moeten gelijk zijn aan elkaar";
+
             else
             {
                 User user = DataRepository.Instance.CreateUser(password, name, lastName, email);
 
-                if (user != null)
+                if (user == null)
                 {
-                    Session["user"] = user;
+                    Session["Exception"] = "Gebruiker registreren is niet gelukt.";
 
-                    Session["pass"] = password;
-
-                    Session["message"] = "Gebruiker is geregistreerd!";
-
-                    return RedirectToAction("Index", "Home");
+                    return View();
                 }
+
+                Session["User"] = user;
+
+                Session["Password"] = password;
+
+                Session["Message"] = "Gebruiker is geregistreerd!";
+
+                return RedirectToAction("Index", "Account");
             }
 
             return View();
