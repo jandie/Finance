@@ -41,10 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\BankAccount.cs" />
-    <Compile Include="Classes\IncrementalBill.cs" />
+    <Compile Include="Classes\DailyBill.cs" />
     <Compile Include="Classes\Payment.cs" />
-    <Compile Include="Classes\ReocurringBill.cs" />
-    <Compile Include="Classes\ReocurringIncome.cs" />
+    <Compile Include="Classes\MonthlyBill.cs" />
+    <Compile Include="Classes\MonthlyIncome.cs" />
     <Compile Include="Classes\Transaction.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="Enums\PaymentType.cs" />

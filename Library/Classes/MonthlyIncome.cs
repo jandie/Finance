@@ -2,11 +2,11 @@
 
 namespace Library.Classes
 {
-    public class ReocurringIncome : Payment, IPayment
+    public class MonthlyIncome : Payment, IPayment
     {
         public bool MayAddPayment => Transactions.Count == 0;
 
-        public ReocurringIncome(int id, string name, decimal amount) : base(id, name, amount)
+        public MonthlyIncome(int id, string name, decimal amount) : base(id, name, amount)
         {
             
         }

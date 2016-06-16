@@ -98,14 +98,14 @@ namespace Database
 
                 switch (type)
                 {
-                    case PaymentType.ReocurringBill:
-                        payments.Add(new ReocurringBill(id, name, amount));
+                    case PaymentType.MonthlyBill:
+                        payments.Add(new MonthlyBill(id, name, amount));
                         break;
-                    case PaymentType.ReocurringIncome:
-                        payments.Add(new ReocurringIncome(id, name, amount));
+                    case PaymentType.MonthlyIncome:
+                        payments.Add(new MonthlyIncome(id, name, amount));
                         break;
-                    case PaymentType.IncrementalBill:
-                        payments.Add(new IncrementalBill(id, name, amount));
+                    case PaymentType.DailyBill:
+                        payments.Add(new DailyBill(id, name, amount));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

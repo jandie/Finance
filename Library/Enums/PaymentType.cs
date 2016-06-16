@@ -2,8 +2,8 @@
 {
     public enum PaymentType
     {
-        ReocurringBill,
-        ReocurringIncome,
-        IncrementalBill
+        MonthlyBill,
+        MonthlyIncome,
+        DailyBill
     }
 }

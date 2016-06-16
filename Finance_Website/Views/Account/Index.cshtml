@@ -9,76 +9,137 @@
 <h2>Overview</h2>
 
 <div class="row">
-    <div class="col-md-12">
-        <h3>Balances:</h3>
-        <div class="form-group">
-            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddBalanceModal">
-                Launch demo modal
-            </button>
+    <div>
+        <div class="col-md-12">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#balances" aria-controls="home" role="tab" data-toggle="tab">Balances</a></li>
+                <li role="presentation"><a href="#monthlybills" aria-controls="profile" role="tab" data-toggle="tab">Monthly bills</a></li>
+                <li role="presentation"><a href="#monthlyincome" aria-controls="messages" role="tab" data-toggle="tab">Monthly income</a></li>
+                <li role="presentation"><a href="#dailybills" aria-controls="settings" role="tab" data-toggle="tab">Daily bills</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="balances">
+                    <h3>Balances:</h3>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddBalanceModal">
+                            Add balance
+                        </button>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (BankAccount bankAccount in user.BankAccounts)
+                            {
+                                <tr>
+                                    <td>@bankAccount.Name</td>
+                                    <td>@bankAccount.Balance.ToString("##.00")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="monthlybills">
+                    <h3>Monthly bills:</h3>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddMonthlyBill">
+                            Add monthly bill
+                        </button>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>Paid?</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (MonthlyBill bill in user.Payments.OfType<MonthlyBill>())
+                            {
+                                <tr>
+                                    <td>@bill.Name</td>
+                                    <td>@bill.Amount.ToString("##.00")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="monthlyincome">
+                    <h3>Monthly income:</h3>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddMonthlyIncome">
+                            Add monthly income
+                        </button>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>Paid?</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (MonthlyIncome income in user.Payments.OfType<MonthlyIncome>())
+                            {
+                                <tr>
+                                    <td>@income.Name</td>
+                                    <td>@income.Amount.ToString("##.00")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="dailybills">
+                    <h3>Daily bills:</h3>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddDailyBill">
+                            Add daily bill
+                        </button>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>Paid</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (DailyBill income in user.Payments.OfType<DailyBill>())
+                            {
+                                <tr>
+                                    <td>@income.Name</td>
+                                    <td>@income.Amount.ToString("##.00")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
-        <table class="table table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Balance</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr>
-                @foreach (BankAccount bankAccount in user.BankAccounts)
-                {
-                    <td>@bankAccount.Name</td>
-                    <td>@bankAccount.Balance.ToString("##.00")</td>
-                }
-            </tr>
-            </tbody>
-        </table>
-
-        <h3>Monthly bills:</h3>
-
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Amount</th>
-                    <th>Paid?</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    @foreach (ReocurringBill bill in user.Payments.OfType<ReocurringBill>())
-                    {
-                        <td>@bill.Name</td>
-                        <td>@bill.Amount.ToString("##.00")</td>
-                    }
-                </tr>
-            </tbody>
-        </table>
-
-        <h3>Monthly income:</h3>
-
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Amount</th>
-                    <th>Paid?</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    @foreach (ReocurringIncome income in user.Payments.OfType<ReocurringIncome>())
-                    {
-                        <td>@income.Name</td>
-                        <td>@income.Amount.ToString("##.00")</td>
-                    }
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 
