@@ -3,13 +3,13 @@ using Database.Interfaces;
 using Library.Enums;
 using Oracle.ManagedDataAccess.Client;
 
-namespace Database
+namespace Database.SqlContexts
 {
     public class InsertSqlContext : IInsertContext
     {
         public void AddBankAccount(int userId, string name, decimal balance)
         {
-            OracleConnection connection = Database.Instance.Connection;
+            OracleConnection connection = Database.Database.Instance.Connection;
             OracleCommand command = new OracleCommand("INSERT INTO BANKACCOUNT (USER_ID, NAME, BALANCE) VALUES (:userId, :name, :balance)", connection)
                 {CommandType = CommandType.Text};
 
@@ -22,7 +22,7 @@ namespace Database
 
         public void AddPayment(int userId, string name, decimal amount, PaymentType type)
         {
-            OracleConnection connection = Database.Instance.Connection;
+            OracleConnection connection = Database.Database.Instance.Connection;
             OracleCommand command = new OracleCommand("INSERT INTO PAYMENT (USER_ID, NAME, AMOUNT, TYPE) VALUES(:userId, :name, :amount, :type)", connection)
             { CommandType = CommandType.Text };
 
@@ -36,7 +36,7 @@ namespace Database
 
         public void AddTransaction(int paymentId, decimal amount, string description)
         {
-            OracleConnection connection = Database.Instance.Connection;
+            OracleConnection connection = Database.Database.Instance.Connection;
             OracleCommand command = new OracleCommand("INSERT INTO TRANSACTION (PAYMENT_ID, AMOUNT, DESCRIPTION) VALUES(:paymentId, :amount, :description)", connection)
             { CommandType = CommandType.Text };
 

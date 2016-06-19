@@ -5,11 +5,11 @@ namespace Library.Classes
 {
     public class User
     {
-        private List<BankAccount> _bakBankAccounts;
+        private List<Balance> _bakBankAccounts;
 
         private List<IPayment> _payments;
 
-        public List<BankAccount> BankAccounts => new List<BankAccount>(_bakBankAccounts);
+        public List<Balance> BankAccounts => new List<Balance>(_bakBankAccounts);
 
         public List<IPayment> Payments => new List<IPayment>(_payments);
 
@@ -25,13 +25,13 @@ namespace Library.Classes
             LastName = lastName;
             Email = email;
 
-            _bakBankAccounts = new List<BankAccount>();
+            _bakBankAccounts = new List<Balance>();
             _payments = new List<IPayment>();
         }
 
-        public void AddBankAccounts(List<BankAccount> bankAccounts)
+        public void AddBankAccounts(List<Balance> bankAccounts)
         {
-            _bakBankAccounts = new List<BankAccount>(bankAccounts);
+            _bakBankAccounts = new List<Balance>(bankAccounts);
         }
 
         public void AddPayment(List<IPayment> payments)

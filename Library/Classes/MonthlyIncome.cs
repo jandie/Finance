@@ -4,7 +4,7 @@ namespace Library.Classes
 {
     public class MonthlyIncome : Payment, IPayment
     {
-        public bool MayAddPayment => Transactions.Count == 0;
+        public bool MayAddPayment => true;
 
         public MonthlyIncome(int id, string name, decimal amount) : base(id, name, amount)
         {
@@ -17,9 +17,7 @@ namespace Library.Classes
 
             Transactions.ForEach(t => gotten += t.Amount);
 
-            if (gotten >= Amount) return 0;
-
-            return Amount;
+            return gotten;
         }
     }
 }

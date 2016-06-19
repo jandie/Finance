@@ -1,0 +1,61 @@
+﻿@using Library.Classes
+
+@{
+    ViewBag.Title = "Balance management";
+
+    Balance balance = ViewBag.Balance as Balance;
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (balance != null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table table-hover">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>@balance.Name</td>
+                    </tr>
+
+                    <tr>
+                        <th>Balance amount</th>
+                        <td>@balance.BalanceAmount.ToString("0.00")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            @using (Html.BeginForm())
+            {
+                <input type="hidden" class="form-control" name="id" aria-describedby="basic-addon3" value="@balance.Id">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="name" name="name" aria-describedby="basic-addon3">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="balance">Balance amount:</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="balance" name="balanceAmount" aria-describedby="basic-addon3">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        Change
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>There is no balance available</p>
+}

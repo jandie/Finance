@@ -1,5 +1,7 @@
-﻿using Database;
+﻿using System;
+using Database;
 using Database.Interfaces;
+using Database.SqlContexts;
 
 namespace Repository
 {
@@ -15,19 +17,40 @@ namespace Repository
             _context = new DeleteSqlContext();
         }
 
-        public void DeleteBankAccount(int bankAccountId)
+        public void DeleteBalance(int id)
         {
-            
+            try
+            {
+                _context.DeleteBalance(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
-        public void DeletePayment(int paymentId)
+        public void DeletePayment(int id)
         {
-            
+            try
+            {
+                _context.DeletePayment(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
-        public void DeleteTransaction(int transactionId)
+        public void DeleteTransaction(int id)
         {
-            
+            try
+            {
+                _context.DeleteTransaction(id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }

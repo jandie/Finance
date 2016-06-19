@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add balance</h4>
+                <h4 class="modal-title" id="myModalLabel">Add BalanceAmount</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -18,9 +18,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="balance">Current balance:</label>
+                                <label for="balance">Current BalanceAmount:</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" id="balance" name="balance" aria-describedby="basic-addon3">
+                                    <input type="number" class="form-control" id="balance" name="BalanceAmount" aria-describedby="basic-addon3">
                                 </div>
                             </div>
 
@@ -103,48 +103,6 @@
 
                             <div class="form-group">
                                 <label for="amount">Amount:</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">
-                                    Add
-                                </button>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="AddDailyBill" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add daily bill</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        @using (Html.BeginForm("AddDailyBill", "Action"))
-                        {
-                            <div class="form-group">
-                                <label for="name">Name:</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="name" name="name" aria-describedby="basic-addon3">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="amount">Monthly amount:</label>
                                 <div class="input-group">
                                     <input type="number" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3">
                                 </div>

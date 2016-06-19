@@ -1,16 +1,16 @@
 ﻿namespace Library.Classes
 {
-    public class BankAccount
+    public class Balance
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public decimal Balance { get; set; }
+        public decimal BalanceAmount { get; set; }
 
-        public BankAccount(int id, string name, decimal balance)
+        public Balance(int id, string name, decimal balanceAmount)
         {
             Id = id;
             Name = name;
-            Balance = balance;
+            BalanceAmount = balanceAmount;
         }
     }
 }

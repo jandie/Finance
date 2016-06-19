@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeRepository.cs" />
     <Compile Include="DataRepository.cs" />
     <Compile Include="DeleteRepository.cs" />
     <Compile Include="InsertRepository.cs" />

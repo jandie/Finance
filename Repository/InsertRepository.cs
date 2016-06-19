@@ -1,6 +1,7 @@
 ﻿using System;
 using Database;
 using Database.Interfaces;
+using Database.SqlContexts;
 using Library.Enums;
 using Library.Interfaces;
 
@@ -22,10 +23,9 @@ namespace Repository
             {
                 _context.AddBankAccount(userId, name, balance);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
-                throw;
+                Console.WriteLine(ex.ToString());
             }
         }
 
@@ -35,10 +35,9 @@ namespace Repository
             {
                 _context.AddPayment(userId, name, amount, type);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
-                throw;
+                Console.WriteLine(ex.ToString());
             }
         }
 
@@ -48,10 +47,9 @@ namespace Repository
             {
                 if (payment.MayAddPayment) _context.AddTransaction(payment.Id, amount, description);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
-                throw;
+                Console.WriteLine(ex.ToString());
             }
         }
     }

@@ -8,13 +8,13 @@ using Library.Exceptions;
 using Library.Interfaces;
 using Oracle.ManagedDataAccess.Client;
 
-namespace Database
+namespace Database.SqlContexts
 {
     public class DataSqlContext : IDataContext
     {
         public User CreateUser(string name, string lastName, string email, string password)
         {
-            OracleConnection connection = Database.Instance.Connection;
+            OracleConnection connection = Database.Database.Instance.Connection;
             OracleCommand command = new OracleCommand("INSERT INTO \"USER\" (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (:name, :lastName, :email, :password)", connection);
             command.CommandType = CommandType.Text;
 
@@ -30,7 +30,7 @@ namespace Database
 
         public User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments, bool loadTransactions)
         {
-            OracleConnection connection = Database.Instance.Connection;
+            OracleConnection connection = Database.Database.Instance.Connection;
             OracleCommand command = new OracleCommand("SELECT ID, NAME, LASTNAME FROM \"USER\" WHERE EMAIL = :email AND PASSWORD = :password", connection);
             command.CommandType = CommandType.Text;
 
@@ -54,11 +54,11 @@ namespace Database
             return user;
         }
 
-        public List<BankAccount> GetBankAccountsOfUser(int userId)
+        public List<Balance> GetBankAccountsOfUser(int userId)
         {
-            List<BankAccount> bankAccounts =  new List<BankAccount>();
+            List<Balance> bankAccounts =  new List<Balance>();
 
-            OracleConnection conneciton = Database.Instance.Connection;
+            OracleConnection conneciton = Database.Database.Instance.Connection;
             OracleCommand command = new OracleCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = :userId", conneciton)
                 { CommandType = CommandType.Text};
 
@@ -72,7 +72,7 @@ namespace Database
                 decimal balance = Convert.ToDecimal(reader.GetString(1));
                 string name = reader.GetString(2);
 
-                bankAccounts.Add(new BankAccount(id, name, balance));
+                bankAccounts.Add(new Balance(id, name, balance));
             }
 
             return bankAccounts;
@@ -81,7 +81,7 @@ namespace Database
         public List<IPayment> GetPaymentsOfUser(int userId)
         {
             List<IPayment> payments = new List<IPayment>();
-            OracleConnection connection = Database.Instance.Connection;
+            OracleConnection connection = Database.Database.Instance.Connection;
             OracleCommand command = new OracleCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = :userId", connection)
                 {CommandType = CommandType.Text};
 
@@ -105,7 +105,7 @@ namespace Database
                         payments.Add(new MonthlyIncome(id, name, amount));
                         break;
                     case PaymentType.DailyBill:
-                        payments.Add(new DailyBill(id, name, amount));
+                        payments.Add(new MonthlyBill(id, name, amount));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -122,7 +122,7 @@ namespace Database
         {
             List<Transaction> transactions = new List<Transaction>();
 
-            OracleConnection connecion = Database.Instance.Connection;
+            OracleConnection connecion = Database.Database.Instance.Connection;
             OracleCommand command = new OracleCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = :paymentId", connecion)
                 {CommandType =  CommandType.Text};
 

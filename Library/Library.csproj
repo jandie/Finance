@@ -40,10 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\BankAccount.cs" />
-    <Compile Include="Classes\DailyBill.cs" />
-    <Compile Include="Classes\Payment.cs" />
+    <Compile Include="Classes\Balance.cs" />
     <Compile Include="Classes\MonthlyBill.cs" />
+    <Compile Include="Classes\Payment.cs" />
     <Compile Include="Classes\MonthlyIncome.cs" />
     <Compile Include="Classes\Transaction.cs" />
     <Compile Include="Classes\User.cs" />

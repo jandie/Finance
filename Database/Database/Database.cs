@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Oracle.ManagedDataAccess.Client;
 
-namespace Database
+namespace Database.Database
 {
     public class Database
     {

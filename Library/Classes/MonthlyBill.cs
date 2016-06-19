@@ -1,10 +1,12 @@
-﻿using Library.Interfaces;
+﻿using System;
+using System.Text.RegularExpressions;
+using Library.Interfaces;
 
 namespace Library.Classes
 {
     public class MonthlyBill : Payment, IPayment
     {
-        public bool MayAddPayment => Transactions.Count == 0;
+        public bool MayAddPayment => true;
 
         public MonthlyBill(int id, string name, decimal amount) : base(id, name, amount)
         {
@@ -17,9 +19,14 @@ namespace Library.Classes
 
             Transactions.ForEach(t => paid += t.Amount);
 
-            if (paid >= Amount) return 0;
+            //if (paid >= Amount)
+            //{
+            //    return (Amount - paid);
+            //}
 
-            return -Amount;
+            //return (Amount - paid) * -1;
+
+            return paid * -1;
         }
     }
 }

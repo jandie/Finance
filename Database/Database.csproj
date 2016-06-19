@@ -44,11 +44,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database.cs" />
-    <Compile Include="DatabaseConfiguration.cs" />
-    <Compile Include="DataSqlContext.cs" />
-    <Compile Include="DeleteSqlContext.cs" />
-    <Compile Include="InsertSqlContext.cs" />
+    <Compile Include="SqlContexts\ChangeSqlContext.cs" />
+    <Compile Include="Database\Database.cs" />
+    <Compile Include="Database\DatabaseConfiguration.cs" />
+    <Compile Include="SqlContexts\DataSqlContext.cs" />
+    <Compile Include="SqlContexts\DeleteSqlContext.cs" />
+    <Compile Include="SqlContexts\InsertSqlContext.cs" />
+    <Compile Include="Interfaces\IChangeContext.cs" />
     <Compile Include="Interfaces\IDataContext.cs" />
     <Compile Include="Interfaces\IDeleteContext.cs" />
     <Compile Include="Interfaces\IInsertContext.cs" />

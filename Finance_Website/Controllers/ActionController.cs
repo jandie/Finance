@@ -24,7 +24,7 @@ namespace Finance_Website.Controllers
             }
             catch (Exception)
             {
-                Session["Exception"] = "Balance couldn't be added";
+                Session["Exception"] = "BalanceAmount couldn't be added";
             }
 
             return RedirectToAction("Index", "Account");
@@ -40,6 +40,8 @@ namespace Finance_Website.Controllers
                 User user = Session["User"] as User;
 
                 InsertRepository.Instance.AddPayment(user.Id, name, amount, PaymentType.MonthlyBill);
+
+                Session["Message"] = "Monthly bill was added successfully.";
             }
             catch (Exception)
             {
@@ -59,25 +61,8 @@ namespace Finance_Website.Controllers
                 User user = Session["User"] as User;
 
                 InsertRepository.Instance.AddPayment(user.Id, name, amount, PaymentType.MonthlyIncome);
-            }
-            catch (Exception)
-            {
-                Session["Exception"] = "Action couldn't be completed.";
-            }
 
-            return RedirectToAction("Index", "Account");
-        }
-
-        public ActionResult AddDailyBill(string name, decimal amount)
-        {
-            if (!UserUtility.UserIsValid(Session["User"] as User))
-                return RedirectToAction("Login", "Account");
-
-            try
-            {
-                User user = Session["User"] as User;
-
-                InsertRepository.Instance.AddPayment(user.Id, name, amount, PaymentType.DailyBill);
+                Session["Message"] = "Monthly income was added successfully.";
             }
             catch (Exception)
             {
