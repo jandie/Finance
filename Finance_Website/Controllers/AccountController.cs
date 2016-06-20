@@ -11,17 +11,15 @@ namespace Finance_Website.Controllers
     {
         public ActionResult Index()
         {
-            if (!UserUtility.UserIsValid(Session["User"] as User))
+            User user = Session["User"] as User;
+
+            user = DataRepository.Instance.Login(user.Email, Session["Password"] as string, true, true, true);
+
+            if (user == null)
                 return RedirectToAction("Login", "Account");
 
             try
             {
-                User user = Session["User"] as User;
-
-                if (user == null) return RedirectToAction("Login", "Account");
-
-                user = DataRepository.Instance.Login(user.Email, Session["Password"] as string, true, true, true);
-
                 ViewBag.User = user;
                 Session["User"] = user;
             }
@@ -46,33 +44,34 @@ namespace Finance_Website.Controllers
             {
                 User user = DataRepository.Instance.Login(email, password, false, false, false);
 
+                if (user == null)
+                {
+                    Session["Exception"] = "Username or password are not correct";
+
+                    return RedirectToAction("Login");
+                }
+
                 Session["User"] = user;
 
                 Session["Password"] = password;
 
-                Session["Message"] = "Gebruiker is ingelogd!";
+                Session["Message"] = "User logged in";
 
                 return RedirectToAction("Index", "Account");
-            }
-            catch (WrongUsernameOrPasswordException ex)
-            {
-                Session["Exception"] = ex.Message;
-
-                return View();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-
-                return View();
             }
+
+            return View();
         }
 
         public ActionResult Loguit()
         {
             Session["User"] = null;
 
-            Session["Message"] = "Gebruiker is uitgelogd!";
+            Session["Message"] = "User logged out";
 
             return RedirectToAction("Login", "Account");
         }
@@ -91,25 +90,25 @@ namespace Finance_Website.Controllers
             ViewBag.Email = email;
 
             if (string.IsNullOrWhiteSpace(name))
-                Session["Exception"] = "Naam moet ingevuld zijn.";
+                Session["Exception"] = "Name is required";
 
             else if (string.IsNullOrWhiteSpace(lastName))
-                Session["Exception"] = "Achternaam moet ingevuld zijn.";
+                Session["Exception"] = "Lastname is required";
 
             else if (string.IsNullOrWhiteSpace(email))
-                Session["Exception"] = "Email moet ingevuld zijn.";
+                Session["Exception"] = "Email is required";
 
             else if (!RegexUtilities.Instance.IsValidEmail(email))
-                Session["Exception"] = "Email moet een geldig email adres zijn.";
+                Session["Exception"] = "Email has to be valid";
 
             else if (password.Length < 8)
-                Session["Exception"] = "Het wachtwoord moet een minimale lengte van 8 hebben.";
+                Session["Exception"] = "Password needs to be at least 8 characters long";
 
             else if (password.Contains(" "))
-                Session["Exception"] = "Het wachtwoord mag geen spaties hebben.";
+                Session["Exception"] = "Password may not contain spaces";
 
             else if (password != password2)
-                Session["Exception"] = "De 2 wachtwoorden moeten gelijk zijn aan elkaar";
+                Session["Exception"] = "The two passwords must be the same";
 
             else
             {
@@ -117,7 +116,7 @@ namespace Finance_Website.Controllers
 
                 if (user == null)
                 {
-                    Session["Exception"] = "Gebruiker registreren is niet gelukt.";
+                    Session["Exception"] = "User registration failed";
 
                     return View();
                 }
@@ -126,7 +125,7 @@ namespace Finance_Website.Controllers
 
                 Session["Password"] = password;
 
-                Session["Message"] = "Gebruiker is geregistreerd!";
+                Session["Message"] = "User registered";
 
                 return RedirectToAction("Index", "Account");
             }

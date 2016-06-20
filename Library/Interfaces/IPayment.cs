@@ -1,4 +1,7 @@
-﻿namespace Library.Interfaces
+﻿using System.Collections.Generic;
+using Library.Classes;
+
+namespace Library.Interfaces
 {
     public interface IPayment
     {
@@ -7,6 +10,8 @@
         string Name { get; }
 
         decimal Amount { get; }
+
+        List<Transaction> AllTransactions { get; }
 
         bool MayAddPayment { get; }
 

@@ -165,6 +165,7 @@
     <Content Include="Views\Manage\Balance.cshtml" />
     <Content Include="Views\Manage\Payment.cshtml" />
     <Content Include="Views\Action\Transaction.cshtml" />
+    <Content Include="Views\Manage\Transaction.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

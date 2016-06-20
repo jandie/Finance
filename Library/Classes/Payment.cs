@@ -8,6 +8,7 @@ namespace Library.Classes
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal Amount { get; set; }
+        public List<Transaction> AllTransactions => new List<Transaction>(Transactions);
 
         protected Payment(int id, string name, decimal amount)
         {

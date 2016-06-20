@@ -12,20 +12,20 @@ namespace Finance_Website.Controllers
     {
         public ActionResult AddBalance(string name, decimal balance)
         {
-            if (!UserUtility.UserIsValid(Session["User"] as User))
+            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string, true, true, true);
+
+            if (user == null)
                 return RedirectToAction("Login", "Account");
 
             try
             {
-                User user = Session["User"] as User;
-
                 InsertRepository.Instance.AddBankAccount(user.Id, name, balance);
 
-                Session["Message"] = "Bank account was added successfully.";
+                Session["Message"] = "Balance was added successfully.";
             }
             catch (Exception)
             {
-                Session["Exception"] = "BalanceAmount couldn't be added";
+                Session["Exception"] = "Balance couldn't be added";
             }
 
             return RedirectToAction("Index", "Account");
@@ -33,15 +33,15 @@ namespace Finance_Website.Controllers
 
         public ActionResult AddMonthlyBill(string name, decimal amount, string lastTab = null)
         {
-            if (!UserUtility.UserIsValid(Session["User"] as User))
+            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string, true, true, true);
+
+            if (user == null)
                 return RedirectToAction("Login", "Account");
 
             Session["LastTab"] = lastTab;
 
             try
             {
-                User user = Session["User"] as User;
-
                 InsertRepository.Instance.AddPayment(user.Id, name, amount, PaymentType.MonthlyBill);
 
                 Session["Message"] = "Monthly bill was added successfully.";
@@ -56,15 +56,15 @@ namespace Finance_Website.Controllers
 
         public ActionResult AddMonthlyIncome(string name, decimal amount, string lastTab = null)
         {
-            if (!UserUtility.UserIsValid(Session["User"] as User))
+            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string, true, true, true);
+
+            if (user == null)
                 return RedirectToAction("Login", "Account");
 
             Session["LastTab"] = lastTab;
 
             try
             {
-                User user = Session["User"] as User;
-
                 InsertRepository.Instance.AddPayment(user.Id, name, amount, PaymentType.MonthlyIncome);
 
                 Session["Message"] = "Monthly income was added successfully.";
@@ -79,7 +79,9 @@ namespace Finance_Website.Controllers
 
         public ActionResult Transaction(int paymentId, string lastTab = null)
         {
-            if (!UserUtility.UserIsValid(Session["User"] as User))
+            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string, true, true, true);
+
+            if (user == null)
                 return RedirectToAction("Login", "Account");
 
             Session["LastTab"] = lastTab;
@@ -98,13 +100,13 @@ namespace Finance_Website.Controllers
 
         public ActionResult AddTransaction(int paymentId, string description, decimal amount)
         {
-            if (!UserUtility.UserIsValid(Session["User"] as User))
+            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string, true, true, true);
+
+            if (user == null)
                 return RedirectToAction("Login", "Account");
 
             try
             {
-                User user = Session["User"] as User;
-
                 if (user.Payments.Any(p => p.Id == paymentId))
                 {
                     InsertRepository.Instance.AddTransaction(paymentId, amount, description);

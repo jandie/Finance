@@ -27,7 +27,7 @@ namespace Repository
             }
             catch (Exception)
             {
-                throw new WrongUsernameOrPasswordException("Wrong username or password!");
+                return null;
             }
         }
 

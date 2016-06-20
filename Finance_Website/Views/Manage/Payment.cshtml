@@ -1,9 +1,11 @@
-﻿@using Library.Interfaces
+﻿@using Library.Classes
+@using Library.Interfaces
 
 @{
-    ViewBag.Title = $"{ViewBag.Type} management";
-
     IPayment payment = ViewBag.Payment as IPayment;
+    List<Transaction> transactions = ViewBag.Transactions as List<Transaction>;
+
+    ViewBag.Title = $"{ViewBag.Type} {payment?.Name}";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -41,6 +43,35 @@
             }
         </div>
     </div>
+    if (transactions != null)
+    {
+         <div class="row">
+             <div class="col-md-12">
+                 <table class="table table-hover">
+                     <thead>
+                     <tr>
+                         <th>Amount</th>
+                         <th>Description</th>
+                         <th></th>
+                     </tr>
+                     </thead>
+
+                     <tbody>
+                     @foreach (Transaction t in transactions)
+                     {
+                         <tr>
+                             <td>@t.Amount.ToString("0.00")</td>
+                             <td>@t.Description</td>
+                             <td>
+                                 <a class="btn btn-primary" href="~/Manage/Transaction?id=@t.Id&paymentId=@payment.Id&paymentType=@ViewBag.Type" role="button">Manage</a>
+                             </td>
+                         </tr>
+                     }
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+     }
 }
 else
 {
