@@ -1,5 +1,4 @@
 ﻿using System;
-using Database;
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Enums;
@@ -41,11 +40,11 @@ namespace Repository
             }
         }
 
-        public void AddTransaction(IPayment payment, decimal amount, string description)
+        public void AddTransaction(int paymentId, decimal amount, string description)
         {
             try
             {
-                if (payment.MayAddPayment) _context.AddTransaction(payment.Id, amount, description);
+                _context.AddTransaction(paymentId, amount, description);
             }
             catch (Exception ex)
             {

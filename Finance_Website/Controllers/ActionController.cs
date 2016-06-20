@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
 using Library.Classes;
@@ -30,10 +31,12 @@ namespace Finance_Website.Controllers
             return RedirectToAction("Index", "Account");
         }
 
-        public ActionResult AddMonthlyBill(string name, decimal amount)
+        public ActionResult AddMonthlyBill(string name, decimal amount, string lastTab = null)
         {
             if (!UserUtility.UserIsValid(Session["User"] as User))
                 return RedirectToAction("Login", "Account");
+
+            Session["LastTab"] = lastTab;
 
             try
             {
@@ -51,10 +54,12 @@ namespace Finance_Website.Controllers
             return RedirectToAction("Index", "Account");
         }
 
-        public ActionResult AddMonthlyIncome(string name, decimal amount)
+        public ActionResult AddMonthlyIncome(string name, decimal amount, string lastTab = null)
         {
             if (!UserUtility.UserIsValid(Session["User"] as User))
                 return RedirectToAction("Login", "Account");
+
+            Session["LastTab"] = lastTab;
 
             try
             {
@@ -63,6 +68,53 @@ namespace Finance_Website.Controllers
                 InsertRepository.Instance.AddPayment(user.Id, name, amount, PaymentType.MonthlyIncome);
 
                 Session["Message"] = "Monthly income was added successfully.";
+            }
+            catch (Exception)
+            {
+                Session["Exception"] = "Action couldn't be completed.";
+            }
+
+            return RedirectToAction("Index", "Account");
+        }
+
+        public ActionResult Transaction(int paymentId, string lastTab = null)
+        {
+            if (!UserUtility.UserIsValid(Session["User"] as User))
+                return RedirectToAction("Login", "Account");
+
+            Session["LastTab"] = lastTab;
+
+            try
+            {
+                ViewBag.PaymentId = paymentId;
+            }
+            catch (Exception)
+            {
+                Session["Exception"] = "Action couldn't be completed.";
+            }
+
+            return View();
+        }
+
+        public ActionResult AddTransaction(int paymentId, string description, decimal amount)
+        {
+            if (!UserUtility.UserIsValid(Session["User"] as User))
+                return RedirectToAction("Login", "Account");
+
+            try
+            {
+                User user = Session["User"] as User;
+
+                if (user.Payments.Any(p => p.Id == paymentId))
+                {
+                    InsertRepository.Instance.AddTransaction(paymentId, amount, description);
+
+                    Session["Message"] = "Transaction was added successfully.";
+                }
+                else
+                {
+                    Session["Exception"] = "Transaction was not added successfully.";
+                }
             }
             catch (Exception)
             {

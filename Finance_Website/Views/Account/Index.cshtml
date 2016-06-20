@@ -4,6 +4,9 @@
     ViewBag.Title = "Overview";
 
     User user = ViewBag.User as User;
+
+    string classActive = "Class=active";
+    string active = "active";
 }
 
 <h2>Overview</h2>
@@ -15,18 +18,18 @@
         <div class="col-md-12">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#balances" aria-controls="home" role="tab" data-toggle="tab">BalanceAmounts</a></li>
-                <li role="presentation"><a href="#monthlybills" aria-controls="profile" role="tab" data-toggle="tab">Monthly bills</a></li>
-                <li role="presentation"><a href="#monthlyincome" aria-controls="messages" role="tab" data-toggle="tab">Monthly income</a></li>
+                <li role="presentation" @if(Session["LastTab"] == null) {Session["LastTab"] = null; @classActive }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">Balances</a></li>
+                <li role="presentation" @if(Session["LastTab"]?.ToString() == "2") {@classActive }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">Monthly bills</a></li>
+                <li role="presentation" @if(Session["LastTab"]?.ToString() == "3") {@classActive }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">Monthly income</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="balances">
-                    <h3>BalanceAmounts:</h3>
+                <div role="tabpanel" class="tab-pane @if(Session["LastTab"] == null) {Session["LastTab"] = null; @active }" id="balances">
+                    <h3>Balances:</h3>
                     <div class="form-group">
-                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddBalanceAmountModal">
-                            Add BalanceAmount
+                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddBalanceModal">
+                            Add Balance
                         </button>
                     </div>
 
@@ -45,14 +48,16 @@
                                 <tr>
                                     <td>@balance.Name</td>
                                     <td>@balance.BalanceAmount.ToString("0.00")</td>
-                                    <td><a class="btn btn-primary" href="~/Manage/Balance?id=@balance.Id" role="button">Manage</a></td>
+                                    <td>
+                                        <a class="btn btn-primary" href="~/Manage/Balance?id=@balance.Id" role="button">Manage</a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
 
-                <div role="tabpanel" class="tab-pane" id="monthlybills">
+                <div role="tabpanel" class="tab-pane @if(Session["LastTab"]?.ToString() == "2") {Session["LastTab"] = null; @active }" id="monthlybills">
                     <h3>Monthly bills:</h3>
 
                     <div class="form-group">
@@ -77,15 +82,18 @@
                                 <tr>
                                     <td>@bill.Name</td>
                                     <td>@bill.Amount.ToString("0.00")</td>
-                                    <td>@bill.GetSum().ToString("0.00")</td>
-                                    <td><a class="btn btn-primary" href="#" role="button">Manage</a></td>
+                                    <td>@bill.GetTotalAmount().ToString("0.00")</td>
+                                    <td>
+                                        <a class="btn btn-primary" href="~/Manage/Payment?id=@bill.Id&type=Monthly bill&lastTab=2" role="button">Manage</a>
+                                        <a class="btn btn-primary" href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2" role="button">Pay</a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
 
-                <div role="tabpanel" class="tab-pane" id="monthlyincome">
+                <div role="tabpanel" class="tab-pane @if(Session["LastTab"]?.ToString() == "3") {Session["LastTab"] = null; @active }" id="monthlyincome">
                     <h3>Monthly income:</h3>
 
                     <div class="form-group">
@@ -110,8 +118,11 @@
                                 <tr>
                                     <td>@income.Name</td>
                                     <td>@income.Amount.ToString("0.00")</td>
-                                    <td>@income.GetSum().ToString("0.00")</td>
-                                    <td><a class="btn btn-primary" href="#" role="button">Manage</a></td>
+                                    <td>@income.GetTotalAmount().ToString("0.00")</td>
+                                    <td>
+                                        <a class="btn btn-primary" href="~/Manage/Payment?id=@income.Id&type=Monthly income&lastTab=3" role="button">Manage</a>
+                                        <a class="btn btn-primary" href="~/Action/Transaction?paymentId=@income.Id&lastTab=3" role="button">Pay</a>
+                                    </td>
                                 </tr>
                             }
                         </tbody>

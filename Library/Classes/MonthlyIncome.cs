@@ -19,5 +19,14 @@ namespace Library.Classes
 
             return gotten;
         }
+
+        public decimal GetTotalAmount()
+        {
+            decimal gotten = 0;
+
+            Transactions.ForEach(t => gotten += t.Amount);
+
+            return gotten;
+        }
     }
 }

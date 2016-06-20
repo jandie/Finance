@@ -160,10 +160,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\Action\AddBalance.cshtml" />
     <Content Include="Views\Account\_ModelsPartial.cshtml" />
     <Content Include="Views\Shared\_MessagePartial.cshtml" />
     <Content Include="Views\Manage\Balance.cshtml" />
+    <Content Include="Views\Manage\Payment.cshtml" />
+    <Content Include="Views\Action\Transaction.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

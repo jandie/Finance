@@ -1,31 +1,31 @@
-﻿@using Library.Classes
+﻿@using Library.Interfaces
 
 @{
-    ViewBag.Title = "Balance management";
+    ViewBag.Title = $"{ViewBag.Type} management";
 
-    Balance balance = ViewBag.Balance as Balance;
+    IPayment payment = ViewBag.Payment as IPayment;
 }
 
 <h2>@ViewBag.Title</h2>
 
-@if (balance != null)
+@if (payment != null)
 {
     <div class="row">
         <div class="col-md-4">
             @using (Html.BeginForm())
             {
-                <input type="hidden" class="form-control" name="id" aria-describedby="basic-addon3" value="@balance.Id">
+                <input type="hidden" class="form-control" name="id" aria-describedby="basic-addon3" value="@payment.Id">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="name" name="name" aria-describedby="basic-addon3" value="@balance.Name" required>
+                        <input type="text" class="form-control" id="name" name="name" aria-describedby="basic-addon3" value="@payment.Name" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="balance">Balance amount:</label>
+                    <label for="balance">Amount:</label>
                     <div class="input-group">
-                        <input type="number" class="form-control" id="balance" name="balanceAmount" aria-describedby="basic-addon3" value="@balance.BalanceAmount" required>
+                        <input type="number" class="form-control" id="balance" name="amount" aria-describedby="basic-addon3" value="@payment.Amount" required>
                     </div>
                 </div>
 
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="form-group">
-                    <a class="btn btn-danger" href="~/Manage/DeleteBalance?id=@balance.Id" role="button">Delete</a>
+                    <a class="btn btn-danger" href="~/Manage/DeletePayment?id=@payment.Id" role="button">Delete</a>
                 </div>
             }
         </div>
