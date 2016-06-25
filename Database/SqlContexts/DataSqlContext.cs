@@ -50,6 +50,8 @@ namespace Database.SqlContexts
 
             User user = new User(id, name, lastName, email);
 
+            reader.Close();
+
             if (loadBankAccounts) user.AddBankAccounts(GetBankAccountsOfUser(id)); 
 
             if (loadPayments) user.AddPayment(GetPaymentsOfUser(id));
@@ -77,6 +79,8 @@ namespace Database.SqlContexts
 
                 bankAccounts.Add(new Balance(id, name, balance));
             }
+
+            reader.Close();
 
             return bankAccounts;
         }
@@ -113,10 +117,11 @@ namespace Database.SqlContexts
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-
-                Payment payment = payments[payments.Count - 1] as Payment;
-                payment?.AddTransactions(GetTransactionsOfPayment(id));
             }
+
+            reader.Close();
+
+            payments.ForEach(p => p.AddTransactions(GetTransactionsOfPayment(p.Id)));
 
             return payments;
         }
@@ -141,6 +146,8 @@ namespace Database.SqlContexts
 
                 transactions.Add(new Transaction(id, amount, description));
             }
+
+            reader.Close();
 
             return transactions;
         }

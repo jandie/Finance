@@ -63,7 +63,16 @@
                              <td>@t.Amount.ToString("0.00")</td>
                              <td>@t.Description</td>
                              <td>
-                                 <a class="btn btn-primary" href="~/Manage/Transaction?id=@t.Id&paymentId=@payment.Id&paymentType=@ViewBag.Type" role="button">Manage</a>
+                                 <div class="btn-group">
+                                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                         Actions <span class="caret"></span>
+                                     </button>
+                                     <ul class="dropdown-menu">
+                                         <li><a href="~/Manage/Transaction?id=@t.Id&paymentId=@payment.Id&paymentType=@ViewBag.Type">Manage</a></li>
+                                         <li role="separator" class="divider"></li>
+                                         <li><a href="~/Manage/DeleteTransaction?id=@t.Id&paymentId=@payment.Id&paymentType=@ViewBag.Type">Delete</a></li>
+                                     </ul>
+                                 </div>
                              </td>
                          </tr>
                      }

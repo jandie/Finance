@@ -1,4 +1,5 @@
-﻿@using Library.Classes
+﻿@using System.Diagnostics
+@using Library.Classes
 
 @{
     ViewBag.Title = "Overview";
@@ -8,11 +9,6 @@
     string classActive = "Class=active";
     string active = "active";
 }
-
-<h2>Overview</h2>
-
-
-
 <div class="row">
     <div>
         <div class="col-md-12">
@@ -26,12 +22,10 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane @if(Session["LastTab"] == null) {Session["LastTab"] = null; @active }" id="balances">
-                    <h3>Balances:</h3>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddBalanceModal">
-                            Add Balance
-                        </button>
-                    </div>
+                    
+                    <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddBalanceModal">
+                        Add
+                    </button>
 
                     <table class="table table-hover">
                         <thead>
@@ -49,7 +43,16 @@
                                     <td>@balance.Name</td>
                                     <td>@balance.BalanceAmount.ToString("0.00")</td>
                                     <td>
-                                        <a class="btn btn-primary" href="~/Manage/Balance?id=@balance.Id" role="button">Manage</a>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Actions <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="~/Manage/Balance?id=@balance.Id">Change</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="~/Manage/DeleteBalance?id=@balance.Id">Delete</a></li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             }
@@ -58,13 +61,9 @@
                 </div>
 
                 <div role="tabpanel" class="tab-pane @if(Session["LastTab"]?.ToString() == "2") {Session["LastTab"] = null; @active }" id="monthlybills">
-                    <h3>Monthly bills:</h3>
-
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddMonthlyBill">
-                            Add monthly bill
-                        </button>
-                    </div>
+                    <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyBill">
+                        Add
+                    </button>
 
                     <table class="table table-hover">
                         <thead>
@@ -77,15 +76,25 @@
                         </thead>
 
                         <tbody>
-                            @foreach (MonthlyBill bill in user.Payments.OfType<MonthlyBill>())
+                        @foreach (MonthlyBill bill in user.Payments.OfType<MonthlyBill>())
                             {
                                 <tr>
                                     <td>@bill.Name</td>
                                     <td>@bill.Amount.ToString("0.00")</td>
                                     <td>@bill.GetTotalAmount().ToString("0.00")</td>
                                     <td>
-                                        <a class="btn btn-primary" href="~/Manage/Payment?id=@bill.Id&type=Monthly bill&lastTab=2" role="button">Manage</a>
-                                        <a class="btn btn-primary" href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2" role="button">Pay</a>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Actions <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="~/Manage/Payment?id=@bill.Id&type=Monthly bill&lastTab=2">Manage</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2">Pay</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="~/Manage/DeletePayment?id=@bill.Id&lastTab=2">Delete</a></li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             }
@@ -94,13 +103,11 @@
                 </div>
 
                 <div role="tabpanel" class="tab-pane @if(Session["LastTab"]?.ToString() == "3") {Session["LastTab"] = null; @active }" id="monthlyincome">
-                    <h3>Monthly income:</h3>
 
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#AddMonthlyIncome">
-                            Add monthly income
-                        </button>
-                    </div>
+
+                    <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyIncome">
+                        Add
+                    </button>
 
                     <table class="table table-hover">
                         <thead>
@@ -120,8 +127,18 @@
                                     <td>@income.Amount.ToString("0.00")</td>
                                     <td>@income.GetTotalAmount().ToString("0.00")</td>
                                     <td>
-                                        <a class="btn btn-primary" href="~/Manage/Payment?id=@income.Id&type=Monthly income&lastTab=3" role="button">Manage</a>
-                                        <a class="btn btn-primary" href="~/Action/Transaction?paymentId=@income.Id&lastTab=3" role="button">Pay</a>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Actions <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="~/Manage/Payment?id=@income.Id&type=Monthly income&lastTab=3">Manage</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3">Pay</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="~/Manage/DeletePayment?id=@income.Id&lastTab=3">Delete</a></li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             }

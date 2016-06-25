@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.ComponentModel.Design;
+using System.Data;
 using MySql.Data.MySqlClient;
 
 namespace Database
@@ -11,6 +13,10 @@ namespace Database
 
         private static Database _instance;
 
+        private bool IsConnected => Connection.State == ConnectionState.Open;
+
+        public MySqlConnection Connection { get; }
+
         public static Database Instance
         {
             get
@@ -19,13 +25,11 @@ namespace Database
                 {
                     return _instance = new Database();
                 }
+
                 return _instance;
             }
         }
 
-        private bool IsConnected => Connection.State == ConnectionState.Open;
-
-        public MySqlConnection Connection { get; }
 
         private Database()
         {
@@ -35,6 +39,11 @@ namespace Database
         }
 
         ~Database()
+        {
+            Close();
+        }
+
+        public void Close()
         {
             Connection.Close();
         }

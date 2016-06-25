@@ -10,7 +10,7 @@
     var user = Session["user"] as User;
 
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink($"Hallo {user.Name}", "Index", "Account")</li>
+        <li>@Html.ActionLink($"{user.Name}'s account", "Index", "Account")</li>
         <li>@Html.ActionLink("Log uit", "Loguit", "Account")</li>
     </ul>
 

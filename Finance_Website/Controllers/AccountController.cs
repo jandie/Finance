@@ -13,7 +13,7 @@ namespace Finance_Website.Controllers
         {
             User user = Session["User"] as User;
 
-            if (user == null) return View();
+            if (user == null) return RedirectToAction("Login", "Account");
 
             user = DataRepository.Instance.Login(user.Email, Session["Password"] as string, true, true, true);
 

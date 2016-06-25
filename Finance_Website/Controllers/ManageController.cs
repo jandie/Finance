@@ -167,13 +167,15 @@ namespace Finance_Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeletePayment(int id)
+        public ActionResult DeletePayment(int id, string lastTab = null)
         {
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
 
             if (user == null)
                 return RedirectToAction("Login", "Account");
+
+            Session["LastTab"] = lastTab;
 
             try
             {

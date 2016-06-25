@@ -18,5 +18,7 @@ namespace Library.Interfaces
         decimal GetSum();
 
         decimal GetTotalAmount();
+
+        void AddTransactions(List<Transaction> transactions);
     }
 }
