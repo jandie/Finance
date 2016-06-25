@@ -1,9 +1,7 @@
 ﻿using System;
-using Database;
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
-using Library.Exceptions;
 
 namespace Repository
 {
@@ -37,9 +35,8 @@ namespace Repository
             {
                 return _context.CreateUser(name, lastName, email, password);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                
                 throw;
             }
         }
