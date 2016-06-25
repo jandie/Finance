@@ -13,6 +13,8 @@ namespace Finance_Website.Controllers
         {
             User user = Session["User"] as User;
 
+            if (user == null) return View();
+
             user = DataRepository.Instance.Login(user.Email, Session["Password"] as string, true, true, true);
 
             if (user == null)
@@ -132,6 +134,5 @@ namespace Finance_Website.Controllers
 
             return View();
         }
-
     }
 }

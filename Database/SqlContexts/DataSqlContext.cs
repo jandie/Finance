@@ -15,8 +15,10 @@ namespace Database.SqlContexts
         public User CreateUser(string name, string lastName, string email, string password)
         {
             MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("INSERT INTO \"USER\" (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (@name, @lastName, @email, @password)", connection);
-            command.CommandType = CommandType.Text;
+            MySqlCommand command =
+                new MySqlCommand(
+                    "INSERT INTO \"USER\" (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (@name, @lastName, @email, @password)",
+                    connection) {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@name", name));
             command.Parameters.Add(new MySqlParameter("@lastName", lastName));
@@ -31,8 +33,9 @@ namespace Database.SqlContexts
         public User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments, bool loadTransactions)
         {
             MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, LASTNAME FROM USER WHERE EMAIL = @email AND PASSWORD = @password", connection);
-            command.CommandType = CommandType.Text;
+            MySqlCommand command =
+                new MySqlCommand("SELECT ID, NAME, LASTNAME FROM USER WHERE EMAIL = @email AND PASSWORD = @password",
+                    connection) {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@email", email));
             command.Parameters.Add(new MySqlParameter("@password", password));
@@ -56,7 +59,7 @@ namespace Database.SqlContexts
 
         public List<Balance> GetBankAccountsOfUser(int userId)
         {
-            List<Balance> bankAccounts =  new List<Balance>();
+            var bankAccounts =  new List<Balance>();
 
             MySqlConnection conneciton = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = @userId", conneciton)
@@ -80,7 +83,7 @@ namespace Database.SqlContexts
 
         public List<IPayment> GetPaymentsOfUser(int userId)
         {
-            List<IPayment> payments = new List<IPayment>();
+            var payments = new List<IPayment>();
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = @userId", connection)
                 {CommandType = CommandType.Text};
@@ -120,7 +123,7 @@ namespace Database.SqlContexts
 
         public List<Transaction> GetTransactionsOfPayment(int paymentId)
         {
-            List<Transaction> transactions = new List<Transaction>();
+            var transactions = new List<Transaction>();
 
             MySqlConnection connecion = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId", connecion)
