@@ -14,7 +14,7 @@ namespace Database.SqlContexts
     {
         public User CreateUser(string name, string lastName, string email, string password)
         {
-            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("INSERT INTO \"USER\" (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (:name, :lastName, :email, :password)", connection);
             command.CommandType = CommandType.Text;
 
@@ -30,7 +30,7 @@ namespace Database.SqlContexts
 
         public User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments, bool loadTransactions)
         {
-            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, NAME, LASTNAME FROM \"USER\" WHERE EMAIL = :email AND PASSWORD = :password", connection);
             command.CommandType = CommandType.Text;
 
@@ -58,7 +58,7 @@ namespace Database.SqlContexts
         {
             List<Balance> bankAccounts =  new List<Balance>();
 
-            MySqlConnection conneciton = Database.Database.Instance.Connection;
+            MySqlConnection conneciton = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = :userId", conneciton)
                 { CommandType = CommandType.Text};
 
@@ -81,7 +81,7 @@ namespace Database.SqlContexts
         public List<IPayment> GetPaymentsOfUser(int userId)
         {
             List<IPayment> payments = new List<IPayment>();
-            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = :userId", connection)
                 {CommandType = CommandType.Text};
 
@@ -122,7 +122,7 @@ namespace Database.SqlContexts
         {
             List<Transaction> transactions = new List<Transaction>();
 
-            MySqlConnection connecion = Database.Database.Instance.Connection;
+            MySqlConnection connecion = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = :paymentId", connecion)
                 {CommandType =  CommandType.Text};
 

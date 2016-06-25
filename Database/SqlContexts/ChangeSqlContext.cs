@@ -9,7 +9,7 @@ namespace Database.SqlContexts
     {
         public void ChangeBalance(int id, string name, decimal balanceAmount)
         {
-            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("UPDATE BANKACCOUNT SET NAME = :name, BALANCE = :balanceAmount WHERE \"ID\" = :id", connection);
             command.CommandType = CommandType.Text;
             
@@ -22,7 +22,7 @@ namespace Database.SqlContexts
 
         public void ChangePayment(int id, string name, decimal amount)
         {
-            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("UPDATE PAYMENT SET NAME = :name, AMOUNT = :amount WHERE ID = :id", connection);
             command.CommandType = CommandType.Text;
             
@@ -35,7 +35,7 @@ namespace Database.SqlContexts
 
         public void ChangeTransaction(int id, decimal amount, string description)
         {
-            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("UPDATE TRANSACTION SET AMOUNT = :amount, DESCRIPTION = :description WHERE ID = :id", connection);
             command.CommandType = CommandType.Text;
             

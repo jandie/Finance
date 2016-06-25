@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using MySql.Data.MySqlClient;
 
-namespace Database.Database
+namespace Database
 {
     public class Database
     {

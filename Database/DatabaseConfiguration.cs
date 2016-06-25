@@ -1,4 +1,4 @@
-﻿namespace Database.Database
+﻿namespace Database
 {
     public static class DatabaseConfiguration
     {

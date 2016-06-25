@@ -2,7 +2,6 @@
 using Database.Interfaces;
 using Library.Enums;
 using MySql.Data.MySqlClient;
-using Database.Database;
 
 namespace Database.SqlContexts
 {
@@ -10,7 +9,7 @@ namespace Database.SqlContexts
     {
         public void AddBankAccount(int userId, string name, decimal balance)
         {
-            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("INSERT INTO BANKACCOUNT (USER_ID, NAME, BALANCE) VALUES (:userId, :name, :balance)", connection)
                 {CommandType = CommandType.Text};
 
@@ -23,7 +22,7 @@ namespace Database.SqlContexts
 
         public void AddPayment(int userId, string name, decimal amount, PaymentType type)
         {
-            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("INSERT INTO PAYMENT (USER_ID, NAME, AMOUNT, TYPE) VALUES(:userId, :name, :amount, :type)", connection)
             { CommandType = CommandType.Text };
 
@@ -37,7 +36,7 @@ namespace Database.SqlContexts
 
         public void AddTransaction(int paymentId, decimal amount, string description)
         {
-            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("INSERT INTO TRANSACTION (PAYMENT_ID, AMOUNT, DESCRIPTION) VALUES(:paymentId, :amount, :description)", connection)
             { CommandType = CommandType.Text };
 
