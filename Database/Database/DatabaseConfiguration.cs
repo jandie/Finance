@@ -2,10 +2,10 @@
 {
     public static class DatabaseConfiguration
     {
-        public const string DatabaseUsername = "finance";
-        public const string DatabasePassword = "goes1995";
-        public const string DatabaseService = "orcl.168.0.27";
-        public const string DatabaseHost = "jandiehendriks.com";
-        public const int DatabasePort = 1521;
+        public const string DatabaseUsername = "root";
+        public const string DatabasePassword = "wDwtd^V^Uk1!";
+        public const string DatabaseName = "Finance";
+        public const string DatabaseHost = "192.168.0.25";
+        public const int DatabasePort = 3306;
     }
 }

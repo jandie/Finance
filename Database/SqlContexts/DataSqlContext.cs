@@ -6,7 +6,7 @@ using Library.Classes;
 using Library.Enums;
 using Library.Exceptions;
 using Library.Interfaces;
-using Oracle.ManagedDataAccess.Client;
+using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
@@ -14,14 +14,14 @@ namespace Database.SqlContexts
     {
         public User CreateUser(string name, string lastName, string email, string password)
         {
-            OracleConnection connection = Database.Database.Instance.Connection;
-            OracleCommand command = new OracleCommand("INSERT INTO \"USER\" (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (:name, :lastName, :email, :password)", connection);
+            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("INSERT INTO \"USER\" (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (:name, :lastName, :email, :password)", connection);
             command.CommandType = CommandType.Text;
 
-            command.Parameters.Add(new OracleParameter(":name", name));
-            command.Parameters.Add(new OracleParameter(":lastName", lastName));
-            command.Parameters.Add(new OracleParameter(":email", email));
-            command.Parameters.Add(new OracleParameter(":password", password));
+            command.Parameters.Add(new MySqlParameter(":name", name));
+            command.Parameters.Add(new MySqlParameter(":lastName", lastName));
+            command.Parameters.Add(new MySqlParameter(":email", email));
+            command.Parameters.Add(new MySqlParameter(":password", password));
 
             command.ExecuteNonQuery();
 
@@ -30,14 +30,14 @@ namespace Database.SqlContexts
 
         public User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments, bool loadTransactions)
         {
-            OracleConnection connection = Database.Database.Instance.Connection;
-            OracleCommand command = new OracleCommand("SELECT ID, NAME, LASTNAME FROM \"USER\" WHERE EMAIL = :email AND PASSWORD = :password", connection);
+            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, LASTNAME FROM \"USER\" WHERE EMAIL = :email AND PASSWORD = :password", connection);
             command.CommandType = CommandType.Text;
 
-            command.Parameters.Add(new OracleParameter(":email", email));
-            command.Parameters.Add(new OracleParameter(":password", password));
+            command.Parameters.Add(new MySqlParameter(":email", email));
+            command.Parameters.Add(new MySqlParameter(":password", password));
 
-            OracleDataReader reader = command.ExecuteReader();
+            MySqlDataReader reader = command.ExecuteReader();
 
             if (!reader.Read()) throw new WrongUsernameOrPasswordException();
 
@@ -58,13 +58,13 @@ namespace Database.SqlContexts
         {
             List<Balance> bankAccounts =  new List<Balance>();
 
-            OracleConnection conneciton = Database.Database.Instance.Connection;
-            OracleCommand command = new OracleCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = :userId", conneciton)
+            MySqlConnection conneciton = Database.Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = :userId", conneciton)
                 { CommandType = CommandType.Text};
 
-            command.Parameters.Add(new OracleParameter(":userId", userId));
+            command.Parameters.Add(new MySqlParameter(":userId", userId));
 
-            OracleDataReader reader = command.ExecuteReader();
+            MySqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
@@ -81,13 +81,13 @@ namespace Database.SqlContexts
         public List<IPayment> GetPaymentsOfUser(int userId)
         {
             List<IPayment> payments = new List<IPayment>();
-            OracleConnection connection = Database.Database.Instance.Connection;
-            OracleCommand command = new OracleCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = :userId", connection)
+            MySqlConnection connection = Database.Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = :userId", connection)
                 {CommandType = CommandType.Text};
 
-            command.Parameters.Add(new OracleParameter(":userId", userId));
+            command.Parameters.Add(new MySqlParameter(":userId", userId));
 
-            OracleDataReader reader = command.ExecuteReader();
+            MySqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
@@ -122,13 +122,13 @@ namespace Database.SqlContexts
         {
             List<Transaction> transactions = new List<Transaction>();
 
-            OracleConnection connecion = Database.Database.Instance.Connection;
-            OracleCommand command = new OracleCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = :paymentId", connecion)
+            MySqlConnection connecion = Database.Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = :paymentId", connecion)
                 {CommandType =  CommandType.Text};
 
-            command.Parameters.Add(new OracleParameter(":paymentId", paymentId));
+            command.Parameters.Add(new MySqlParameter(":paymentId", paymentId));
 
-            OracleDataReader reader = command.ExecuteReader();
+            MySqlDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {

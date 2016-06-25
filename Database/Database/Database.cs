@@ -1,12 +1,13 @@
 ﻿using System.Data;
-using Oracle.ManagedDataAccess.Client;
+using MySql.Data.MySqlClient;
 
 namespace Database.Database
 {
     public class Database
     {
         private static readonly string CONNECTION_STRING =
-            $"data source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = {DatabaseConfiguration.DatabaseHost})(PORT = {DatabaseConfiguration.DatabasePort})))(CONNECT_DATA =(SERVICE_NAME = {DatabaseConfiguration.DatabaseService})));USER ID={DatabaseConfiguration.DatabaseUsername};PASSWORD={DatabaseConfiguration.DatabasePassword}";
+            "SERVER=" + DatabaseConfiguration.DatabaseHost + ";" + "DATABASE=" +
+            DatabaseConfiguration.DatabaseName + ";" + "UID=" + DatabaseConfiguration.DatabaseUsername + ";" + "PASSWORD=" + DatabaseConfiguration.DatabasePassword + ";";
 
         private static Database _instance;
 
@@ -24,11 +25,11 @@ namespace Database.Database
 
         private bool IsConnected => Connection.State == ConnectionState.Open;
 
-        public OracleConnection Connection { get; }
+        public MySqlConnection Connection { get; }
 
         private Database()
         {
-            Connection = new OracleConnection { ConnectionString = CONNECTION_STRING };
+            Connection = new MySqlConnection { ConnectionString = CONNECTION_STRING };
 
             Open();
         }
