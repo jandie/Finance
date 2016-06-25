@@ -14,17 +14,22 @@
         <div class="col-md-12">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" @if(Session["LastTab"] == null) {Session["LastTab"] = null; @classActive }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">Balances</a></li>
+                <li role="presentation" @if (Session["LastTab"] == null) { Session["LastTab"] = null; @classActive }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
+                <li role="presentation" @if(Session["LastTab"]?.ToString() == "1") {@classActive }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">Balances</a></li>
                 <li role="presentation" @if(Session["LastTab"]?.ToString() == "2") {@classActive }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">Monthly bills</a></li>
                 <li role="presentation" @if(Session["LastTab"]?.ToString() == "3") {@classActive }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">Monthly income</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane @if(Session["LastTab"] == null) {Session["LastTab"] = null; @active }" id="balances">
+                <div role="tabpanel" class="tab-pane @if(Session["LastTab"] == null) {Session["LastTab"] = null; @active}" id="overview">
+                    ...
+                </div>
+                
+                <div role="tabpanel" class="tab-pane @if(Session["LastTab"]?.ToString() == "1") {Session["LastTab"] = null; @active }" id="balances">
                     
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddBalanceModal">
-                        Add
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
 
                     <table class="table table-hover">
@@ -62,7 +67,7 @@
 
                 <div role="tabpanel" class="tab-pane @if(Session["LastTab"]?.ToString() == "2") {Session["LastTab"] = null; @active }" id="monthlybills">
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyBill">
-                        Add
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
 
                     <table class="table table-hover">
@@ -106,7 +111,7 @@
 
 
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyIncome">
-                        Add
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
 
                     <table class="table table-hover">
