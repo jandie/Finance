@@ -15,13 +15,13 @@ namespace Database.SqlContexts
         public User CreateUser(string name, string lastName, string email, string password)
         {
             MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("INSERT INTO \"USER\" (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (:name, :lastName, :email, :password)", connection);
+            MySqlCommand command = new MySqlCommand("INSERT INTO \"USER\" (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (@name, @lastName, @email, @password)", connection);
             command.CommandType = CommandType.Text;
 
-            command.Parameters.Add(new MySqlParameter(":name", name));
-            command.Parameters.Add(new MySqlParameter(":lastName", lastName));
-            command.Parameters.Add(new MySqlParameter(":email", email));
-            command.Parameters.Add(new MySqlParameter(":password", password));
+            command.Parameters.Add(new MySqlParameter("@name", name));
+            command.Parameters.Add(new MySqlParameter("@lastName", lastName));
+            command.Parameters.Add(new MySqlParameter("@email", email));
+            command.Parameters.Add(new MySqlParameter("@password", password));
 
             command.ExecuteNonQuery();
 
@@ -31,11 +31,11 @@ namespace Database.SqlContexts
         public User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments, bool loadTransactions)
         {
             MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, LASTNAME FROM \"USER\" WHERE EMAIL = :email AND PASSWORD = :password", connection);
+            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, LASTNAME FROM USER WHERE EMAIL = @email AND PASSWORD = @password", connection);
             command.CommandType = CommandType.Text;
 
-            command.Parameters.Add(new MySqlParameter(":email", email));
-            command.Parameters.Add(new MySqlParameter(":password", password));
+            command.Parameters.Add(new MySqlParameter("@email", email));
+            command.Parameters.Add(new MySqlParameter("@password", password));
 
             MySqlDataReader reader = command.ExecuteReader();
 
@@ -59,10 +59,10 @@ namespace Database.SqlContexts
             List<Balance> bankAccounts =  new List<Balance>();
 
             MySqlConnection conneciton = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = :userId", conneciton)
+            MySqlCommand command = new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = @userId", conneciton)
                 { CommandType = CommandType.Text};
 
-            command.Parameters.Add(new MySqlParameter(":userId", userId));
+            command.Parameters.Add(new MySqlParameter("@userId", userId));
 
             MySqlDataReader reader = command.ExecuteReader();
 
@@ -82,10 +82,10 @@ namespace Database.SqlContexts
         {
             List<IPayment> payments = new List<IPayment>();
             MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = :userId", connection)
+            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = @userId", connection)
                 {CommandType = CommandType.Text};
 
-            command.Parameters.Add(new MySqlParameter(":userId", userId));
+            command.Parameters.Add(new MySqlParameter("@userId", userId));
 
             MySqlDataReader reader = command.ExecuteReader();
 
@@ -123,10 +123,10 @@ namespace Database.SqlContexts
             List<Transaction> transactions = new List<Transaction>();
 
             MySqlConnection connecion = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = :paymentId", connecion)
+            MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId", connecion)
                 {CommandType =  CommandType.Text};
 
-            command.Parameters.Add(new MySqlParameter(":paymentId", paymentId));
+            command.Parameters.Add(new MySqlParameter("@paymentId", paymentId));
 
             MySqlDataReader reader = command.ExecuteReader();
 

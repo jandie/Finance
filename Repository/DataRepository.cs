@@ -23,7 +23,7 @@ namespace Repository
             {
                 return _context.LoginUser(email, password, loadBankAccounts, loadPayments, loadTransactions);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }
