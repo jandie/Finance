@@ -1,113 +1,189 @@
 ﻿@using System.Diagnostics
 @using Library.Classes
+@using Library.Interfaces
 
 @{
-    ViewBag.Title = "Overview";
-
     User user = ViewBag.User as User;
 
     string classActive = "Class=active";
     string active = "active";
+
+    ViewBag.Title = $"{user.Name}'s Overview";
 }
+
+<h3>@ViewBag.Title</h3>
+
 <div class="row">
+    <div class="col-md-4">
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <th>Amount of money at the end of the month</th>
+                </tr>
+                <tr>
+                    <td>@user.Prediction.ToString("0.00")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    
     <div>
         <div class="col-md-12">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" @if (Session["LastTab"] == null) { Session["LastTab"] = null; @classActive }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
-                <li role="presentation" @if(Session["LastTab"]?.ToString() == "1") {@classActive }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">Balances</a></li>
-                <li role="presentation" @if(Session["LastTab"]?.ToString() == "2") {@classActive }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">Monthly bills</a></li>
-                <li role="presentation" @if(Session["LastTab"]?.ToString() == "3") {@classActive }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">Monthly income</a></li>
+                <li role="presentation" @if (Session["LastTab"] == null)
+                                        {
+                                            Session["LastTab"] = null;
+                                            @classActive
+                                        }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Details</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "1")
+                                        {
+                                            @classActive
+                                        }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">Balances</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2")
+                                        {
+                                            @classActive
+                                        }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">Monthly bills</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3")
+                                        {
+                                            @classActive
+                                        }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">Monthly income</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane @if(Session["LastTab"] == null) {Session["LastTab"] = null; @active}" id="overview">
-                    ...
+                <div role="tabpanel" class="tab-pane @if (Session["LastTab"] == null)
+                                                     {
+                                                         Session["LastTab"] = null;
+                                                         @active
+                                                     }" id="overview">
+
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (Transaction transaction in user.TransactionList)
+                        {
+                            <tr>
+
+                                @if (transaction.Positive)
+                                {
+                                    <td><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></td>
+                                }
+                                else
+                                {
+                                    <td><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></td>
+                                }
+                                <td>@transaction.Amount.ToString("0.00")</td>
+                                <td>@transaction.Description</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+
                 </div>
-                
-                <div role="tabpanel" class="tab-pane @if(Session["LastTab"]?.ToString() == "1") {Session["LastTab"] = null; @active }" id="balances">
-                    
+
+                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "1")
+                                                     {
+                                                         Session["LastTab"] = null;
+                                                         @active
+                                                     }" id="balances">
+
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddBalanceModal">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
 
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Balance</th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Balance</th>
+                            <th></th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            @foreach (Balance balance in user.BankAccounts)
-                            {
-                                <tr>
-                                    <td>@balance.Name</td>
-                                    <td>@balance.BalanceAmount.ToString("0.00")</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Actions <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="~/Manage/Balance?id=@balance.Id">Change</a></li>
-                                                <li role="separator" class="divider"></li>
-                                                <li><a href="~/Manage/DeleteBalance?id=@balance.Id">Delete</a></li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
+                        @foreach (Balance balance in user.Balances)
+                        {
+                            <tr>
+                                <td>@balance.Name</td>
+                                <td>@balance.BalanceAmount.ToString("0.00")</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Actions <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="~/Manage/Balance?id=@balance.Id&lastTab=1">Change</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a href="~/Manage/DeleteBalance?id=@balance.Id&lastTab=1">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 </div>
 
-                <div role="tabpanel" class="tab-pane @if(Session["LastTab"]?.ToString() == "2") {Session["LastTab"] = null; @active }" id="monthlybills">
+                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "2")
+                                                     {
+                                                         Session["LastTab"] = null;
+                                                         @active
+                                                     }" id="monthlybills">
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyBill">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </button>
 
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Amount</th>
-                                <th>Paid</th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Paid</th>
+                            <th></th>
+                        </tr>
                         </thead>
 
                         <tbody>
                         @foreach (MonthlyBill bill in user.Payments.OfType<MonthlyBill>())
-                            {
-                                <tr>
-                                    <td>@bill.Name</td>
-                                    <td>@bill.Amount.ToString("0.00")</td>
-                                    <td>@bill.GetTotalAmount().ToString("0.00")</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Actions <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="~/Manage/Payment?id=@bill.Id&type=Monthly bill&lastTab=2">Manage</a></li>
-                                                <li role="separator" class="divider"></li>
-                                                <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2">Pay</a></li>
-                                                <li role="separator" class="divider"></li>
-                                                <li><a href="~/Manage/DeletePayment?id=@bill.Id&lastTab=2">Delete</a></li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
+                        {
+                            <tr>
+                                <td>@bill.Name</td>
+                                <td>@bill.Amount.ToString("0.00")</td>
+                                <td>@bill.GetTotalAmount().ToString("0.00")</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Actions <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="~/Manage/Payment?id=@bill.Id&type=Monthly bill&lastTab=2">Manage</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2">Pay</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a href="~/Manage/DeletePayment?id=@bill.Id&lastTab=2">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 </div>
 
-                <div role="tabpanel" class="tab-pane @if(Session["LastTab"]?.ToString() == "3") {Session["LastTab"] = null; @active }" id="monthlyincome">
+                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "3")
+                                                     {
+                                                         Session["LastTab"] = null;
+                                                         @active
+                                                     }" id="monthlyincome">
 
 
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyIncome">
@@ -116,37 +192,37 @@
 
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Amount</th>
-                                <th>Paid</th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Amount</th>
+                            <th>Paid</th>
+                            <th></th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            @foreach (MonthlyIncome income in user.Payments.OfType<MonthlyIncome>())
-                            {
-                                <tr>
-                                    <td>@income.Name</td>
-                                    <td>@income.Amount.ToString("0.00")</td>
-                                    <td>@income.GetTotalAmount().ToString("0.00")</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Actions <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="~/Manage/Payment?id=@income.Id&type=Monthly income&lastTab=3">Manage</a></li>
-                                                <li role="separator" class="divider"></li>
-                                                <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3">Pay</a></li>
-                                                <li role="separator" class="divider"></li>
-                                                <li><a href="~/Manage/DeletePayment?id=@income.Id&lastTab=3">Delete</a></li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
+                        @foreach (MonthlyIncome income in user.Payments.OfType<MonthlyIncome>())
+                        {
+                            <tr>
+                                <td>@income.Name</td>
+                                <td>@income.Amount.ToString("0.00")</td>
+                                <td>@income.GetTotalAmount().ToString("0.00")</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Actions <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="~/Manage/Payment?id=@income.Id&type=Monthly income&lastTab=3">Manage</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3">Pay</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li><a href="~/Manage/DeletePayment?id=@income.Id&lastTab=3">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 </div>

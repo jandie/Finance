@@ -18,7 +18,7 @@ namespace Finance_Website.Controllers
         #region Balance
 
         [HttpGet]
-        public ActionResult Balance(int id = 0)
+        public ActionResult Balance(int id = 0, string lastTab = null)
         {
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
@@ -26,10 +26,12 @@ namespace Finance_Website.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
+            Session["LastTab"] = lastTab;
+
             try
             {
                 ViewBag.User = user;
-                ViewBag.Balance = user.BankAccounts.Find(b => b.Id == id);
+                ViewBag.Balance = user.Balances.Find(b => b.Id == id);
             }
             catch (Exception)
             {
@@ -50,7 +52,7 @@ namespace Finance_Website.Controllers
 
             try
             {
-                Balance balance = user.BankAccounts.Find(b => b.Id == id);
+                Balance balance = user.Balances.Find(b => b.Id == id);
 
                 if (balance != null)
                 {
@@ -72,7 +74,7 @@ namespace Finance_Website.Controllers
         }
 
         [HttpGet]
-        public ActionResult DeleteBalance(int id)
+        public ActionResult DeleteBalance(int id, string lastTab = null)
         {
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
@@ -80,9 +82,11 @@ namespace Finance_Website.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
+            Session["LastTab"] = lastTab;
+
             try
             {
-                Balance balance = user.BankAccounts.Find(b => b.Id == id);
+                Balance balance = user.Balances.Find(b => b.Id == id);
 
                 if (balance != null)
                 {

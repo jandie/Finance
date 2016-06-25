@@ -3,7 +3,6 @@
     public enum PaymentType
     {
         MonthlyBill,
-        MonthlyIncome,
-        DailyBill
+        MonthlyIncome
     }
 }

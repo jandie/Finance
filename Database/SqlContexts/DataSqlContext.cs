@@ -111,9 +111,6 @@ namespace Database.SqlContexts
                     case PaymentType.MonthlyIncome:
                         payments.Add(new MonthlyIncome(id, name, amount));
                         break;
-                    case PaymentType.DailyBill:
-                        payments.Add(new MonthlyBill(id, name, amount));
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -121,12 +118,12 @@ namespace Database.SqlContexts
 
             reader.Close();
 
-            payments.ForEach(p => p.AddTransactions(GetTransactionsOfPayment(p.Id)));
+            payments.ForEach(p => p.AddTransactions(GetTransactionsOfPayment(p)));
 
             return payments;
         }
 
-        public List<Transaction> GetTransactionsOfPayment(int paymentId)
+        public List<Transaction> GetTransactionsOfPayment(IPayment payment)
         {
             var transactions = new List<Transaction>();
 
@@ -134,7 +131,7 @@ namespace Database.SqlContexts
             MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId", connecion)
                 {CommandType =  CommandType.Text};
 
-            command.Parameters.Add(new MySqlParameter("@paymentId", paymentId));
+            command.Parameters.Add(new MySqlParameter("@paymentId", payment.Id));
 
             MySqlDataReader reader = command.ExecuteReader();
 
@@ -144,7 +141,10 @@ namespace Database.SqlContexts
                 decimal amount = Convert.ToDecimal(reader.GetString(1));
                 string description = reader.GetString(2);
 
-                transactions.Add(new Transaction(id, amount, description));
+                if (payment is MonthlyBill)
+                    transactions.Add(new Transaction(id, amount, description, false));
+                else if (payment is MonthlyIncome)
+                    transactions.Add(new Transaction(id, amount, description, true));
             }
 
             reader.Close();

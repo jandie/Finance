@@ -19,7 +19,11 @@ namespace Library.Classes
 
             Transactions.ForEach(t => paid += t.Amount);
 
-            return paid * -1;
+            paid -= Amount;
+
+            if (paid > 0) paid *= -1;
+
+            return paid;
         }
 
         public decimal GetTotalAmount()

@@ -1,4 +1,5 @@
-﻿using Library.Interfaces;
+﻿using System;
+using Library.Interfaces;
 
 namespace Library.Classes
 {
@@ -16,6 +17,10 @@ namespace Library.Classes
             decimal gotten = 0;
 
             Transactions.ForEach(t => gotten += t.Amount);
+
+            gotten -= Amount;
+
+            if (gotten < 0) gotten = Math.Abs(gotten);
 
             return gotten;
         }

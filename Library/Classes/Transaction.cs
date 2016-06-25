@@ -2,15 +2,20 @@
 {
     public class Transaction
     {
-        public int Id { get; set; }
-        public decimal Amount { get; set; }
-        public string Description { get; set; }
-
-        public Transaction(int id, decimal amount, string description)
+        public Transaction(int id, decimal amount, string description, bool positive)
         {
             Id = id;
             Amount = amount;
             Description = description;
+            Positive = positive;
         }
+
+        public int Id { get;}
+
+        public decimal Amount { get; }
+
+        public string Description { get; }
+
+        public bool Positive { get; }
     }
 }
