@@ -14,7 +14,7 @@ namespace Repository
 
         public static DataRepository Instance => _instance ?? (_instance = new DataRepository());
 
-        public DataRepository()
+        private DataRepository()
         {
             _context = new DataSqlContext();
         }
@@ -25,7 +25,7 @@ namespace Repository
             {
                 return _context.LoginUser(email, password, loadBankAccounts, loadPayments, loadTransactions);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -37,7 +37,7 @@ namespace Repository
             {
                 return _context.CreateUser(name, lastName, email, password);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 
                 throw;

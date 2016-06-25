@@ -2,6 +2,7 @@
 using Database.Interfaces;
 using Library.Enums;
 using MySql.Data.MySqlClient;
+using Database.Database;
 
 namespace Database.SqlContexts
 {

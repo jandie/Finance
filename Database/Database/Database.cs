@@ -31,20 +31,10 @@ namespace Database.Database
         {
             Connection = new MySqlConnection { ConnectionString = CONNECTION_STRING };
 
-            Open();
-        }
-
-        ~Database()
-        {
-            Close();
-        }
-
-        private void Open()
-        {
             Connection.Open();
         }
 
-        private void Close()
+        ~Database()
         {
             Connection.Close();
         }
