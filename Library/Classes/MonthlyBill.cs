@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Library.Enums;
 using Library.Interfaces;
 
 namespace Library.Classes
@@ -8,7 +9,7 @@ namespace Library.Classes
     {
         public bool MayAddPayment => true;
 
-        public MonthlyBill(int id, string name, decimal amount) : base(id, name, amount)
+        public MonthlyBill(int id, string name, decimal amount, PaymentType paymentType) : base(id, name, amount, paymentType)
         {
             
         }

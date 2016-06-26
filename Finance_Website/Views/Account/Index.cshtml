@@ -1,12 +1,10 @@
-﻿@using System.Diagnostics
-@using Library.Classes
-@using Library.Interfaces
+﻿@using Library.Classes
 
 @{
     User user = ViewBag.User as User;
 
-    string classActive = "Class=active";
-    string active = "active";
+    const string classActive = "Class=active";
+    const string active = "active";
 
     ViewBag.Title = $"{user.Name}'s Overview";
 }
@@ -60,7 +58,7 @@
                                                          @active
                                                      }" id="overview">
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#QuickTransaction">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
                     </button>
 
                     <table class="table table-hover">
@@ -69,13 +67,13 @@
                             <th></th>
                             <th>Amount</th>
                             <th>Description</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach (Transaction transaction in user.TransactionList)
                         {
                             <tr>
-
                                 @if (transaction.Positive)
                                 {
                                     <td><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></td>
@@ -86,6 +84,17 @@
                                 }
                                 <td>@transaction.Amount.ToString("0.00")</td>
                                 <td>@transaction.Description</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Actions <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="~/Manage/Transaction?id=@transaction.Id"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>Edit</a></li>
+                                            <li><a href="~/Manage/DeleteTransaction?id=@transaction.Id&quick=true"><span class="glyphicon glyphicon-trash icon-content" aria-hidden="true"></span>Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
                             </tr>
                         }
                         </tbody>
@@ -100,7 +109,7 @@
                                                      }" id="balances">
 
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddBalanceModal">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
                     </button>
 
                     <table class="table table-hover">
@@ -124,7 +133,7 @@
                                             Actions <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Balance?id=@balance.Id&lastTab=1">Change</a></li>
+                                            <li><a href="~/Manage/Balance?id=@balance.Id&lastTab=1"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>Edit</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -140,7 +149,7 @@
                                                          @active
                                                      }" id="monthlybills">
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyBill">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
                     </button>
 
                     <table class="table table-hover">
@@ -166,9 +175,9 @@
                                             Actions <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Payment?id=@bill.Id&type=Monthly bill&lastTab=2">Manage</a></li>
+                                            <li><a href="~/Manage/Payment?id=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>Edit</a></li>
                                             <li role="separator" class="divider"></li>
-                                            <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2">Pay</a></li>
+                                            <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>Pay</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -186,7 +195,7 @@
 
 
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyIncome">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
                     </button>
 
                     <table class="table table-hover">
@@ -212,9 +221,9 @@
                                             Actions <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Payment?id=@income.Id&type=Monthly income&lastTab=3">Manage</a></li>
+                                            <li><a href="~/Manage/Payment?id=@income.Id&lastTab=3"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>Edit</a></li>
                                             <li role="separator" class="divider"></li>
-                                            <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3">Pay</a></li>
+                                            <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>Pay</a></li>
                                         </ul>
                                     </div>
                                 </td>

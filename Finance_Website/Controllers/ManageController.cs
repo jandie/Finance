@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
 using Library.Classes;
@@ -9,6 +10,8 @@ namespace Finance_Website.Controllers
 {
     public class ManageController : Controller
     {
+        private IPayment _payment;
+
         // GET: Manage
         public ActionResult Index()
         {
@@ -111,7 +114,7 @@ namespace Finance_Website.Controllers
         #region Payment
 
         [HttpGet]
-        public ActionResult Payment(int id = 0, string type = "", string lastTab = null)
+        public ActionResult Payment(int id = 0, string lastTab = null)
         {
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
@@ -123,11 +126,9 @@ namespace Finance_Website.Controllers
 
             try
             {
-                IPayment payment = user.Payments.Find(p => p.Id == id);
+                _payment = user.Payments.Find(p => p.Id == id);
 
-                ViewBag.Payment = payment;
-                ViewBag.Transactions = payment.AllTransactions;
-                ViewBag.Type = type;
+                ViewBag.Payment = _payment;
             }
             catch (Exception)
             {
@@ -181,11 +182,11 @@ namespace Finance_Website.Controllers
 
             try
             {
-                IPayment payment = user.Payments.Find(p => p.Id == id);
+                _payment = user.Payments.Find(p => p.Id == id);
 
-                if (payment != null)
+                if (_payment != null)
                 {
-                    DeleteRepository.Instance.DeletePayment(id);
+                    DeleteRepository.Instance.DeletePayment(_payment.Id);
 
                     Session["Message"] = "Payment deleted.";
                 }
@@ -207,7 +208,7 @@ namespace Finance_Website.Controllers
         #region Transaction
 
         [HttpGet]
-        public ActionResult Transaction(int id = 0, int paymentId = 0, string paymentType = "")
+        public ActionResult Transaction(int id = 0)
         {
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
@@ -217,14 +218,13 @@ namespace Finance_Website.Controllers
 
             try
             {
-                user = DataRepository.Instance.Login(user.Email, Session["Password"] as string, false, true, true);
+                _payment = user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
 
-                Transaction transaction =
-                    user.Payments.Find(p => p.Id == paymentId).AllTransactions.Find(t => t.Id == id);
+                Transaction transaction =_payment.AllTransactions.Find(t => t.Id == id);
 
                 ViewBag.Transaction = transaction;
-                ViewBag.PaymentId = paymentId;
-                ViewBag.PaymentType = paymentType;
+                ViewBag.PaymentId = _payment.Id;
+                ViewBag.PaymentType = _payment.PaymentType.ToString();
             }
             catch (Exception)
             {
@@ -235,8 +235,7 @@ namespace Finance_Website.Controllers
         }
 
         [HttpPost]
-        public ActionResult Transaction(int id = 0, int paymentId = 0, string paymentType = "", decimal amount = 0,
-            string description = "")
+        public ActionResult Transaction(int id, decimal amount, string description)
         {
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
@@ -246,8 +245,9 @@ namespace Finance_Website.Controllers
 
             try
             {
-                Transaction transaction =
-                    user.Payments.Find(p => p.Id == paymentId).AllTransactions.Find(t => t.Id == id);
+                _payment = user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
+
+                Transaction transaction =_payment.AllTransactions.Find(t => t.Id == id);
 
                 if (transaction != null)
                 {
@@ -256,9 +256,7 @@ namespace Finance_Website.Controllers
                     Session["Message"] = "Transaction changed.";
                 }
                 else
-                {
                     Session["Exception"] = "Transaction could not be changed.";
-                }
             }
             catch (Exception)
             {
@@ -266,12 +264,14 @@ namespace Finance_Website.Controllers
             }
 
             return RedirectToAction("Payment", "Manage",
-                new {id = paymentId, type = paymentType, lastTab = Session["LastTab"]});
+                new {id = _payment.Id, lastTab = Session["LastTab"]});
         }
 
         [HttpGet]
-        public ActionResult DeleteTransaction(int id, int paymentId, string paymentType)
+        public ActionResult DeleteTransaction(int id, bool quick = false)
         {
+            string paymentType = null;
+
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
 
@@ -280,8 +280,11 @@ namespace Finance_Website.Controllers
 
             try
             {
-                Transaction transaction =
-                    user.Payments.Find(p => p.Id == paymentId).AllTransactions.Find(t => t.Id == id);
+                _payment = user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
+
+                paymentType = _payment.PaymentType.ToString();
+
+                Transaction transaction = _payment.AllTransactions.Find(t => t.Id == id);
 
                 if (transaction != null)
                 {
@@ -290,17 +293,18 @@ namespace Finance_Website.Controllers
                     Session["Message"] = "Transaction deleted.";
                 }
                 else
-                {
                     Session["Exception"] = "Transaction could not be deleted.";
-                }
             }
             catch (Exception)
             {
                 Session["Exception"] = "Transaction could not be deleted.";
             }
 
+            if (quick || _payment == null)
+                return RedirectToAction("Index", "Account");
+            
             return RedirectToAction("Payment", "Manage",
-                new {id = paymentId, type = paymentType, lastTab = Session["LastTab"]});
+                new { id = _payment.Id, lastTab = Session["LastTab"] });
         }
 
         #endregion Transaction

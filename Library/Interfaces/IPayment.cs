@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Library.Classes;
+using Library.Enums;
 
 namespace Library.Interfaces
 {
@@ -8,6 +9,8 @@ namespace Library.Interfaces
         int Id { get; set; }
 
         string Name { get; }
+
+        PaymentType PaymentType { get; }
 
         decimal Amount { get; }
 

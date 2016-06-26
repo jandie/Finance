@@ -1,4 +1,5 @@
 ﻿using System;
+using Library.Enums;
 using Library.Interfaces;
 
 namespace Library.Classes
@@ -7,7 +8,7 @@ namespace Library.Classes
     {
         public bool MayAddPayment => true;
 
-        public MonthlyIncome(int id, string name, decimal amount) : base(id, name, amount)
+        public MonthlyIncome(int id, string name, decimal amount, PaymentType paymentType) : base(id, name, amount, paymentType)
         {
             
         }

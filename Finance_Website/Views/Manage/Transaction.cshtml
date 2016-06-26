@@ -15,8 +15,6 @@
             @using (Html.BeginForm())
             {
                 <input type="hidden" class="form-control" name="id" aria-describedby="basic-addon3" value="@transaction.Id">
-                <input type="hidden" class="form-control" name="paymentId" aria-describedby="basic-addon3" value="@ViewBag.PaymentId">
-                <input type="hidden" class="form-control" name="paymentId" aria-describedby="basic-addon3" value="@ViewBag.PaymentType">
                 <div class="form-group">
                     <label for="description">Description:</label>
                     <div class="input-group">
@@ -27,7 +25,7 @@
                 <div class="form-group">
                     <label for="amount">Balance amount:</label>
                     <div class="input-group">
-                        <input type="number" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3" value="@transaction.Amount" required>
+                        <input type="number" step="any" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3" value="@transaction.Amount" required>
                     </div>
                 </div>
 
@@ -38,7 +36,7 @@
                 </div>
 
                 <div class="form-group">
-                    <a class="btn btn-danger" href="~/Manage/DeleteTransaction?id=@transaction.Id&paymentId=@ViewBag.PaymentId&paymentType=@ViewBag.PaymentType" role="button">Delete</a>
+                    <a class="btn btn-danger" href="~/Manage/DeleteTransaction?id=@transaction.Id" role="button">Delete</a>
                 </div>
             }
         </div>

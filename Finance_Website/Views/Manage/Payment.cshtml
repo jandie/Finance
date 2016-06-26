@@ -3,7 +3,7 @@
 
 @{
     IPayment payment = ViewBag.Payment as IPayment;
-    List<Transaction> transactions = ViewBag.Transactions as List<Transaction>;
+    List<Transaction> transactions = payment.AllTransactions;
 
     ViewBag.Title = $"{ViewBag.Type} {payment?.Name}";
 }
@@ -27,7 +27,7 @@
                 <div class="form-group">
                     <label for="balance">Amount:</label>
                     <div class="input-group">
-                        <input type="number" class="form-control" id="balance" name="amount" aria-describedby="basic-addon3" value="@payment.Amount" required>
+                        <input type="number" step="any" class="form-control" id="balance" name="amount" aria-describedby="basic-addon3" value="@payment.Amount" required>
                     </div>
                 </div>
 
@@ -68,9 +68,9 @@
                                          Actions <span class="caret"></span>
                                      </button>
                                      <ul class="dropdown-menu">
-                                         <li><a href="~/Manage/Transaction?id=@t.Id&paymentId=@payment.Id&paymentType=@ViewBag.Type">Manage</a></li>
+                                         <li><a href="~/Manage/Transaction?id=@t.Id">Manage</a></li>
                                          <li role="separator" class="divider"></li>
-                                         <li><a href="~/Manage/DeleteTransaction?id=@t.Id&paymentId=@payment.Id&paymentType=@ViewBag.Type">Delete</a></li>
+                                         <li><a href="~/Manage/DeleteTransaction?id=@t.Id">Delete</a></li>
                                      </ul>
                                  </div>
                              </td>

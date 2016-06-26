@@ -106,10 +106,10 @@ namespace Database.SqlContexts
                 switch (type)
                 {
                     case PaymentType.MonthlyBill:
-                        payments.Add(new MonthlyBill(id, name, amount));
+                        payments.Add(new MonthlyBill(id, name, amount, type));
                         break;
                     case PaymentType.MonthlyIncome:
-                        payments.Add(new MonthlyIncome(id, name, amount));
+                        payments.Add(new MonthlyIncome(id, name, amount, type));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
