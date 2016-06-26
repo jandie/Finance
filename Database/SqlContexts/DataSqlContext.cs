@@ -34,7 +34,7 @@ namespace Database.SqlContexts
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
-                new MySqlCommand("SELECT ID, NAME, LASTNAME FROM USER WHERE EMAIL = @email AND PASSWORD = @password",
+                new MySqlCommand("SELECT ID, NAME, LASTNAME FROM USER WHERE EMAIL = @email AND PASSWORD = @password AND Active = 1",
                     connection) {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@email", email));
@@ -69,7 +69,7 @@ namespace Database.SqlContexts
             var bankAccounts =  new List<Balance>();
 
             MySqlConnection conneciton = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = @userId", conneciton)
+            MySqlCommand command = new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = @userId AND Active = 1", conneciton)
                 { CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@userId", userId));
@@ -94,7 +94,7 @@ namespace Database.SqlContexts
         {
             var payments = new List<IPayment>();
             MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = @userId", connection)
+            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = @userId AND Active = 1", connection)
                 {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@userId", userId));
