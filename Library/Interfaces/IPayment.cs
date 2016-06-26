@@ -10,18 +10,16 @@ namespace Library.Interfaces
 
         string Name { get; }
 
-        PaymentType PaymentType { get; }
-
         decimal Amount { get; }
+
+        PaymentType PaymentType { get; }
 
         List<Transaction> AllTransactions { get; }
 
-        bool MayAddPayment { get; }
+        void AddTransactions(List<Transaction> transactions);
 
         decimal GetSum();
 
         decimal GetTotalAmount();
-
-        void AddTransactions(List<Transaction> transactions);
     }
 }

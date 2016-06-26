@@ -6,8 +6,6 @@ namespace Library.Classes
 {
     public class MonthlyIncome : Payment, IPayment
     {
-        public bool MayAddPayment => true;
-
         public MonthlyIncome(int id, string name, decimal amount, PaymentType paymentType) : base(id, name, amount, paymentType)
         {
             
