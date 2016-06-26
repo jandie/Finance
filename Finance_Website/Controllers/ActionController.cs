@@ -152,23 +152,23 @@ namespace Finance_Website.Controllers
 
                     if (payment is MonthlyBill)
                     {
-                        RedirectToAction("ChangeBalance", "Manage", new {id = balance.Id, name = balance.Name, balanceAmount = balance.BalanceAmount - amount});
+                        ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount - amount);
                     }
                     else if (payment is MonthlyIncome)
                     {
-                        RedirectToAction("ChangeBalance", "Manage", new { id = balance.Id, name = balance.Name, balanceAmount = balance.BalanceAmount + amount });
+                        ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount + amount);
                     }
 
-                    Session["Message"] = "Transaction was added successfully.";
+                    Session["Message"] = "Quick transaction was added successfully.";
                 }
                 else
                 {
-                    Session["Exception"] = "Transaction was not added successfully.";
+                    Session["Exception"] = "Quick transaction was not added successfully.";
                 }
             }
             catch (Exception)
             {
-                Session["Exception"] = "Transaction was not added successfully.";
+                Session["Exception"] = "Quick transaction was not added successfully.";
             }
 
             return RedirectToAction("Index", "Account");
