@@ -37,7 +37,7 @@ namespace Repository
             {
                 return _context.CreateUser(name, lastName, email, password);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

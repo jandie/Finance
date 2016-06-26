@@ -22,7 +22,16 @@ namespace Database.SqlContexts
         public void DeletePayment(int id)
         {
             MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("DELETE FROM PAYMENT WHERE ID = @id", connection)
+            MySqlCommand command = new MySqlCommand("DELETE FROM TRANSACTION WHERE Payment_Id = @id", connection)
+            {
+                CommandType = CommandType.Text
+            };
+
+            command.Parameters.Add(new MySqlParameter("@id", id));
+
+            command.ExecuteNonQuery();
+
+            command = new MySqlCommand("DELETE FROM PAYMENT WHERE ID = @id", connection)
             {
                 CommandType = CommandType.Text
             };

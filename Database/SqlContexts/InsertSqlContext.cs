@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Globalization;
 using Database.Interfaces;
 using Library.Enums;
@@ -45,13 +46,14 @@ namespace Database.SqlContexts
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "INSERT INTO TRANSACTION (PAYMENT_ID, AMOUNT, DESCRIPTION) VALUES(@paymentId, @amount, @description)",
+                    "INSERT INTO TRANSACTION (PAYMENT_ID, AMOUNT, DESCRIPTION, DateAdded) VALUES(@paymentId, @amount, @description, @dateAdded)",
                     connection)
                 {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@paymentId", paymentId));
             command.Parameters.Add(new MySqlParameter("@amount", amount.ToString(CultureInfo.InvariantCulture)));
             command.Parameters.Add(new MySqlParameter("@description", description));
+            command.Parameters.Add(new MySqlParameter("@dateAdded", DateTime.Now.ToString("yyyy-MM-dd")));
 
             command.ExecuteNonQuery();
         }

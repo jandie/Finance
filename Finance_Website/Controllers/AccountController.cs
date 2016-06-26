@@ -114,7 +114,7 @@ namespace Finance_Website.Controllers
 
             else
             {
-                User user = DataRepository.Instance.CreateUser(password, name, lastName, email);
+                User user = DataRepository.Instance.CreateUser(name, lastName, email, password);
 
                 if (user == null)
                 {

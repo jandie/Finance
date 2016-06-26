@@ -84,7 +84,8 @@ namespace Finance_Website.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            Session["LastTab"] = lastTab;
+            if (string.IsNullOrWhiteSpace(Session["LastTab"] as string))
+                Session["LastTab"] = lastTab;
 
             try
             {
@@ -178,7 +179,8 @@ namespace Finance_Website.Controllers
             if (user == null)
                 return RedirectToAction("Login", "Account");
 
-            Session["LastTab"] = lastTab;
+            if (string.IsNullOrWhiteSpace(Session["LastTab"] as string))
+                Session["LastTab"] = lastTab;
 
             try
             {
@@ -270,8 +272,6 @@ namespace Finance_Website.Controllers
         [HttpGet]
         public ActionResult DeleteTransaction(int id, bool quick = false)
         {
-            string paymentType = null;
-
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
 
@@ -281,8 +281,6 @@ namespace Finance_Website.Controllers
             try
             {
                 _payment = user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
-
-                paymentType = _payment.PaymentType.ToString();
 
                 Transaction transaction = _payment.AllTransactions.Find(t => t.Id == id);
 

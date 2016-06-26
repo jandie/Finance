@@ -12,6 +12,7 @@
                     <div class="col-md-4">
                         @using (Html.BeginForm("AddBalance", "Action"))
                         {
+                            <input type="hidden" class="form-control" name="lastTab" aria-describedby="basic-addon3" value="1">
                             <div class="form-group">
                                 <label for="name">Name:</label>
                                 <div class="input-group">

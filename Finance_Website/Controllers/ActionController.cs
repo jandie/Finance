@@ -11,13 +11,15 @@ namespace Finance_Website.Controllers
 {
     public class ActionController : Controller
     {
-        public ActionResult AddBalance(string name, decimal balance)
+        public ActionResult AddBalance(string name, decimal balance, string lastTab = null)
         {
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
 
             if (user == null)
                 return RedirectToAction("Login", "Account");
+
+            Session["LastTab"] = lastTab;
 
             try
             {

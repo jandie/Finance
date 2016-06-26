@@ -17,7 +17,7 @@ namespace Database.SqlContexts
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "INSERT INTO \"USER\" (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (@name, @lastName, @email, @password)",
+                    "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (@name, @lastName, @email, @password)",
                     connection) {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@name", name));
@@ -42,7 +42,12 @@ namespace Database.SqlContexts
 
             MySqlDataReader reader = command.ExecuteReader();
 
-            if (!reader.Read()) throw new WrongUsernameOrPasswordException();
+            if (!reader.Read())
+            {
+                reader.Close();
+
+                throw new WrongUsernameOrPasswordException();
+            }
 
             int id = reader.GetInt32(0);
             string name = reader.GetString(1);
@@ -128,10 +133,12 @@ namespace Database.SqlContexts
             var transactions = new List<Transaction>();
 
             MySqlConnection connecion = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId", connecion)
+            MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId " +
+                                                    "AND Active = 1 AND DateAdded LIKE '%____-' || @month || '-__%'", connecion)
                 {CommandType =  CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@paymentId", payment.Id));
+            command.Parameters.Add(new MySqlParameter("@month", DateTime.Now.ToString("MM")));
 
             MySqlDataReader reader = command.ExecuteReader();
 
