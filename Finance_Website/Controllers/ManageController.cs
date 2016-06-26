@@ -40,9 +40,8 @@ namespace Finance_Website.Controllers
 
             return View();
         }
-
-        [HttpPost]
-        public ActionResult Balance(int id, string name, decimal balanceAmount)
+        
+        public ActionResult ChangeBalance(int id, string name, decimal balanceAmount)
         {
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);
@@ -137,9 +136,8 @@ namespace Finance_Website.Controllers
 
             return View();
         }
-
-        [HttpPost]
-        public ActionResult Payment(int id, string name, decimal amount)
+        
+        public ActionResult ChangePayment(int id, string name, decimal amount)
         {
             User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
                 true, true, true);

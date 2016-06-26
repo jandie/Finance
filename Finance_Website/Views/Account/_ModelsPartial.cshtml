@@ -1,4 +1,6 @@
-﻿<div class="modal fade" id="AddBalanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+﻿@using Library.Classes
+@using Library.Interfaces
+<div class="modal fade" id="AddBalanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -102,6 +104,68 @@
                                 <label for="incomeName">Name:</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="incomeName" name="name" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount">Amount:</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    Add
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="QuickTransaction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add quick transaction</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        @using (Html.BeginForm("AddQuickTransaction", "Action"))
+                        {
+                            <div class="form-group">
+                                <label for="balance">Balance:</label>
+                                <select class="form-control" name="balanceId" id="balance">
+                                    @foreach (Balance balance in (ViewBag.User as User).Balances)
+                                    {
+                                        <option value="@balance.Id">@balance.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="payent">Bill/ income:</label>
+                                <select class="form-control" name="paymentId" id="payent">
+                                    @foreach (MonthlyBill payment in (ViewBag.User as User).Payments.OfType<MonthlyBill>())
+                                    {
+                                        <option value="@payment.Id">@payment.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">Description:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="description" name="description" aria-describedby="basic-addon3">
                                 </div>
                             </div>
 

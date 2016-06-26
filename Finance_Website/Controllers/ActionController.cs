@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
 using Library.Classes;
 using Library.Enums;
+using Library.Interfaces;
 using Repository;
 
 namespace Finance_Website.Controllers
@@ -93,6 +94,7 @@ namespace Finance_Website.Controllers
             try
             {
                 ViewBag.PaymentId = paymentId;
+                ViewBag.PaymentName = user.Payments.Find(p => p.Id == paymentId).Name;
             }
             catch (Exception)
             {
@@ -126,6 +128,47 @@ namespace Finance_Website.Controllers
             catch (Exception)
             {
                 Session["Exception"] = "Action couldn't be completed.";
+            }
+
+            return RedirectToAction("Index", "Account");
+        }
+
+        public ActionResult AddQuickTransaction(int balanceId, int paymentId, string description, decimal amount)
+        {
+            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
+                true, true, true);
+
+            if (user == null)
+                return RedirectToAction("Login", "Account");
+
+            try
+            {
+                IPayment payment = user.Payments.Find(p => p.Id == paymentId);
+                Balance balance = user.Balances.Find(b => b.Id == balanceId);
+
+                if (payment != null && balance != null)
+                {
+                    InsertRepository.Instance.AddTransaction(paymentId, amount, description);
+
+                    if (payment is MonthlyBill)
+                    {
+                        RedirectToAction("ChangeBalance", "Manage", new {id = balance.Id, name = balance.Name, balanceAmount = balance.BalanceAmount - amount});
+                    }
+                    else if (payment is MonthlyIncome)
+                    {
+                        RedirectToAction("ChangeBalance", "Manage", new { id = balance.Id, name = balance.Name, balanceAmount = balance.BalanceAmount + amount });
+                    }
+
+                    Session["Message"] = "Transaction was added successfully.";
+                }
+                else
+                {
+                    Session["Exception"] = "Transaction was not added successfully.";
+                }
+            }
+            catch (Exception)
+            {
+                Session["Exception"] = "Transaction was not added successfully.";
             }
 
             return RedirectToAction("Index", "Account");

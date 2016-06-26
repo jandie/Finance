@@ -48,9 +48,9 @@ namespace Database.SqlContexts
             string name = reader.GetString(1);
             string lastName = reader.GetString(2);
 
-            User user = new User(id, name, lastName, email);
-
             reader.Close();
+
+            User user = new User(id, name, lastName, email);
 
             if (loadBankAccounts) user.AddBankAccounts(GetBankAccountsOfUser(id)); 
 

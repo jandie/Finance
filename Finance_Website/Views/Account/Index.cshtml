@@ -59,6 +59,9 @@
                                                          Session["LastTab"] = null;
                                                          @active
                                                      }" id="overview">
+                    <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#QuickTransaction">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
 
                     <table class="table table-hover">
                         <thead>
@@ -122,8 +125,6 @@
                                         </button>
                                         <ul class="dropdown-menu">
                                             <li><a href="~/Manage/Balance?id=@balance.Id&lastTab=1">Change</a></li>
-                                            <li role="separator" class="divider"></li>
-                                            <li><a href="~/Manage/DeleteBalance?id=@balance.Id&lastTab=1">Delete</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -168,8 +169,6 @@
                                             <li><a href="~/Manage/Payment?id=@bill.Id&type=Monthly bill&lastTab=2">Manage</a></li>
                                             <li role="separator" class="divider"></li>
                                             <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2">Pay</a></li>
-                                            <li role="separator" class="divider"></li>
-                                            <li><a href="~/Manage/DeletePayment?id=@bill.Id&lastTab=2">Delete</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -216,8 +215,6 @@
                                             <li><a href="~/Manage/Payment?id=@income.Id&type=Monthly income&lastTab=3">Manage</a></li>
                                             <li role="separator" class="divider"></li>
                                             <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3">Pay</a></li>
-                                            <li role="separator" class="divider"></li>
-                                            <li><a href="~/Manage/DeletePayment?id=@income.Id&lastTab=3">Delete</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -232,3 +229,4 @@
 </div>
 
 @Html.Partial("_ModelsPartial")
+
