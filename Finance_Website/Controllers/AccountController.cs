@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
 using Library.Classes;
+using Library.Classes.Language;
 using Library.Exceptions;
 using Repository;
 
@@ -10,6 +11,7 @@ namespace Finance_Website.Controllers
     public class AccountController : Controller
     {
         private User _user;
+        private Language _language;
 
         public void InitializeAction(string lastTab = null)
         {
@@ -20,7 +22,14 @@ namespace Finance_Website.Controllers
 
             _user = Session["User"] as User;
 
-            if (_user == null) throw new WrongUsernameOrPasswordException("Not logged in.");
+            if (_user == null)
+            {
+                if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
+
+                throw new WrongUsernameOrPasswordException(_language.GetText(31));
+            }
+
+            if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
 
             _user = DataRepository.Instance.Login(_user.Email, Session["Password"] as string, true, true, true);
         }
@@ -45,7 +54,7 @@ namespace Finance_Website.Controllers
             }
             catch (Exception)
             {
-                Session["Exception"] = "Kon gegevens niet laden";
+                Session["Exception"] = _language.GetText(32);
             }
 
             return View();
@@ -66,7 +75,7 @@ namespace Finance_Website.Controllers
 
                 if (_user == null)
                 {
-                    Session["Exception"] = "Username or password are not correct";
+                    Session["Exception"] = _language.GetText(33);
 
                     return RedirectToAction("Login");
                 }
@@ -75,7 +84,7 @@ namespace Finance_Website.Controllers
 
                 Session["Password"] = password;
 
-                Session["Message"] = "User logged in";
+                Session["Message"] = _language.GetText(57);
 
                 return RedirectToAction("Index", "Account");
             }
@@ -91,7 +100,7 @@ namespace Finance_Website.Controllers
         {
             Session["User"] = null;
 
-            Session["Message"] = "User logged out";
+            Session["Message"] = _language.GetText(34);
 
             return RedirectToAction("Login", "Account");
         }
@@ -110,25 +119,25 @@ namespace Finance_Website.Controllers
             ViewBag.Email = email;
 
             if (string.IsNullOrWhiteSpace(name))
-                Session["Exception"] = "Name is required";
+                Session["Exception"] = _language.GetText(35);
 
             else if (string.IsNullOrWhiteSpace(lastName))
-                Session["Exception"] = "Lastname is required";
+                Session["Exception"] = _language.GetText(36);
 
             else if (string.IsNullOrWhiteSpace(email))
-                Session["Exception"] = "Email is required";
+                Session["Exception"] = _language.GetText(37);
 
             else if (!RegexUtilities.Instance.IsValidEmail(email))
-                Session["Exception"] = "Email has to be valid";
+                Session["Exception"] = _language.GetText(38);
 
             else if (password.Length < 8)
-                Session["Exception"] = "Password needs to be at least 8 characters long";
+                Session["Exception"] = _language.GetText(39);
 
             else if (password.Contains(" "))
-                Session["Exception"] = "Password may not contain spaces";
+                Session["Exception"] = _language.GetText(40);
 
             else if (password != password2)
-                Session["Exception"] = "The two passwords must be the same";
+                Session["Exception"] = _language.GetText(41);
 
             else
             {
@@ -136,7 +145,7 @@ namespace Finance_Website.Controllers
 
                 if (user == null)
                 {
-                    Session["Exception"] = "User registration failed";
+                    Session["Exception"] = _language.GetText(42);
 
                     return View();
                 }
@@ -145,7 +154,7 @@ namespace Finance_Website.Controllers
 
                 Session["Password"] = password;
 
-                Session["Message"] = "User registered";
+                Session["Message"] = _language.GetText(43);
 
                 return RedirectToAction("Index", "Account");
             }

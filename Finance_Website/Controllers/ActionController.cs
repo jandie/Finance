@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Library.Classes;
+using Library.Classes.Language;
 using Library.Enums;
 using Library.Exceptions;
 using Library.Interfaces;
@@ -12,6 +13,7 @@ namespace Finance_Website.Controllers
     public class ActionController : Controller
     {
         private User _user;
+        private Language _language;
 
         public void InitializeAction(string lastTab = null)
         {
@@ -22,7 +24,14 @@ namespace Finance_Website.Controllers
 
             _user = Session["User"] as User;
 
-            if (_user == null) throw new WrongUsernameOrPasswordException("Not logged in.");
+            if (_user == null)
+            {
+                if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
+
+                throw new WrongUsernameOrPasswordException(_language.GetText(31));
+            }
+
+            if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
 
             _user = DataRepository.Instance.Login(_user.Email, Session["Password"] as string, true, true, true);
         }
@@ -46,11 +55,11 @@ namespace Finance_Website.Controllers
             {
                 InsertRepository.Instance.AddBankAccount(_user.Id, name, balance);
 
-                Session["Message"] = "Balance was added successfully.";
+                Session["Message"] = _language.GetText(44);
             }
             catch (Exception)
             {
-                Session["Exception"] = "Balance couldn't be added";
+                Session["Exception"] = _language.GetText(45);
             }
 
             return RedirectToAction("Index", "Account");
@@ -73,11 +82,11 @@ namespace Finance_Website.Controllers
             {
                 InsertRepository.Instance.AddPayment(_user.Id, name, amount, PaymentType.MonthlyBill);
 
-                Session["Message"] = "Monthly bill was added successfully.";
+                Session["Message"] = _language.GetText(46);
             }
             catch (Exception)
             {
-                Session["Exception"] = "Action couldn't be completed.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");
@@ -100,11 +109,11 @@ namespace Finance_Website.Controllers
             {
                 InsertRepository.Instance.AddPayment(_user.Id, name, amount, PaymentType.MonthlyIncome);
 
-                Session["Message"] = "Monthly income was added successfully.";
+                Session["Message"] = _language.GetText(48);
             }
             catch (Exception)
             {
-                Session["Exception"] = "Action couldn't be completed.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");
@@ -130,7 +139,7 @@ namespace Finance_Website.Controllers
             }
             catch (Exception)
             {
-                Session["Exception"] = "Action couldn't be completed.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return View();
@@ -155,16 +164,16 @@ namespace Finance_Website.Controllers
                 {
                     InsertRepository.Instance.AddTransaction(paymentId, amount, description);
 
-                    Session["Message"] = "Transaction was added successfully.";
+                    Session["Message"] = _language.GetText(49);
                 }
                 else
                 {
-                    Session["Exception"] = "Transaction was not added successfully.";
+                    Session["Exception"] = _language.GetText(47);
                 }
             }
             catch (Exception)
             {
-                Session["Exception"] = "Action couldn't be completed.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");
@@ -201,16 +210,16 @@ namespace Finance_Website.Controllers
                         ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount + amount);
                     }
 
-                    Session["Message"] = "Quick transaction was added successfully.";
+                    Session["Message"] = _language.GetText(50);
                 }
                 else
                 {
-                    Session["Exception"] = "Quick transaction was not added successfully.";
+                    Session["Exception"] = _language.GetText(47);
                 }
             }
             catch (Exception)
             {
-                Session["Exception"] = "Quick transaction was not added successfully.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");

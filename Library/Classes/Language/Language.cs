@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Library.Classes.Language
 {
@@ -26,6 +27,15 @@ namespace Library.Classes.Language
         public void AddTranslation(Translation translation)
         {
             _translations.Add(translation);
+        }
+
+        public string GetText(int translationId)
+        {
+            string translationText = translationId.ToString();
+
+            translationText = _translations.Find(t => t.Id == translationId)?.TranslationText;
+
+            return translationText;
         }
     }
 }

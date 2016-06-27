@@ -219,6 +219,195 @@
             "Verwijder",
             "Delete"
          ]
+      },
+      {
+         "ID":"31",
+         "Translations":[
+            "Niet ingelogd",
+            "Not logged in"
+         ]
+      },
+      {
+         "ID":"32",
+         "Translations":[
+            "Kon gegevens niet laden",
+            "Couldn't load data"
+         ]
+      },
+      {
+         "ID":"33",
+         "Translations":[
+            "Email of wachtwoord klopt niet",
+            "Email or password are not correct"
+         ]
+      },
+      {
+         "ID":"34",
+         "Translations":[
+            "Gebruiker is uitgelogd",
+            "User logged out"
+         ]
+      },
+      {
+         "ID":"35",
+         "Translations":[
+            "Naam is verplicht",
+            "Name is required"
+         ]
+      },
+      {
+         "ID":"36",
+         "Translations":[
+            "Achternaam is verplicht",
+            "Lastname is required"
+         ]
+      },
+      {
+         "ID":"37",
+         "Translations":[
+            "Email is verplicht",
+            "Email is required"
+         ]
+      },
+      {
+         "ID":"38",
+         "Translations":[
+            "Email moet correct zijn",
+            "Email has to be valid"
+         ]
+      },
+      {
+         "ID":"39",
+         "Translations":[
+            "Wachtwoord moet minstens 8 karakters lang zijn",
+            "Password needs to be at least 8 characters long"
+         ]
+      },
+      {
+         "ID":"40",
+         "Translations":[
+            "Wachtwoord mag geen spaties bevatten",
+            "Password may not contain spaces"
+         ]
+      },
+      {
+         "ID":"41",
+         "Translations":[
+            "De twee wachtwoorden moeten hetzelfde zijn",
+            "The two passwords must be the same"
+         ]
+      },
+      {
+         "ID":"42",
+         "Translations":[
+            "Registratie van gebruiker is gefaald",
+            "User registration failed"
+         ]
+      },
+      {
+         "ID":"43",
+         "Translations":[
+            "Gebruiker is geregistreerd",
+            "User registered"
+         ]
+      },
+      {
+         "ID":"44",
+         "Translations":[
+            "Balans was succesvol toegevoegd",
+            "Balance was added successfully"
+         ]
+      },
+      {
+         "ID":"45",
+         "Translations":[
+            "Balans kon niet worden toegevoegd",
+            "Balance couldn't be added"
+         ]
+      },
+      {
+         "ID":"46",
+         "Translations":[
+            "Maandelijkse uitgave was succesvol toegevoegd",
+            "Monthly bill was added successfully"
+         ]
+      },
+      {
+         "ID":"47",
+         "Translations":[
+            "Deze actie kon niet worden afgerond",
+            "Action couldn't be completed."
+         ]
+      },
+      {
+         "ID":"48",
+         "Translations":[
+            "Maandelijks inkomen was succesvol toegevoegd",
+            "Monthly income was added successfully"
+         ]
+      },
+      {
+         "ID":"49",
+         "Translations":[
+            "Transactie is succesvol toegevoegd",
+            "Transaction was added successfully"
+         ]
+      },
+      {
+         "ID":"50",
+         "Translations":[
+            "Snelle transactie was succesvol toegevoegd",
+            "Quick transaction was added successfully"
+         ]
+      },
+      {
+         "ID":"51",
+         "Translations":[
+            "Balans is gewijzigd",
+            "Balance changed"
+         ]
+      },
+      {
+         "ID":"52",
+         "Translations":[
+            "Balans is verwijderd",
+            "Balance deleted"
+         ]
+      },
+      {
+         "ID":"53",
+         "Translations":[
+            "Betaling/ inkomst is gewijzigd",
+            "Payment changed"
+         ]
+      },
+      {
+         "ID":"54",
+         "Translations":[
+            "Betaling/ inkomst is verwijderd",
+            "Payment deleted"
+         ]
+      },
+      {
+         "ID":"55",
+         "Translations":[
+            "Transactie is gewijzigd",
+            "Transaction changed"
+         ]
+      },
+      {
+         "ID":"56",
+         "Translations":[
+            "Transactie is verwijderd",
+            "Transaction deleted"
+         ]
+      },
+      {
+         "ID":"57",
+         "Translations":[
+            "Gebruiker ingelogd",
+            "User logged in"
+         ]
       }
    ]
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Library.Classes;
+using Library.Classes.Language;
 using Library.Exceptions;
 using Library.Interfaces;
 using Repository;
@@ -13,6 +14,7 @@ namespace Finance_Website.Controllers
         private IPayment _payment;
 
         private User _user;
+        private Language _language;
 
         public void InitializeAction(string lastTab = null)
         {
@@ -23,7 +25,14 @@ namespace Finance_Website.Controllers
 
             _user = Session["User"] as User;
 
-            if (_user == null) throw new WrongUsernameOrPasswordException("Not logged in.");
+            if (_user == null)
+            {
+                if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
+
+                throw new WrongUsernameOrPasswordException(_language.GetText(31));
+            }
+
+            if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
 
             _user = DataRepository.Instance.Login(_user.Email, Session["Password"] as string, true, true, true);
         }
@@ -57,7 +66,7 @@ namespace Finance_Website.Controllers
             }
             catch (Exception)
             {
-                Session["Exception"] = "Kon gegevens niet laden";
+                Session["Exception"] = _language.GetText(37);
             }
 
             return View();
@@ -84,16 +93,16 @@ namespace Finance_Website.Controllers
                 {
                     ChangeRepository.Instance.ChangeBalance(id, name, balanceAmount);
 
-                    Session["Message"] = "Balance changed.";
+                    Session["Message"] = _language.GetText(51);
                 }
                 else
                 {
-                    Session["Exception"] = "Balance could not be changed.";
+                    Session["Exception"] = _language.GetText(47);
                 }
             }
             catch (Exception)
             {
-                Session["Exception"] = "Balance could not be changed.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");
@@ -121,16 +130,16 @@ namespace Finance_Website.Controllers
                 {
                     DeleteRepository.Instance.DeleteBalance(id);
 
-                    Session["Message"] = "Balance deleted.";
+                    Session["Message"] = _language.GetText(52);
                 }
                 else
                 {
-                    Session["Exception"] = "Balance could not be deleted.";
+                    Session["Exception"] = _language.GetText(47);
                 }
             }
             catch (Exception)
             {
-                Session["Exception"] = "Balance could not be deleted.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");
@@ -162,7 +171,7 @@ namespace Finance_Website.Controllers
             }
             catch (Exception)
             {
-                Session["Exception"] = "Kon gegevens niet laden";
+                Session["Exception"] = _language.GetText(32);
             }
 
             return View();
@@ -189,16 +198,16 @@ namespace Finance_Website.Controllers
                 {
                     ChangeRepository.Instance.ChangePayment(id, name, amount);
 
-                    Session["Message"] = "Payment changed.";
+                    Session["Message"] = _language.GetText(53);
                 }
                 else
                 {
-                    Session["Exception"] = "Payment could not be changed.";
+                    Session["Exception"] = _language.GetText(47);
                 }
             }
             catch (Exception)
             {
-                Session["Exception"] = "Payment could not be changed.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");
@@ -226,16 +235,16 @@ namespace Finance_Website.Controllers
                 {
                     DeleteRepository.Instance.DeletePayment(_payment.Id);
 
-                    Session["Message"] = "Payment deleted.";
+                    Session["Message"] = _language.GetText(54);
                 }
                 else
                 {
-                    Session["Exception"] = "Payment could not be deleted.";
+                    Session["Exception"] = _language.GetText(47);
                 }
             }
             catch (Exception)
             {
-                Session["Exception"] = "Payment could not be deleted.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");
@@ -271,7 +280,7 @@ namespace Finance_Website.Controllers
             }
             catch (Exception)
             {
-                Session["Exception"] = "Data could not be loaded";
+                Session["Exception"] = _language.GetText(32);
             }
 
             return View();
@@ -301,14 +310,14 @@ namespace Finance_Website.Controllers
                 {
                     ChangeRepository.Instance.ChangeTransaction(id, amount, description);
 
-                    Session["Message"] = "Transaction changed.";
+                    Session["Message"] = _language.GetText(55);
                 }
                 else
-                    Session["Exception"] = "Transaction could not be changed.";
+                    Session["Exception"] = _language.GetText(47);
             }
             catch (Exception)
             {
-                Session["Exception"] = "Transaction could not be changed.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             return RedirectToAction("Payment", "Manage",
@@ -339,14 +348,14 @@ namespace Finance_Website.Controllers
                 {
                     DeleteRepository.Instance.DeleteTransaction(id);
 
-                    Session["Message"] = "Transaction deleted.";
+                    Session["Message"] = _language.GetText(56);
                 }
                 else
-                    Session["Exception"] = "Transaction could not be deleted.";
+                    Session["Exception"] = _language.GetText(47);
             }
             catch (Exception)
             {
-                Session["Exception"] = "Transaction could not be deleted.";
+                Session["Exception"] = _language.GetText(47);
             }
 
             if (quick || _payment == null)
