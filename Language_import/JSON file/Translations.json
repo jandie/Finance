@@ -90,8 +90,8 @@
       {
          "ID":"12",
          "Translations":[
-            "Voorspelling van geld",
-            "Prediction of money"
+            "Aan het einde van de maand",
+            "At the end of the month"
          ]
       },
       {
@@ -407,6 +407,48 @@
          "Translations":[
             "Gebruiker ingelogd",
             "User logged in"
+         ]
+      },
+      {
+         "ID":"58",
+         "Translations":[
+            "Betaal",
+            "Pay"
+         ]
+      },
+      {
+         "ID":"59",
+         "Translations":[
+            "Achternaam",
+            "Lastname"
+         ]
+      },
+      {
+         "ID":"60",
+         "Translations":[
+            "Transactie toevoegen voor",
+            "Add transaction for"
+         ]
+      },
+      {
+         "ID":"61",
+         "Translations":[
+            "Balans beheer",
+            "Balance anagement"
+         ]
+      },
+      {
+         "ID":"62",
+         "Translations":[
+            "Transactie beheer",
+            "Transaction anagement"
+         ]
+      },
+      {
+         "ID":"63",
+         "Translations":[
+            "Waarschuwing!",
+            "Warning!"
          ]
       }
    ]
