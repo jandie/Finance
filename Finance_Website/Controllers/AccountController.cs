@@ -24,12 +24,30 @@ namespace Finance_Website.Controllers
 
             if (_user == null)
             {
-                if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
+                if (!(Session["Language"] is Language))
+                {
+                    _language = LanguageRepository.Instance.LoadLanguage(0);
+
+                    Session["Language"] = _language;
+                }
+                else
+                {
+                    _language = Session["Language"] as Language;
+                }
 
                 throw new WrongUsernameOrPasswordException(_language.GetText(31));
             }
 
-            if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
+            if (!(Session["Language"] is Language))
+            {
+                _language = LanguageRepository.Instance.LoadLanguage(0);
+
+                Session["Language"] = _language;
+            }
+            else
+            {
+                _language = Session["Language"] as Language;
+            }
 
             _user = DataRepository.Instance.Login(_user.Email, Session["Password"] as string, true, true, true);
         }
@@ -63,6 +81,15 @@ namespace Finance_Website.Controllers
         // GET: Account
         public ActionResult Login()
         {
+            try
+            {
+                InitializeAction();
+            }
+            catch (Exception)
+            {
+                // 
+            }
+
             return View();
         }
 
@@ -71,6 +98,8 @@ namespace Finance_Website.Controllers
         {
             try
             {
+                _language = Session["Language"] as Language;
+
                 _user = DataRepository.Instance.Login(email, password, false, false, false);
 
                 if (_user == null)
@@ -98,6 +127,8 @@ namespace Finance_Website.Controllers
 
         public ActionResult Loguit()
         {
+            _language = Session["Language"] as Language;
+
             Session["User"] = null;
 
             Session["Message"] = _language.GetText(34);
@@ -108,12 +139,30 @@ namespace Finance_Website.Controllers
         // GET: Account
         public ActionResult Register()
         {
+            try
+            {
+                InitializeAction();
+            }
+            catch (Exception)
+            {
+                // 
+            }
+
             return View();
         }
 
         [HttpPost]
         public ActionResult Register(string name, string lastName, string email, string password, string password2)
         {
+            try
+            {
+                InitializeAction();
+            }
+            catch (Exception)
+            {
+                // 
+            }
+
             ViewBag.Name = name;
             ViewBag.LastName = lastName;
             ViewBag.Email = email;

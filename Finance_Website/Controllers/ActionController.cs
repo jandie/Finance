@@ -26,12 +26,30 @@ namespace Finance_Website.Controllers
 
             if (_user == null)
             {
-                if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
+                if (!(Session["Language"] is Language))
+                {
+                    _language = LanguageRepository.Instance.LoadLanguage(0);
+
+                    Session["Language"] = _language;
+                }
+                else
+                {
+                    _language = Session["Language"] as Language;
+                }
 
                 throw new WrongUsernameOrPasswordException(_language.GetText(31));
             }
 
-            if (!(Session["Language"] is Language)) _language = LanguageRepository.Instance.LoadLanguage(0);
+            if (!(Session["Language"] is Language))
+            {
+                _language = LanguageRepository.Instance.LoadLanguage(0);
+
+                Session["Language"] = _language;
+            }
+            else
+            {
+                _language = Session["Language"] as Language;
+            }
 
             _user = DataRepository.Instance.Login(_user.Email, Session["Password"] as string, true, true, true);
         }

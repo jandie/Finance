@@ -1,9 +1,11 @@
 ﻿@using Library.Classes
+@using Library.Classes.Language
 @using Library.Interfaces
 
 @{
     IPayment payment = ViewBag.Payment as IPayment;
     List<Transaction> transactions = payment.AllTransactions;
+    Language language = Session["Language"] as Language;
 
     ViewBag.Title = $"{ViewBag.Type} {payment?.Name}";
 }
@@ -18,14 +20,14 @@
             {
                 <input type="hidden" class="form-control" name="id" aria-describedby="basic-addon3" value="@payment.Id">
                 <div class="form-group">
-                    <label for="name">Name:</label>
+                    <label for="name">@language.GetText(19)</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="name" name="name" aria-describedby="basic-addon3" value="@payment.Name" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="balance">Amount:</label>
+                    <label for="balance">@language.GetText(17)</label>
                     <div class="input-group">
                         <input type="number" step="any" class="form-control" id="balance" name="amount" aria-describedby="basic-addon3" value="@payment.Amount" required>
                     </div>
@@ -33,12 +35,12 @@
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">
-                        Change
+                        @language.GetText(2)
                     </button>
                 </div>
 
                 <div class="form-group">
-                    <a class="btn btn-danger" href="~/Manage/DeletePayment?id=@payment.Id" role="button">Delete</a>
+                    <a class="btn btn-danger" href="~/Manage/DeletePayment?id=@payment.Id" role="button">@language.GetText(30)</a>
                 </div>
             }
         </div>
@@ -50,8 +52,8 @@
                  <table class="table table-hover">
                      <thead>
                      <tr>
-                         <th>Amount</th>
-                         <th>Description</th>
+                         <th>@language.GetText(17)</th>
+                         <th>@language.GetText(18)</th>
                          <th></th>
                      </tr>
                      </thead>
@@ -65,12 +67,12 @@
                              <td>
                                  <div class="btn-group">
                                      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                         Actions <span class="caret"></span>
+                                         @language.GetText(29) <span class="caret"></span>
                                      </button>
                                      <ul class="dropdown-menu">
-                                         <li><a href="~/Manage/Transaction?id=@t.Id">Manage</a></li>
+                                         <li><a href="~/Manage/Transaction?id=@t.Id">@language.GetText(2)</a></li>
                                          <li role="separator" class="divider"></li>
-                                         <li><a href="~/Manage/DeleteTransaction?id=@t.Id">Delete</a></li>
+                                         <li><a href="~/Manage/DeleteTransaction?id=@t.Id">@language.GetText(30)</a></li>
                                      </ul>
                                  </div>
                              </td>

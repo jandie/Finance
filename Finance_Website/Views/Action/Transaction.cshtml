@@ -1,6 +1,9 @@
-﻿
+﻿@using Library.Classes.Language
+
 @{
-    ViewBag.Title = $"Add transaction for {ViewBag.PaymentName}";
+    Language language = Session["Language"] as Language;
+
+    ViewBag.Title = $"{language.GetText(60)} {ViewBag.PaymentName}";
 }
 
 <h3>@ViewBag.Title</h3>
@@ -12,14 +15,14 @@
             <input type="hidden" class="form-control" id="paymentId" name="paymentId" aria-describedby="basic-addon3" value="@ViewBag.PaymentId">
 
             <div class="form-group">
-                <label for="description">Description:</label>
+                <label for="description">@language.GetText(18)</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="description" name="description" aria-describedby="basic-addon3">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="amount">Amount:</label>
+                <label for="amount">@language.GetText(17)</label>
                 <div class="input-group">
                     <input type="number" step="any" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3" required>
                 </div>
@@ -27,7 +30,7 @@
 
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">
-                    Add
+                    @language.GetText(1)
                 </button>
             </div>
         }

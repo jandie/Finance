@@ -1,6 +1,9 @@
-﻿
+﻿@using Library.Classes.Language
+
 @{
-    ViewBag.Title = "Register";
+    Language language = Session["Language"] as Language;
+
+    ViewBag.Title = language.GetText(8);
 }
 
 <div class="row">
@@ -10,35 +13,35 @@
         @using (Html.BeginForm())
         {
             <div class="form-group">
-                <label for="name">Naam:</label>
+                <label for="name">@language.GetText(19)</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="name" name="name" aria-describedby="basic-addon3" value="@ViewBag.Name">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="lastName">Achternaam:</label>
+                <label for="lastName">@language.GetText(59)</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="lastName" name="lastName" aria-describedby="basic-addon3" value="@ViewBag.LastName">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="email">Email:</label>
+                <label for="email">@language.GetText(4)</label>
                 <div class="input-group">
                     <input type="text" class="form-control" id="email" name="email" aria-describedby="basic-addon3" value="@ViewBag.Email">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="password">Wachtwoord:</label>
+                <label for="password">@language.GetText(5)</label>
                 <div class="input-group">
                     <input type="password" class="form-control" id="password" name="password" aria-describedby="basic-addon3">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="password">Voer wachtwoord opnieuw in:</label>
+                <label for="password">@language.GetText(5)</label>
                 <div class="input-group">
                     <input type="password" class="form-control" id="password" name="password2" aria-describedby="basic-addon3">
                 </div>
@@ -46,7 +49,7 @@
 
             <div class="form-group">
                 <button type="submit" class="btn btn-default">
-                    Register
+                    @language.GetText(8)
                 </button>
             </div>
         }

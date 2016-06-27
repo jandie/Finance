@@ -1,6 +1,9 @@
 ﻿@using Library.Classes
+@using Library.Classes.Language
 
 @{
+    Language language = Session["Language"] as Language;
+
     ViewBag.Title = "_LoginPartial";
 }
 
@@ -10,16 +13,16 @@
     var user = Session["user"] as User;
 
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink($"{user.Name}'s account", "Index", "Account")</li>
-        <li>@Html.ActionLink("Log uit", "Loguit", "Account")</li>
+        <li>@Html.ActionLink($"{user.Name}'s {language.GetText(9)}", "Index", "Account")</li>
+        <li>@Html.ActionLink(language.GetText(10), "Loguit", "Account")</li>
     </ul>
 
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Log in", "Login", "Account")</li>
-        <li>@Html.ActionLink("Register", "Register", "Account")</li>
+        <li>@Html.ActionLink(language.GetText(3), "Login", "Account")</li>
+        <li>@Html.ActionLink(language.GetText(8), "Register", "Account")</li>
     </ul>
 }
 

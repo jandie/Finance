@@ -1,4 +1,5 @@
 ﻿@using Library.Classes
+@using Library.Classes.Language
 
 @{
     User user = ViewBag.User as User;
@@ -6,7 +7,9 @@
     const string classActive = "Class=active";
     const string active = "active";
 
-    ViewBag.Title = $"{user.Name}'s Overview";
+    Language language = Session["Language"] as Language;
+
+    ViewBag.Title = $"{user.Name}'s {language.GetText(11)}";
 }
 
 <h3>@ViewBag.Title</h3>
@@ -16,7 +19,7 @@
         <table class="table table-hover">
             <tbody>
                 <tr>
-                    <th>Amount of money at the end of the month</th>
+                    <th>@language.GetText(12)</th>
                 </tr>
                 <tr>
                     <td>@user.Prediction.ToString("0.00")</td>
@@ -35,19 +38,19 @@
                                         {
                                             Session["LastTab"] = null;
                                             @classActive
-                                        }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Details</a></li>
+                                        }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">@language.GetText(13)</a></li>
                 <li role="presentation" @if (Session["LastTab"]?.ToString() == "1")
                                         {
                                             @classActive
-                                        }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">Balances</a></li>
+                                        }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">@language.GetText(14)</a></li>
                 <li role="presentation" @if (Session["LastTab"]?.ToString() == "2")
                                         {
                                             @classActive
-                                        }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">Monthly bills</a></li>
+                                        }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">@language.GetText(15)</a></li>
                 <li role="presentation" @if (Session["LastTab"]?.ToString() == "3")
                                         {
                                             @classActive
-                                        }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">Monthly income</a></li>
+                                        }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">@language.GetText(16)</a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -58,15 +61,15 @@
                                                          @active
                                                      }" id="overview">
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#QuickTransaction">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
 
                     <table class="table table-hover">
                         <thead>
                         <tr>
                             <th></th>
-                            <th>Amount</th>
-                            <th>Description</th>
+                            <th>@language.GetText(17)</th>
+                            <th>@language.GetText(18)</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -87,11 +90,11 @@
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Actions <span class="caret"></span>
+                                            @language.GetText(29) <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Transaction?id=@transaction.Id"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>Edit</a></li>
-                                            <li><a href="~/Manage/DeleteTransaction?id=@transaction.Id&quick=true"><span class="glyphicon glyphicon-trash icon-content" aria-hidden="true"></span>Delete</a></li>
+                                            <li><a href="~/Manage/Transaction?id=@transaction.Id"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
+                                            <li><a href="~/Manage/DeleteTransaction?id=@transaction.Id&quick=true"><span class="glyphicon glyphicon-trash icon-content" aria-hidden="true"></span>@language.GetText(30)</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -109,14 +112,14 @@
                                                      }" id="balances">
 
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddBalanceModal">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
 
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Balance</th>
+                            <th>@language.GetText(19)</th>
+                            <th>@language.GetText(21)</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -130,10 +133,10 @@
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Actions <span class="caret"></span>
+                                            @language.GetText(29) <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Balance?id=@balance.Id&lastTab=1"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>Edit</a></li>
+                                            <li><a href="~/Manage/Balance?id=@balance.Id&lastTab=1"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -149,15 +152,15 @@
                                                          @active
                                                      }" id="monthlybills">
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyBill">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
 
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Amount</th>
-                            <th>Paid</th>
+                            <th>@language.GetText(19)</th>
+                            <th>@language.GetText(17)</th>
+                            <th>@language.GetText(20)</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -172,12 +175,12 @@
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Actions <span class="caret"></span>
+                                            @language.GetText(29) <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Payment?id=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>Edit</a></li>
+                                            <li><a href="~/Manage/Payment?id=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
                                             <li role="separator" class="divider"></li>
-                                            <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>Pay</a></li>
+                                            <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>@language.GetText(58)</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -195,15 +198,15 @@
 
 
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyIncome">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
 
                     <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Amount</th>
-                            <th>Paid</th>
+                            <th>@language.GetText(19)</th>
+                            <th>@language.GetText(17)</th>
+                            <th>@language.GetText(20)</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -218,12 +221,12 @@
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Actions <span class="caret"></span>
+                                            @language.GetText(29) <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Payment?id=@income.Id&lastTab=3"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>Edit</a></li>
+                                            <li><a href="~/Manage/Payment?id=@income.Id&lastTab=3"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
                                             <li role="separator" class="divider"></li>
-                                            <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>Pay</a></li>
+                                            <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>@language.GetText(58)</a></li>
                                         </ul>
                                     </div>
                                 </td>

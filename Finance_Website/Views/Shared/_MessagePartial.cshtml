@@ -1,8 +1,13 @@
-﻿@if (Session["Exception"] != null)
+﻿@using Library.Classes.Language
+@{
+    Language language = Session["Language"] as Language;
+}
+
+@if (Session["Exception"] != null)
 {
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>Warning!</strong> @Session["Exception"].ToString()
+        <strong>@language.GetText(63)</strong> @Session["Exception"].ToString()
     </div>
 }
 
