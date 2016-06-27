@@ -1,7 +1,13 @@
 {
    "Languages":[
-      "NL",
-      "EN"
+      {
+         "Abbrevation":"NL",
+         "Name":"Nederlands"
+      },
+      {
+         "Abbrevation":"EN",
+         "Name":"English"
+      }
    ],
    "Translations":[
       {
