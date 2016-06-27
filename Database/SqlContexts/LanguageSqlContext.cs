@@ -91,6 +91,8 @@ namespace Database.SqlContexts
 
             reader.Close();
 
+            LoadTranslations(languageId).ForEach(t => language.AddTranslation(t));
+
             return language;
         }
 

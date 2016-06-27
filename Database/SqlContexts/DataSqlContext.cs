@@ -128,17 +128,16 @@ namespace Database.SqlContexts
             return payments;
         }
 
-        public List<Transaction> GetTransactionsOfPayment(IPayment payment)
+        public List<Transaction> GetTransactionsOfPayment(IPayment payment) //bug
         {
             var transactions = new List<Transaction>();
 
             MySqlConnection connecion = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId " +
-                                                    "AND Active = 1 AND DateAdded LIKE '%____-' || @month || '-__%'", connecion)
+            MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId AND DateAdded LIKE @month AND Active = 1", connecion)
                 {CommandType =  CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@paymentId", payment.Id));
-            command.Parameters.Add(new MySqlParameter("@month", DateTime.Now.ToString("MM")));
+            command.Parameters.Add(new MySqlParameter("@month", $"%-{DateTime.Now.ToString("MM")}-%" ));
 
             MySqlDataReader reader = command.ExecuteReader();
 
