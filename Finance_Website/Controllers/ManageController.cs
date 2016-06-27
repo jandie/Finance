@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Finance_Website.Models.Utilities;
 using Library.Classes;
+using Library.Exceptions;
 using Library.Interfaces;
 using Repository;
 
@@ -11,6 +11,22 @@ namespace Finance_Website.Controllers
     public class ManageController : Controller
     {
         private IPayment _payment;
+
+        private User _user;
+
+        public void InitializeAction(string lastTab = null)
+        {
+            if (string.IsNullOrWhiteSpace(Session["LastTab"] as string))
+                Session["LastTab"] = lastTab;
+
+            _user = null;
+
+            _user = Session["User"] as User;
+
+            if (_user == null) throw new WrongUsernameOrPasswordException("Not logged in.");
+
+            _user = DataRepository.Instance.Login(_user.Email, Session["Password"] as string, true, true, true);
+        }
 
         // GET: Manage
         public ActionResult Index()
@@ -23,18 +39,21 @@ namespace Finance_Website.Controllers
         [HttpGet]
         public ActionResult Balance(int id = 0, string lastTab = null)
         {
-            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
-                true, true, true);
+            try
+            {
+                InitializeAction(lastTab);
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null)
                 return RedirectToAction("Login", "Account");
-
-            Session["LastTab"] = lastTab;
+            }
 
             try
             {
-                ViewBag.User = user;
-                ViewBag.Balance = user.Balances.Find(b => b.Id == id);
+                ViewBag.User = _user;
+                ViewBag.Balance = _user.Balances.Find(b => b.Id == id);
             }
             catch (Exception)
             {
@@ -46,15 +65,20 @@ namespace Finance_Website.Controllers
         
         public ActionResult ChangeBalance(int id, string name, decimal balanceAmount)
         {
-            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
-                true, true, true);
+            try
+            {
+                InitializeAction();
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null)
                 return RedirectToAction("Login", "Account");
+            }
 
             try
             {
-                Balance balance = user.Balances.Find(b => b.Id == id);
+                Balance balance = _user.Balances.Find(b => b.Id == id);
 
                 if (balance != null)
                 {
@@ -78,18 +102,20 @@ namespace Finance_Website.Controllers
         [HttpGet]
         public ActionResult DeleteBalance(int id, string lastTab = null)
         {
-            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
-                true, true, true);
+            try
+            {
+                InitializeAction(lastTab);
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null)
                 return RedirectToAction("Login", "Account");
-
-            if (string.IsNullOrWhiteSpace(Session["LastTab"] as string))
-                Session["LastTab"] = lastTab;
+            }
 
             try
             {
-                Balance balance = user.Balances.Find(b => b.Id == id);
+                Balance balance = _user.Balances.Find(b => b.Id == id);
 
                 if (balance != null)
                 {
@@ -117,17 +143,20 @@ namespace Finance_Website.Controllers
         [HttpGet]
         public ActionResult Payment(int id = 0, string lastTab = null)
         {
-            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
-                true, true, true);
+            try
+            {
+                InitializeAction(lastTab);
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null)
                 return RedirectToAction("Login", "Account");
-
-            Session["LastTab"] = lastTab;
+            }
 
             try
             {
-                _payment = user.Payments.Find(p => p.Id == id);
+                _payment = _user.Payments.Find(p => p.Id == id);
 
                 ViewBag.Payment = _payment;
             }
@@ -141,15 +170,20 @@ namespace Finance_Website.Controllers
         
         public ActionResult ChangePayment(int id, string name, decimal amount)
         {
-            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
-                true, true, true);
+            try
+            {
+                InitializeAction();
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null)
                 return RedirectToAction("Login", "Account");
+            }
 
             try
             {
-                IPayment payment = user.Payments.Find(p => p.Id == id);
+                IPayment payment = _user.Payments.Find(p => p.Id == id);
 
                 if (payment != null)
                 {
@@ -173,18 +207,20 @@ namespace Finance_Website.Controllers
         [HttpGet]
         public ActionResult DeletePayment(int id, string lastTab = null)
         {
-            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
-                true, true, true);
+            try
+            {
+                InitializeAction(lastTab);
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null)
                 return RedirectToAction("Login", "Account");
-
-            if (string.IsNullOrWhiteSpace(Session["LastTab"] as string))
-                Session["LastTab"] = lastTab;
+            }
 
             try
             {
-                _payment = user.Payments.Find(p => p.Id == id);
+                _payment = _user.Payments.Find(p => p.Id == id);
 
                 if (_payment != null)
                 {
@@ -212,15 +248,20 @@ namespace Finance_Website.Controllers
         [HttpGet]
         public ActionResult Transaction(int id = 0)
         {
-            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
-                true, true, true);
+            try
+            {
+                InitializeAction();
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null)
                 return RedirectToAction("Login", "Account");
+            }
 
             try
             {
-                _payment = user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
+                _payment = _user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
 
                 Transaction transaction =_payment.AllTransactions.Find(t => t.Id == id);
 
@@ -239,15 +280,20 @@ namespace Finance_Website.Controllers
         [HttpPost]
         public ActionResult Transaction(int id, decimal amount, string description)
         {
-            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
-                true, true, true);
+            try
+            {
+                InitializeAction();
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null)
                 return RedirectToAction("Login", "Account");
+            }
 
             try
             {
-                _payment = user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
+                _payment = _user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
 
                 Transaction transaction =_payment.AllTransactions.Find(t => t.Id == id);
 
@@ -272,15 +318,20 @@ namespace Finance_Website.Controllers
         [HttpGet]
         public ActionResult DeleteTransaction(int id, bool quick = false)
         {
-            User user = DataRepository.Instance.Login((Session["User"] as User)?.Email, Session["Password"] as string,
-                true, true, true);
+            try
+            {
+                InitializeAction();
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null)
                 return RedirectToAction("Login", "Account");
+            }
 
             try
             {
-                _payment = user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
+                _payment = _user.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
 
                 Transaction transaction = _payment.AllTransactions.Find(t => t.Id == id);
 

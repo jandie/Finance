@@ -9,21 +9,39 @@ namespace Finance_Website.Controllers
 {
     public class AccountController : Controller
     {
+        private User _user;
+
+        public void InitializeAction(string lastTab = null)
+        {
+            if (string.IsNullOrWhiteSpace(Session["LastTab"] as string))
+                Session["LastTab"] = lastTab;
+
+            _user = null;
+
+            _user = Session["User"] as User;
+
+            if (_user == null) throw new WrongUsernameOrPasswordException("Not logged in.");
+
+            _user = DataRepository.Instance.Login(_user.Email, Session["Password"] as string, true, true, true);
+        }
+
         public ActionResult Index()
         {
-            User user = Session["User"] as User;
+            try
+            {
+                InitializeAction();
+            }
+            catch (WrongUsernameOrPasswordException x)
+            {
+                Session["Exception"] = x.Message;
 
-            if (user == null) return RedirectToAction("Login", "Account");
-
-            user = DataRepository.Instance.Login(user.Email, Session["Password"] as string, true, true, true);
-
-            if (user == null)
                 return RedirectToAction("Login", "Account");
+            }
 
             try
             {
-                ViewBag.User = user;
-                Session["User"] = user;
+                ViewBag.User = _user;
+                Session["User"] = _user;
             }
             catch (Exception)
             {
@@ -42,18 +60,18 @@ namespace Finance_Website.Controllers
         [HttpPost]
         public ActionResult Login(string email, string password)
         {
+            _user = DataRepository.Instance.Login(email, password, false, false, false);
+
             try
             {
-                User user = DataRepository.Instance.Login(email, password, false, false, false);
-
-                if (user == null)
+                if (_user == null)
                 {
                     Session["Exception"] = "Username or password are not correct";
 
                     return RedirectToAction("Login");
                 }
 
-                Session["User"] = user;
+                Session["User"] = _user;
 
                 Session["Password"] = password;
 

@@ -1,7 +1,9 @@
-DROP TABLE Transaction CASCADE;
-DROP TABLE Payment CASCADE;
-DROP TABLE BankAccount CASCADE;
-DROP TABLE User CASCADE;
+DROP TABLE Transaction;
+DROP TABLE Payment;
+DROP TABLE BankAccount;
+DROP TABLE User;
+DROP TABLE Language;
+DROP TABLE Currency;
 
 CREATE TABLE User (
     Id INT NOT NULL AUTO_INCREMENT,
@@ -43,6 +45,29 @@ CREATE TABLE Transaction (
     Active INT DEFAULT 1,
     PRIMARY KEY (Id),
     FOREIGN KEY (Payment_Id) REFERENCES Payment(Id)
+);
+
+CREATE TABLE Language(
+	Id INT NOT NULL AUTO_INCREMENT,
+    Abbrevation VARCHAR(3) NOT NULL,
+    Name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (Id)
+);
+
+CREATE TABLE Translation(
+	Id INT NOT NULL AUTO_INCREMENT,
+    Language_Id INT NOT NULL,
+    Translation VARCHAR(255) NOT NULL,
+    PRIMARY KEY (Id),
+    FOREIGN KEY (Language_Id) REFERENCES Language(Id)
+);
+
+CREATE TABLE Currency(
+	Id INT NOT NULL AUTO_INCREMENT,
+    Abbrevation VARCHAR(3) NOT NULL,
+    Name VARCHAR(255) NOT NULL,
+    Html VARCHAR(255) NOT NULL,
+    PRIMARY KEY (Id)
 );
 
 INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD) VALUES ('Jandie', 'Hendriks', 'jandie@live.nl', 'test');

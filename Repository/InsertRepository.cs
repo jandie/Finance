@@ -2,7 +2,6 @@
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Enums;
-using Library.Interfaces;
 
 namespace Repository
 {
