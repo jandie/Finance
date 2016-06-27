@@ -1,0 +1,218 @@
+{
+   "Languages":[
+      "NL",
+      "EN"
+   ],
+   "Translations":[
+      {
+         "ID":"1",
+         "Translations":[
+            "Toevoegen",
+            "Add"
+         ]
+      },
+      {
+         "ID":"2",
+         "Translations":[
+            "Aanpassen",
+            "Edit"
+         ]
+      },
+      {
+         "ID":"3",
+         "Translations":[
+            "Inloggen",
+            "Log in"
+         ]
+      },
+      {
+         "ID":"4",
+         "Translations":[
+            "Email",
+            "Email"
+         ]
+      },
+      {
+         "ID":"5",
+         "Translations":[
+            "Wachtwoord",
+            "Password"
+         ]
+      },
+      {
+         "ID":"6",
+         "Translations":[
+            "Geen account?",
+            "No Account?"
+         ]
+      },
+      {
+         "ID":"7",
+         "Translations":[
+            "Start hier",
+            "Start here"
+         ]
+      },
+      {
+         "ID":"8",
+         "Translations":[
+            "Registreren",
+            "Register"
+         ]
+      },
+      {
+         "ID":"9",
+         "Translations":[
+            "Account",
+            "Account"
+         ]
+      },
+      {
+         "ID":"10",
+         "Translations":[
+            "Log uit",
+            "Log out"
+         ]
+      },
+      {
+         "ID":"11",
+         "Translations":[
+            "Overzicht",
+            "Overview"
+         ]
+      },
+      {
+         "ID":"12",
+         "Translations":[
+            "Voorspelling van geld",
+            "Prediction of money"
+         ]
+      },
+      {
+         "ID":"13",
+         "Translations":[
+            "Details",
+            "Details"
+         ]
+      },
+      {
+         "ID":"14",
+         "Translations":[
+            "Balansen",
+            "Balances"
+         ]
+      },
+      {
+         "ID":"15",
+         "Translations":[
+            "Maandelijkse uitgaven",
+            "Monthly bills"
+         ]
+      },
+      {
+         "ID":"16",
+         "Translations":[
+            "Maandelijks inkomen",
+            "Monthly income"
+         ]
+      },
+      {
+         "ID":"17",
+         "Translations":[
+            "Hoeveelheid",
+            "Amount"
+         ]
+      },
+      {
+         "ID":"18",
+         "Translations":[
+            "Beschrijving",
+            "Description"
+         ]
+      },
+      {
+         "ID":"19",
+         "Translations":[
+            "Naam",
+            "Name"
+         ]
+      },
+      {
+         "ID":"20",
+         "Translations":[
+            "Betaald",
+            "Paid"
+         ]
+      },
+      {
+         "ID":"21",
+         "Translations":[
+            "Balans",
+            "Balance"
+         ]
+      },
+      {
+         "ID":"22",
+         "Translations":[
+            "Huidig balans",
+            "Current balance"
+         ]
+      },
+      {
+         "ID":"23",
+         "Translations":[
+            "Uitgave/ inkomen",
+            "Bill/ income"
+         ]
+      },
+      {
+         "ID":"24",
+         "Translations":[
+            "Sluit",
+            "Close"
+         ]
+      },
+      {
+         "ID":"25",
+         "Translations":[
+            "Snelle transactie toevoegen",
+            "Add quick transaction"
+         ]
+      },
+      {
+         "ID":"26",
+         "Translations":[
+            "Balans toevoegen",
+            "Add balance"
+         ]
+      },
+      {
+         "ID":"27",
+         "Translations":[
+            "Maandelijks uitgaven toevoegen",
+            "Add monthly bill"
+         ]
+      },
+      {
+         "ID":"28",
+         "Translations":[
+            "Maandelijks inkomst toevoegen",
+            "Add monthly income"
+         ]
+      },
+      {
+         "ID":"29",
+         "Translations":[
+            "Acties",
+            "Actions"
+         ]
+      },
+      {
+         "ID":"30",
+         "Translations":[
+            "Verwijder",
+            "Delete"
+         ]
+      }
+   ]
+}
