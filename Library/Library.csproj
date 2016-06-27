@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Balance.cs" />
+    <Compile Include="Classes\Language\Language.cs" />
+    <Compile Include="Classes\Language\Translation.cs" />
     <Compile Include="Classes\MonthlyBill.cs" />
     <Compile Include="Classes\Payment.cs" />
     <Compile Include="Classes\MonthlyIncome.cs" />
