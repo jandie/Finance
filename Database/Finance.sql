@@ -52,17 +52,17 @@ CREATE TABLE Transaction (
 );
 
 CREATE TABLE Language (
-    Id INT NOT NULL AUTO_INCREMENT,
+    Id INT NOT NULL,
     Abbrevation VARCHAR(3) NOT NULL,
     Name VARCHAR(255) NOT NULL,
     PRIMARY KEY (Id)
 );
 
 CREATE TABLE Translation (
-    Id INT NOT NULL AUTO_INCREMENT,
+    Id INT NOT NULL,
     Language_Id INT NOT NULL,
     Translation VARCHAR(255) NOT NULL,
-    PRIMARY KEY (Id),
+    PRIMARY KEY (Id, Language_Id),
     FOREIGN KEY (Language_Id)
         REFERENCES Language (Id)
 );
