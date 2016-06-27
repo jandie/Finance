@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Library.Classes.Language;
 using Newtonsoft.Json.Linq;
+using Repository;
 
 namespace Language_import
 {
@@ -10,6 +12,8 @@ namespace Language_import
     {
         private static void Main(string[] args)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             const string path = "C:\\Users\\Jandie\\BitTorrent Sync\\Bsync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
             string json = "";
 
@@ -22,6 +26,8 @@ namespace Language_import
                     json += line;
                     Console.WriteLine(line);
                 }
+
+                Console.WriteLine($"File read! ({stopwatch.ElapsedMilliseconds}ms)");
             }
             catch (Exception e)
             {
@@ -29,13 +35,13 @@ namespace Language_import
                 Console.WriteLine(e.Message);
             }
 
+            List<Language> languages = new List<Language>();
+
             try
             {
                 dynamic parsedData = JObject.Parse(json);
 
                 int languageId = 0;
-
-                List<Language> languages = new List<Language>();
 
                 foreach (dynamic language in parsedData.Languages)
                 {
@@ -58,12 +64,32 @@ namespace Language_import
                         languages[i].AddTranslation(new Translation(Convert.ToInt32(translation.ID), translation.Translations[i].ToString()));
                     }
                 }
+
+                Console.WriteLine($"Json file converted! ({stopwatch.ElapsedMilliseconds}ms)");
             }
             catch (Exception e)
             {
                 Console.WriteLine("The file could not be converted into library:");
                 Console.WriteLine(e.Message);
             }
+
+            try
+            {
+                LanguageRepository.Instance.AddLanguages(languages);
+
+                Console.WriteLine($"Languages saved to database! ({stopwatch.ElapsedMilliseconds}ms)");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The languages could not be saved to the database.");
+                Console.WriteLine(e.Message);
+            }
+
+            stopwatch.Stop();
+
+            Console.WriteLine($"Done! ({stopwatch.ElapsedMilliseconds}ms)");
+
+            Console.ReadLine();
         }
     }
 }

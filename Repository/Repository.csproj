@@ -45,6 +45,7 @@
     <Compile Include="DeleteRepository.cs" />
     <Compile Include="Exceptions\DatabaseException.cs" />
     <Compile Include="InsertRepository.cs" />
+    <Compile Include="LanguageRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

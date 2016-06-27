@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using Database.Interfaces;
 using Library.Classes.Language;
 using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    public class LanguageSqlContext
+    public class LanguageSqlContext : ILanguageContext
     {
         public void Clean()
         {
@@ -56,7 +57,7 @@ namespace Database.SqlContexts
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
-                new MySqlCommand("INSERT INTO LANGUAGE (ID, LANGUAGE_ID, TRANSLATION) VALUES (@Id, @languageId, @TranslationText)",
+                new MySqlCommand("INSERT INTO TRANSLATION (ID, LANGUAGE_ID, TRANSLATION) VALUES (@Id, @languageId, @TranslationText)",
                     connection)
                 { CommandType = CommandType.Text };
 
