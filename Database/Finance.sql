@@ -2,6 +2,7 @@ DROP TABLE Transaction;
 DROP TABLE Payment;
 DROP TABLE BankAccount;
 DROP TABLE User;
+DROP TABLE Translation;
 DROP TABLE Language;
 DROP TABLE Currency;
 
