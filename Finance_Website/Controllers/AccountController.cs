@@ -60,10 +60,10 @@ namespace Finance_Website.Controllers
         [HttpPost]
         public ActionResult Login(string email, string password)
         {
-            _user = DataRepository.Instance.Login(email, password, false, false, false);
-
             try
             {
+                _user = DataRepository.Instance.Login(email, password, false, false, false);
+
                 if (_user == null)
                 {
                     Session["Exception"] = "Username or password are not correct";
