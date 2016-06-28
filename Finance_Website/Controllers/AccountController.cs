@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
 using Library.Classes;
 using Library.Classes.Language;
-using Library.Exceptions;
 using Repository;
 
 namespace Finance_Website.Controllers
