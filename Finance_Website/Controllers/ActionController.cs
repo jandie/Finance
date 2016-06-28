@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Finance_Website.Models.Utilities;
 using Library.Classes;
-using Library.Classes.Language;
 using Library.Enums;
 using Library.Exceptions;
 using Library.Interfaces;
@@ -12,186 +12,105 @@ namespace Finance_Website.Controllers
 {
     public class ActionController : Controller
     {
-        private User _user;
-        private Language _language;
+        private UserUtility _userUtility;
 
-        public void InitializeAction(string lastTab = null)
+        public bool InitializeAction(string lastTab = null)
         {
-            if (string.IsNullOrWhiteSpace(Session["LastTab"] as string))
-                Session["LastTab"] = lastTab;
+            bool succes = true;
 
-            _user = null;
+            object sessionUser = Session["User"];
+            object sessionPassword = Session["Password"];
+            object sessionLanguage = Session["Language"];
+            object sessionLastTab = Session["LastTab"];
 
-            _user = Session["User"] as User;
-
-            if (_user == null)
+            try
             {
-                if (!(Session["Language"] is Language))
-                {
-                    _language = LanguageRepository.Instance.LoadLanguage(0);
-
-                    Session["Language"] = _language;
-                }
-                else
-                {
-                    _language = Session["Language"] as Language;
-                }
-
-                throw new WrongUsernameOrPasswordException(_language.GetText(31));
+                _userUtility = new UserUtility(ref sessionUser, ref sessionPassword, ref sessionLanguage, ref sessionLastTab, lastTab);
+            }
+            catch (Exception)
+            {
+                succes = false;
             }
 
-            if (!(Session["Language"] is Language))
-            {
-                _language = LanguageRepository.Instance.LoadLanguage(0);
+            Session["User"] = sessionUser;
+            Session["Password"] = sessionPassword;
+            Session["Language"] = sessionLanguage;
+            Session["LastTab"] = sessionLastTab;
 
-                Session["Language"] = _language;
-            }
-            else
-            {
-                _language = Session["Language"] as Language;
-            }
-
-            _user = DataRepository.Instance.Login(_user.Email, Session["Password"] as string, true, true, true);
+            return succes;
         }
 
         public ActionResult AddBalance(string name, decimal balance, string lastTab = null)
         {
-            try
-            {
-                InitializeAction(lastTab);
-            }
-            catch (WrongUsernameOrPasswordException x)
-            {
-                Session["Exception"] = x.Message;
+            InitializeAction(lastTab);
 
+            if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            }
 
-            Session["LastTab"] = lastTab;
+            InsertRepository.Instance.AddBankAccount(_userUtility.User.Id, name, balance);
 
-            try
-            {
-                InsertRepository.Instance.AddBankAccount(_user.Id, name, balance);
-
-                Session["Message"] = _language.GetText(44);
-            }
-            catch (Exception)
-            {
-                Session["Exception"] = _language.GetText(45);
-            }
+            Session["Message"] = _userUtility.Language.GetText(44);
 
             return RedirectToAction("Index", "Account");
         }
 
         public ActionResult AddMonthlyBill(string name, decimal amount, string lastTab = null)
         {
-            try
-            {
-                InitializeAction(lastTab);
-            }
-            catch (WrongUsernameOrPasswordException x)
-            {
-                Session["Exception"] = x.Message;
+            InitializeAction(lastTab);
 
+            if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            }
 
-            try
-            {
-                InsertRepository.Instance.AddPayment(_user.Id, name, amount, PaymentType.MonthlyBill);
+            InsertRepository.Instance.AddPayment(_userUtility.User.Id, name, amount, PaymentType.MonthlyBill);
 
-                Session["Message"] = _language.GetText(46);
-            }
-            catch (Exception)
-            {
-                Session["Exception"] = _language.GetText(47);
-            }
+            Session["Message"] = _userUtility.Language.GetText(46);
 
             return RedirectToAction("Index", "Account");
         }
 
         public ActionResult AddMonthlyIncome(string name, decimal amount, string lastTab = null)
         {
-            try
-            {
-                InitializeAction(lastTab);
-            }
-            catch (WrongUsernameOrPasswordException x)
-            {
-                Session["Exception"] = x.Message;
+            InitializeAction(lastTab);
 
+            if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            }
 
-            try
-            {
-                InsertRepository.Instance.AddPayment(_user.Id, name, amount, PaymentType.MonthlyIncome);
+            InsertRepository.Instance.AddPayment(_userUtility.User.Id, name, amount, PaymentType.MonthlyIncome);
 
-                Session["Message"] = _language.GetText(48);
-            }
-            catch (Exception)
-            {
-                Session["Exception"] = _language.GetText(47);
-            }
+            Session["Message"] = _userUtility.Language.GetText(48);
 
             return RedirectToAction("Index", "Account");
         }
 
         public ActionResult Transaction(int paymentId, string lastTab = null)
         {
-            try
-            {
-                InitializeAction(lastTab);
-            }
-            catch (WrongUsernameOrPasswordException x)
-            {
-                Session["Exception"] = x.Message;
+            InitializeAction(lastTab);
 
+            if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            }
 
-            try
-            {
-                ViewBag.PaymentId = paymentId;
-                ViewBag.PaymentName = _user.Payments.Find(p => p.Id == paymentId).Name;
-            }
-            catch (Exception)
-            {
-                Session["Exception"] = _language.GetText(47);
-            }
+            ViewBag.PaymentId = paymentId;
+            ViewBag.PaymentName = _userUtility.User.Payments.Find(p => p.Id == paymentId).Name;
 
             return View();
         }
 
         public ActionResult AddTransaction(int paymentId, string description, decimal amount)
         {
-            try
-            {
-                InitializeAction();
-            }
-            catch (WrongUsernameOrPasswordException x)
-            {
-                Session["Exception"] = x.Message;
+            InitializeAction();
 
+            if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            }
 
-            try
+            if (_userUtility.User.Payments.Any(p => p.Id == paymentId))
             {
-                if (_user.Payments.Any(p => p.Id == paymentId))
-                {
-                    InsertRepository.Instance.AddTransaction(paymentId, amount, description);
+                InsertRepository.Instance.AddTransaction(paymentId, amount, description);
 
-                    Session["Message"] = _language.GetText(49);
-                }
-                else
-                {
-                    Session["Exception"] = _language.GetText(47);
-                }
+                Session["Message"] = _userUtility.Language.GetText(49);
             }
-            catch (Exception)
+            else
             {
-                Session["Exception"] = _language.GetText(47);
+                Session["Exception"] = _userUtility.Language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");
@@ -199,45 +118,32 @@ namespace Finance_Website.Controllers
 
         public ActionResult AddQuickTransaction(int balanceId, int paymentId, string description, decimal amount)
         {
-            try
-            {
-                InitializeAction();
-            }
-            catch (WrongUsernameOrPasswordException x)
-            {
-                Session["Exception"] = x.Message;
+            InitializeAction();
 
+            if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            }
 
-            try
+            IPayment payment = _userUtility.User.Payments.Find(p => p.Id == paymentId);
+            Balance balance = _userUtility.User.Balances.Find(b => b.Id == balanceId);
+
+            if (payment != null && balance != null)
             {
-                IPayment payment = _user.Payments.Find(p => p.Id == paymentId);
-                Balance balance = _user.Balances.Find(b => b.Id == balanceId);
+                InsertRepository.Instance.AddTransaction(paymentId, amount, description);
 
-                if (payment != null && balance != null)
+                if (payment is MonthlyBill)
                 {
-                    InsertRepository.Instance.AddTransaction(paymentId, amount, description);
-
-                    if (payment is MonthlyBill)
-                    {
-                        ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount - amount);
-                    }
-                    else if (payment is MonthlyIncome)
-                    {
-                        ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount + amount);
-                    }
-
-                    Session["Message"] = _language.GetText(50);
+                    ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount - amount);
                 }
-                else
+                else if (payment is MonthlyIncome)
                 {
-                    Session["Exception"] = _language.GetText(47);
+                    ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount + amount);
                 }
+
+                Session["Message"] = _userUtility.Language.GetText(50);
             }
-            catch (Exception)
+            else
             {
-                Session["Exception"] = _language.GetText(47);
+                Session["Exception"] = _userUtility.Language.GetText(47);
             }
 
             return RedirectToAction("Index", "Account");
