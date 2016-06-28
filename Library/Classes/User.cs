@@ -69,7 +69,7 @@ namespace Library.Classes
             _balances = new List<Balance>(bankAccounts);
         }
 
-        public void AddPayment(List<IPayment> payments)
+        public void AddPayments(List<IPayment> payments)
         {
             _payments = new List<IPayment>(payments);
         }

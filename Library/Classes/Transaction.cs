@@ -14,7 +14,6 @@ namespace Library.Classes
 
         public int CompareTo(Transaction other)
         {
-            // Default to id sort. [High to low]
             return other.Id.CompareTo(this.Id);
         }
 

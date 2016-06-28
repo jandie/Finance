@@ -59,7 +59,7 @@ namespace Database.SqlContexts
 
             if (loadBankAccounts) user.AddBankAccounts(GetBankAccountsOfUser(id)); 
 
-            if (loadPayments) user.AddPayment(GetPaymentsOfUser(id));
+            if (loadPayments) user.AddPayments(GetPaymentsOfUser(id));
 
             return user;
         }

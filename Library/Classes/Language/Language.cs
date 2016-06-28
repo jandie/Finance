@@ -4,7 +4,7 @@ namespace Library.Classes.Language
 {
     public class Language
     {
-        private List<Translation> _translations;
+        private readonly List<Translation> _translations;
 
         public Language(int id, string abbrevation, string name)
         {
