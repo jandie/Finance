@@ -9,7 +9,7 @@
 
     Language language = Session["Language"] as Language;
 
-    ViewBag.Title = $"{user.Name}'s {language.GetText(11)}";
+    ViewBag.Title = $"{user.Name.Trim()}'s {language.GetText(11)}";
 }
 
 <div class="page-header">
@@ -37,8 +37,8 @@
             <ul class="nav nav-pills" role="tablist">
                 <li role="presentation" @if (Session["LastTab"] == null) { Session["LastTab"] = null; @classActive  }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-menu-hamburger icon-content" aria-hidden="true"></span>@language.GetText(13)</a></li>
                 <li role="presentation" @if (Session["LastTab"]?.ToString() == "1") { @classActive }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-briefcase icon-content" aria-hidden="true"></span>@language.GetText(14)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2") { @classActive }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-up icon-content" aria-hidden="true"></span>@language.GetText(15)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3") { @classActive }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-down icon-content" aria-hidden="true"></span>@language.GetText(16)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2") { @classActive }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-up icon-content negative" aria-hidden="true"></span>@language.GetText(15)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3") { @classActive }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-down icon-content positive" aria-hidden="true"></span>@language.GetText(16)</a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -68,11 +68,11 @@
                                     <tr>
                                         @if (transaction.Positive)
                                         {
-                                            <td><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></td>
+                                            <td><span class="glyphicon glyphicon-plus positive" aria-hidden="true"></span></td>
                                         }
                                         else
                                         {
-                                            <td><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></td>
+                                            <td><span class="glyphicon glyphicon-minus negative" aria-hidden="true"></span></td>
                                         }
                                         <td>@transaction.Amount.ToString("0.00")</td>
                                         <td>@transaction.Description</td>

@@ -21,6 +21,14 @@
     margin-right: 10px;
 }
 
+.positive {
+    color: green !important;
+}
+
+.negative {
+    color: red !important;
+}
+
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
