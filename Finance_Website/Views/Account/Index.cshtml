@@ -34,11 +34,11 @@
     <div>
         <div class="col-md-12">
             <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" @if (Session["LastTab"] == null) { Session["LastTab"] = null; @classActive  }><a class="primary-background primary-content" href="#overview" aria-controls="overview" role="tab" data-toggle="tab">@language.GetText(13)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "1") { @classActive }><a class="primary-background primary-content" href="#balances" aria-controls="balances" role="tab" data-toggle="tab">@language.GetText(14)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2") { @classActive }><a class="primary-background primary-content" href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">@language.GetText(15)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3") { @classActive }><a class="primary-background primary-content" href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">@language.GetText(16)</a></li>
+            <ul class="nav nav-pills" role="tablist">
+                <li role="presentation" @if (Session["LastTab"] == null) { Session["LastTab"] = null; @classActive  }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">@language.GetText(13)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "1") { @classActive }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">@language.GetText(14)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2") { @classActive }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">@language.GetText(15)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3") { @classActive }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">@language.GetText(16)</a></li>
             </ul>
 
             <!-- Tab panes -->
@@ -123,7 +123,7 @@
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    @language.GetText(29) <span class="caret"></span>
+                                                    <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li><a href="~/Manage/Balance?id=@balance.Id&lastTab=1"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
@@ -164,7 +164,7 @@
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    @language.GetText(29) <span class="caret"></span>
+                                                    <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li><a href="~/Manage/Payment?id=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
@@ -188,7 +188,7 @@
                     </button>
                     <div class="panel panel-primary">
                         <!-- Default panel contents -->
-                        <div class="panel-heading">Panel heading</div>
+                        <div class="panel-heading">@language.GetText(16)</div>
                         <!-- Table -->
                         <table class="table table-hover">
                             <thead>
@@ -210,7 +210,7 @@
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    @language.GetText(29) <span class="caret"></span>
+                                                    <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li><a href="~/Manage/Payment?id=@income.Id&lastTab=3"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
