@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
+using Library.Classes.Language;
 
 namespace Repository
 {
@@ -36,6 +38,34 @@ namespace Repository
             try
             {
                 return _context.CreateUser(name, lastName, email, password, currencyId, languageId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+                throw;
+            }
+        }
+
+        public List<Language> LoadLanguages()
+        {
+            try
+            {
+                return _context.LoadLanguages();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+                throw;
+            }
+        }
+
+        public List<Currency> LoadCurrencies()
+        {
+            try
+            {
+                return _context.LoadCurrencies();
             }
             catch (Exception ex)
             {
