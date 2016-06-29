@@ -35,10 +35,10 @@
         <div class="col-md-12">
             <!-- Nav tabs -->
             <ul class="nav nav-pills" role="tablist">
-                <li role="presentation" @if (Session["LastTab"] == null) { Session["LastTab"] = null; @classActive  }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">@language.GetText(13)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "1") { @classActive }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">@language.GetText(14)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2") { @classActive }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">@language.GetText(15)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3") { @classActive }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">@language.GetText(16)</a></li>
+                <li role="presentation" @if (Session["LastTab"] == null) { Session["LastTab"] = null; @classActive  }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-menu-hamburger icon-content" aria-hidden="true"></span>@language.GetText(13)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "1") { @classActive }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-briefcase icon-content" aria-hidden="true"></span>@language.GetText(14)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2") { @classActive }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-up icon-content" aria-hidden="true"></span>@language.GetText(15)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3") { @classActive }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-down icon-content" aria-hidden="true"></span>@language.GetText(16)</a></li>
             </ul>
 
             <!-- Tab panes -->
