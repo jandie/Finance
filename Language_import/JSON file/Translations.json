@@ -450,6 +450,20 @@
             "Waarschuwing!",
             "Warning!"
          ]
+      },
+      {
+         "ID":"64",
+         "Translations":[
+            "Taal",
+            "Language"
+         ]
+      },
+      {
+         "ID":"65",
+         "Translations":[
+            "Valuta",
+            "Currency"
+         ]
       }
    ]
 }
