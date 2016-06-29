@@ -98,11 +98,14 @@ namespace Finance_Website.Controllers
            
             InitializeAction();
 
+            ViewBag.Languages = DataRepository.Instance.LoadLanguages();
+            ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
+
             return View();
         }
 
         [HttpPost]
-        public ActionResult Register(string name, string lastName, string email, string password, string password2)
+        public ActionResult Register(string name, string lastName, string email, int currencyId, int languageId, string password, string password2)
         {
             
             InitializeAction();
@@ -134,7 +137,7 @@ namespace Finance_Website.Controllers
 
             else
             {
-                User user = DataRepository.Instance.CreateUser(name.Trim(), lastName.Trim(), email.Trim(), password.Trim());
+                User user = DataRepository.Instance.CreateUser(name.Trim(), lastName.Trim(), email.Trim(), password.Trim(), currencyId, languageId);
 
                 if (user == null)
                 {
