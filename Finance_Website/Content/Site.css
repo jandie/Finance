@@ -6,6 +6,15 @@
 /* Set padding to keep content from hitting the edges */
 .body-content {
     margin-top: 10px;
+    margin-bottom: 10px !important;
+}
+
+.primary-content {
+    color: #ffffff !important;
+}
+
+.primary-background {
+    background-color: #337ab7 !important;
 }
 
 .icon-content {

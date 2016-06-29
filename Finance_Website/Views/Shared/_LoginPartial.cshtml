@@ -13,16 +13,16 @@
     var user = Session["user"] as User;
 
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink($"{user.Name}'s {language.GetText(9)}", "Index", "Account")</li>
-        <li>@Html.ActionLink(language.GetText(10), "Loguit", "Account")</li>
+        <li class="">@Html.ActionLink($"{user.Name}'s {language.GetText(9)}", "Index", "Account", new { area = "" }, new { @class = "primary-content" })</li>
+        <li class="navbar-content">@Html.ActionLink(language.GetText(10), "Loguit", "Account", new { area = "" }, new { @class = "primary-content" })</li>
     </ul>
 
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink(language.GetText(3), "Login", "Account")</li>
-        <li>@Html.ActionLink(language.GetText(8), "Register", "Account")</li>
+        <li class="navbar-content">@Html.ActionLink(language.GetText(3), "Login", "Account", new { area = "" }, new { @class = "primary-content" })</li>
+        <li class="navbar-content">@Html.ActionLink(language.GetText(8), "Register", "Account", new { area = "" }, new { @class = "primary-content" })</li>
     </ul>
 }
 

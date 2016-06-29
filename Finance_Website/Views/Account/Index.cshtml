@@ -12,228 +12,218 @@
     ViewBag.Title = $"{user.Name}'s {language.GetText(11)}";
 }
 
-<h3>@ViewBag.Title</h3>
+<div class="page-header">
+    <h1>@ViewBag.Title</h1>
+</div>
 
 <div class="row">
     <div class="col-md-4">
-        <table class="table table-hover">
-            <tbody>
-                <tr>
-                    <th>@language.GetText(12)</th>
-                </tr>
-                <tr>
-                    <td>@user.Prediction.ToString("0.00")</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="panel panel-primary">
+            <!-- Default panel contents -->
+            <div class="panel-heading">@language.GetText(12)</div>
+
+            <div class="panel-body">
+                <p>@user.Prediction.ToString("0.00")</p>
+            </div>
+        </div>
+
     </div>
 </div>
 <div class="row">
-    
+
     <div>
         <div class="col-md-12">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" @if (Session["LastTab"] == null)
-                                        {
-                                            Session["LastTab"] = null;
-                                            @classActive
-                                        }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">@language.GetText(13)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "1")
-                                        {
-                                            @classActive
-                                        }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab">@language.GetText(14)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2")
-                                        {
-                                            @classActive
-                                        }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">@language.GetText(15)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3")
-                                        {
-                                            @classActive
-                                        }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">@language.GetText(16)</a></li>
+                <li role="presentation" @if (Session["LastTab"] == null) { Session["LastTab"] = null; @classActive  }><a class="primary-background primary-content" href="#overview" aria-controls="overview" role="tab" data-toggle="tab">@language.GetText(13)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "1") { @classActive }><a class="primary-background primary-content" href="#balances" aria-controls="balances" role="tab" data-toggle="tab">@language.GetText(14)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2") { @classActive }><a class="primary-background primary-content" href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab">@language.GetText(15)</a></li>
+                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3") { @classActive }><a class="primary-background primary-content" href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab">@language.GetText(16)</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane @if (Session["LastTab"] == null)
-                                                     {
-                                                         Session["LastTab"] = null;
-                                                         @active
-                                                     }" id="overview">
+                <div role="tabpanel" class="tab-pane @if (Session["LastTab"] == null) {Session["LastTab"] = null; @active}" id="overview">
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#QuickTransaction">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
 
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>@language.GetText(17)</th>
-                            <th>@language.GetText(18)</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach (Transaction transaction in user.TransactionList)
-                        {
-                            <tr>
-                                @if (transaction.Positive)
-                                {
-                                    <td><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></td>
-                                }
-                                else
-                                {
-                                    <td><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></td>
-                                }
-                                <td>@transaction.Amount.ToString("0.00")</td>
-                                <td>@transaction.Description</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            @language.GetText(29) <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Transaction?id=@transaction.Id"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
-                                            <li><a href="~/Manage/DeleteTransaction?id=@transaction.Id&quick=true"><span class="glyphicon glyphicon-trash icon-content" aria-hidden="true"></span>@language.GetText(30)</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
+                    <div class="panel panel-primary">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">@language.GetText(13)</div>
 
+                        <!-- Table -->
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>@language.GetText(17)</th>
+                                    <th>@language.GetText(18)</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (Transaction transaction in user.TransactionList)
+                                {
+                                    <tr>
+                                        @if (transaction.Positive)
+                                        {
+                                            <td><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></td>
+                                        }
+                                        <td>@transaction.Amount.ToString("0.00")</td>
+                                        <td>@transaction.Description</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="~/Manage/Transaction?id=@transaction.Id"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
+                                                    <li><a href="~/Manage/DeleteTransaction?id=@transaction.Id&quick=true"><span class="glyphicon glyphicon-trash icon-content" aria-hidden="true"></span>@language.GetText(30)</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "1")
-                                                     {
-                                                         Session["LastTab"] = null;
-                                                         @active
-                                                     }" id="balances">
+                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "1"){ Session["LastTab"] = null; @active}" id="balances">
 
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddBalanceModal">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
 
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>@language.GetText(19)</th>
-                            <th>@language.GetText(21)</th>
-                            <th></th>
-                        </tr>
-                        </thead>
+                    <div class="panel panel-primary">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">@language.GetText(14)</div>
 
-                        <tbody>
-                        @foreach (Balance balance in user.Balances)
-                        {
-                            <tr>
-                                <td>@balance.Name</td>
-                                <td>@balance.BalanceAmount.ToString("0.00")</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            @language.GetText(29) <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Balance?id=@balance.Id&lastTab=1"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
+                        <!-- Table -->
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>@language.GetText(19)</th>
+                                    <th>@language.GetText(21)</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (Balance balance in user.Balances)
+                                {
+                                    <tr>
+                                        <td>@balance.Name</td>
+                                        <td>@balance.BalanceAmount.ToString("0.00")</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    @language.GetText(29) <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="~/Manage/Balance?id=@balance.Id&lastTab=1"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "2")
-                                                     {
-                                                         Session["LastTab"] = null;
-                                                         @active
-                                                     }" id="monthlybills">
+                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "2") {Session["LastTab"] = null; @active}" id="monthlybills">
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyBill">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
-
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>@language.GetText(19)</th>
-                            <th>@language.GetText(17)</th>
-                            <th>@language.GetText(20)</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        @foreach (MonthlyBill bill in user.Payments.OfType<MonthlyBill>())
-                        {
-                            <tr>
-                                <td>@bill.Name</td>
-                                <td>@bill.Amount.ToString("0.00")</td>
-                                <td>@bill.GetTotalAmount().ToString("0.00")</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            @language.GetText(29) <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Payment?id=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
-                                            <li role="separator" class="divider"></li>
-                                            <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>@language.GetText(58)</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
+                    <div class="panel panel-primary">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">@language.GetText(15)</div>
+                        <!-- Table -->
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>@language.GetText(19)</th>
+                                    <th>@language.GetText(17)</th>
+                                    <th>@language.GetText(20)</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (MonthlyBill bill in user.Payments.OfType<MonthlyBill>())
+                                {
+                                    <tr>
+                                        <td>@bill.Name</td>
+                                        <td>@bill.Amount.ToString("0.00")</td>
+                                        <td>@bill.GetTotalAmount().ToString("0.00")</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    @language.GetText(29) <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="~/Manage/Payment?id=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
+                                                    <li role="separator" class="divider"></li>
+                                                    <li><a href="~/Action/Transaction?paymentId=@bill.Id&lastTab=2"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>@language.GetText(58)</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "3")
-                                                     {
-                                                         Session["LastTab"] = null;
-                                                         @active
-                                                     }" id="monthlyincome">
+                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "3"){Session["LastTab"] = null; @active}" id="monthlyincome">
 
 
                     <button type="button" class="body-content btn btn-primary" data-toggle="modal" data-target="#AddMonthlyIncome">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
+                    <div class="panel panel-primary">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">Panel heading</div>
+                        <!-- Table -->
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>@language.GetText(19)</th>
+                                    <th>@language.GetText(17)</th>
+                                    <th>@language.GetText(20)</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
 
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>@language.GetText(19)</th>
-                            <th>@language.GetText(17)</th>
-                            <th>@language.GetText(20)</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        @foreach (MonthlyIncome income in user.Payments.OfType<MonthlyIncome>())
-                        {
-                            <tr>
-                                <td>@income.Name</td>
-                                <td>@income.Amount.ToString("0.00")</td>
-                                <td>@income.GetTotalAmount().ToString("0.00")</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            @language.GetText(29) <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="~/Manage/Payment?id=@income.Id&lastTab=3"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
-                                            <li role="separator" class="divider"></li>
-                                            <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>@language.GetText(58)</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
+                            <tbody>
+                                @foreach (MonthlyIncome income in user.Payments.OfType<MonthlyIncome>())
+                                {
+                                    <tr>
+                                        <td>@income.Name</td>
+                                        <td>@income.Amount.ToString("0.00")</td>
+                                        <td>@income.GetTotalAmount().ToString("0.00")</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    @language.GetText(29) <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="~/Manage/Payment?id=@income.Id&lastTab=3"><span class="glyphicon glyphicon-pencil icon-content" aria-hidden="true"></span>@language.GetText(2)</a></li>
+                                                    <li role="separator" class="divider"></li>
+                                                    <li><a href="~/Action/Transaction?paymentId=@income.Id&lastTab=3"><span class="glyphicon glyphicon-ok-circle icon-content" aria-hidden="true"></span>@language.GetText(58)</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

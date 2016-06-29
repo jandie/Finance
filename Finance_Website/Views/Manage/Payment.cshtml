@@ -10,7 +10,9 @@
     ViewBag.Title = $"{ViewBag.Type} {payment?.Name}";
 }
 
-<h2>@ViewBag.Title</h2>
+<div class="page-header">
+    <h1>@ViewBag.Title</h1>
+</div>
 
 @if (payment != null)
 {
@@ -49,37 +51,42 @@
     {
          <div class="row">
              <div class="col-md-12">
-                 <table class="table table-hover">
-                     <thead>
-                     <tr>
-                         <th>@language.GetText(17)</th>
-                         <th>@language.GetText(18)</th>
-                         <th></th>
-                     </tr>
-                     </thead>
+                 <div class="panel panel-primary">
+                     <!-- Default panel contents -->
+                     <div class="panel-heading">@language.GetText(13)</div>
+                     <!-- Table -->
+                     <table class="table table-hover">
+                         <thead>
+                             <tr>
+                                 <th>@language.GetText(17)</th>
+                                 <th>@language.GetText(18)</th>
+                                 <th></th>
+                             </tr>
+                         </thead>
 
-                     <tbody>
-                     @foreach (Transaction t in transactions)
-                     {
-                         <tr>
-                             <td>@t.Amount.ToString("0.00")</td>
-                             <td>@t.Description</td>
-                             <td>
-                                 <div class="btn-group">
-                                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                         @language.GetText(29) <span class="caret"></span>
-                                     </button>
-                                     <ul class="dropdown-menu">
-                                         <li><a href="~/Manage/Transaction?id=@t.Id">@language.GetText(2)</a></li>
-                                         <li role="separator" class="divider"></li>
-                                         <li><a href="~/Manage/DeleteTransaction?id=@t.Id">@language.GetText(30)</a></li>
-                                     </ul>
-                                 </div>
-                             </td>
-                         </tr>
-                     }
-                     </tbody>
-                 </table>
+                         <tbody>
+                             @foreach (Transaction t in transactions)
+                             {
+                                 <tr>
+                                     <td>@t.Amount.ToString("0.00")</td>
+                                     <td>@t.Description</td>
+                                     <td>
+                                         <div class="btn-group">
+                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                 <span class="caret"></span>
+                                             </button>
+                                             <ul class="dropdown-menu">
+                                                 <li><a href="~/Manage/Transaction?id=@t.Id">@language.GetText(2)</a></li>
+                                                 <li role="separator" class="divider"></li>
+                                                 <li><a href="~/Manage/DeleteTransaction?id=@t.Id">@language.GetText(30)</a></li>
+                                             </ul>
+                                         </div>
+                                     </td>
+                                 </tr>
+                             }
+                         </tbody>
+                     </table>
+                 </div>
              </div>
          </div>
      }
