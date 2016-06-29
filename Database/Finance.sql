@@ -80,4 +80,7 @@ CREATE TABLE Transaction (
 
 INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD) VALUES ('Jandie', 'Hendriks', 'jandie@live.nl', 'test');
 
+INSERT INTO `finance`.`currency` (`Abbrevation`, `Name`, `Html`) VALUES ('EUR', 'Euro', 'EUR');
+INSERT INTO `finance`.`currency` (`Abbrevation`, `Name`, `Html`) VALUES ('USD', 'US Dollar', 'USD');
+
 COMMIT;

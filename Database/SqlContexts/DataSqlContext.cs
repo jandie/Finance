@@ -12,18 +12,20 @@ namespace Database.SqlContexts
 {
     public class DataSqlContext : IDataContext
     {
-        public User CreateUser(string name, string lastName, string email, string password)
+        public User CreateUser(string name, string lastName, string email, string password, int currencyId, int languageId)
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD) VALUES (@name, @lastName, @email, @password)",
+                    "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD, CURRENCY, LANGUAGE) VALUES (@name, @lastName, @email, @password, @currencyId, @languageId)",
                     connection) {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@name", name));
             command.Parameters.Add(new MySqlParameter("@lastName", lastName));
             command.Parameters.Add(new MySqlParameter("@email", email));
             command.Parameters.Add(new MySqlParameter("@password", password));
+            command.Parameters.Add(new MySqlParameter("@currencyId", currencyId));
+            command.Parameters.Add(new MySqlParameter("@languageId", languageId));
 
             command.ExecuteNonQuery();
 
@@ -34,7 +36,8 @@ namespace Database.SqlContexts
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
-                new MySqlCommand("SELECT ID, NAME, LASTNAME FROM USER WHERE EMAIL = @email AND PASSWORD = @password AND Active = 1",
+                new MySqlCommand("SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML FROM USER U " +
+                                 "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND PASSWORD = @password AND ACTIVE = 1;",
                     connection) {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@email", email));
@@ -52,10 +55,17 @@ namespace Database.SqlContexts
             int id = reader.GetInt32(0);
             string name = reader.GetString(1);
             string lastName = reader.GetString(2);
+            int languageId = reader.GetInt32(3);
+            int currencyId = reader.GetInt32(4);
+            string currencyAbbrevation = reader.GetString(5);
+            string currencyName = reader.GetString(6);
+            string currencyHtml = reader.GetString(7);
 
             reader.Close();
 
-            User user = new User(id, name, lastName, email);
+            Currency currency =  new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
+
+            User user = new User(id, name, lastName, email, languageId, currency);
 
             if (loadBankAccounts) user.AddBankAccounts(GetBankAccountsOfUser(id)); 
 
