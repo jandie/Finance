@@ -97,8 +97,8 @@
       {
          "ID":"13",
          "Translations":[
-            "Details",
-            "Details"
+            "Transacties",
+            "Transactions"
          ]
       },
       {
@@ -111,21 +111,21 @@
       {
          "ID":"15",
          "Translations":[
-            "Maandelijkse uitgaven",
-            "Monthly bills"
+            "Uitgaven",
+            "Expenses"
          ]
       },
       {
          "ID":"16",
          "Translations":[
-            "Maandelijks inkomen",
-            "Monthly income"
+            "Inkomsten",
+            "Income"
          ]
       },
       {
          "ID":"17",
          "Translations":[
-            "Hoeveelheid",
+            "Bedrag",
             "Amount"
          ]
       },
