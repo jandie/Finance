@@ -24,7 +24,7 @@ namespace Finance_Website.Controllers
             {
                 _userUtility = new UserUtility(ref sessionUser, ref sessionPassword, ref sessionLanguage, ref sessionLastTab, lastTab);
             }
-            catch (Exception) 
+            catch (Exception ex) 
             {
                 succes = false;
             }
@@ -134,7 +134,7 @@ namespace Finance_Website.Controllers
 
             else
             {
-                User user = DataRepository.Instance.CreateUser(name, lastName, email, password);
+                User user = DataRepository.Instance.CreateUser(name.Trim(), lastName.Trim(), email.Trim(), password.Trim());
 
                 if (user == null)
                 {

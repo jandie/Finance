@@ -46,7 +46,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            InsertRepository.Instance.AddBankAccount(_userUtility.User.Id, name, balance);
+            InsertRepository.Instance.AddBankAccount(_userUtility.User.Id, name.Trim(), balance);
 
             Session["Message"] = _userUtility.Language.GetText(44);
 
@@ -60,7 +60,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            InsertRepository.Instance.AddPayment(_userUtility.User.Id, name, amount, PaymentType.MonthlyBill);
+            InsertRepository.Instance.AddPayment(_userUtility.User.Id, name.Trim(), amount, PaymentType.MonthlyBill);
 
             Session["Message"] = _userUtility.Language.GetText(46);
 
@@ -74,7 +74,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            InsertRepository.Instance.AddPayment(_userUtility.User.Id, name, amount, PaymentType.MonthlyIncome);
+            InsertRepository.Instance.AddPayment(_userUtility.User.Id, name.Trim(), amount, PaymentType.MonthlyIncome);
 
             Session["Message"] = _userUtility.Language.GetText(48);
 
@@ -103,7 +103,7 @@ namespace Finance_Website.Controllers
 
             if (_userUtility.User.Payments.Any(p => p.Id == paymentId))
             {
-                InsertRepository.Instance.AddTransaction(paymentId, amount, description);
+                InsertRepository.Instance.AddTransaction(paymentId, amount, description.Trim());
 
                 Session["Message"] = _userUtility.Language.GetText(49);
             }
@@ -127,7 +127,7 @@ namespace Finance_Website.Controllers
 
             if (payment != null && balance != null)
             {
-                InsertRepository.Instance.AddTransaction(paymentId, amount, description);
+                InsertRepository.Instance.AddTransaction(paymentId, amount, description.Trim());
 
                 if (payment is MonthlyBill)
                 {
