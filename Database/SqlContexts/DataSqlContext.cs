@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using Database.Interfaces;
 using Library.Classes;
+using Library.Classes.Language;
 using Library.Enums;
 using Library.Exceptions;
 using Library.Interfaces;
@@ -10,8 +11,10 @@ using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
+    
     public class DataSqlContext : IDataContext
     {
+        #region User
         public User CreateUser(string name, string lastName, string email, string password, int currencyId, int languageId)
         {
             MySqlConnection connection = Database.Instance.Connection;
@@ -76,7 +79,7 @@ namespace Database.SqlContexts
 
         public List<Balance> GetBankAccountsOfUser(int userId)
         {
-            var bankAccounts =  new List<Balance>();
+            List<Balance> bankAccounts =  new List<Balance>();
 
             MySqlConnection conneciton = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = @userId AND Active = 1", conneciton)
@@ -102,7 +105,7 @@ namespace Database.SqlContexts
 
         public List<IPayment> GetPaymentsOfUser(int userId)
         {
-            var payments = new List<IPayment>();
+            List<IPayment> payments = new List<IPayment>();
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = @userId AND Active = 1", connection)
                 {CommandType = CommandType.Text};
@@ -140,7 +143,7 @@ namespace Database.SqlContexts
 
         public List<Transaction> GetTransactionsOfPayment(IPayment payment) //bug
         {
-            var transactions = new List<Transaction>();
+            List<Transaction> transactions = new List<Transaction>();
 
             MySqlConnection connecion = Database.Instance.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId AND DateAdded LIKE @month AND Active = 1", connecion)
@@ -166,6 +169,56 @@ namespace Database.SqlContexts
             reader.Close();
 
             return transactions;
+        }
+        #endregion User
+
+        public List<Currency> LoadCurrencies()
+        {
+            List<Currency> currencies = new List<Currency>();
+
+            MySqlConnection connecion = Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME, HTML FROM CURRENCY", connecion)
+            { CommandType = CommandType.Text };
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string abbrevation = reader.GetString(1);
+                string name = reader.GetString(2);
+                string html = reader.GetString(3);
+
+                currencies.Add(new Currency(id, abbrevation, name, html));
+            }
+
+            reader.Close();
+
+            return currencies;
+        }
+
+        public List<Language> LoadLanguages()
+        {
+            List<Language> languages = new List<Language>();
+
+            MySqlConnection connecion = Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME FROM LANGUAGE", connecion)
+            { CommandType = CommandType.Text };
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string abbrevation = reader.GetString(1);
+                string name = reader.GetString(2);
+
+                languages.Add(new Language(id, abbrevation, name));
+            }
+
+            reader.Close();
+
+            return languages;
         }
     }
 }
