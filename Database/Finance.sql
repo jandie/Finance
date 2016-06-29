@@ -31,16 +31,20 @@ CREATE TABLE Currency (
 );
 
 CREATE TABLE `user` (
-    `Id` INT(11) NOT NULL AUTO_INCREMENT,
-    `Name` VARCHAR(255) NOT NULL,
-    `LastName` VARCHAR(255) NOT NULL,
-    `Email` VARCHAR(255) DEFAULT NULL,
-    `Password` VARCHAR(255) NOT NULL,
-    `Active` INT(11) DEFAULT '1',
-    `Currency` INT(11) DEFAULT '0',
-    `Language` INT(11) DEFAULT '0',
-    PRIMARY KEY (`Id`),
-    UNIQUE KEY `Email` (`Email`)
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(255) NOT NULL,
+  `LastName` varchar(255) NOT NULL,
+  `Email` varchar(255) DEFAULT NULL,
+  `Password` varchar(255) NOT NULL,
+  `Active` int(11) DEFAULT '1',
+  `Currency` int(11) DEFAULT '1',
+  `Language` int(11) DEFAULT '0',
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Email` (`Email`),
+  KEY `Currency` (`Currency`),
+  KEY `Language` (`Language`),
+  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`Currency`) REFERENCES `currency` (`Id`),
+  CONSTRAINT `user_ibfk_2` FOREIGN KEY (`Language`) REFERENCES `language` (`Id`)
 );
 
 CREATE TABLE BankAccount (
