@@ -31,11 +31,11 @@ namespace Repository
             }
         }
 
-        public User CreateUser(string name, string lastName, string email, string password)
+        public User CreateUser(string name, string lastName, string email, string password, int currencyId, int languageId)
         {
             try
             {
-                return _context.CreateUser(name, lastName, email, password);
+                return _context.CreateUser(name, lastName, email, password, currencyId, languageId);
             }
             catch (Exception ex)
             {
