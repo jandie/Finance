@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Library.Interfaces;
 
 namespace Library.Classes
@@ -53,6 +55,30 @@ namespace Library.Classes
                 prediction = totalBalance + sum;
 
                 return prediction;
+            }
+        }
+
+        public decimal ToPay
+        {
+            get
+            {
+                decimal toPay = 0;
+
+                Payments.OfType<MonthlyBill>().ToList().ForEach(p => toPay += Math.Abs(p.GetSum()));
+
+                return toPay;
+            }
+        }
+
+        public decimal ToGet
+        {
+            get
+            {
+                decimal toGet = 0;
+
+                Payments.OfType<MonthlyIncome>().ToList().ForEach(p => toGet += p.GetSum());
+
+                return toGet;
             }
         }
 
