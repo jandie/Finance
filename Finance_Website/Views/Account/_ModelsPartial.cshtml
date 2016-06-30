@@ -1,5 +1,6 @@
 ﻿@using Library.Classes
 @using Library.Classes.Language
+@using Library.Interfaces
 @{
     Language language = Session["Language"] as Language;
 }
@@ -159,9 +160,17 @@
                             <div class="form-group">
                                 <label for="payent">@language.GetText(23)</label>
                                 <select class="form-control" name="paymentId" id="payent">
-                                    @foreach (MonthlyBill payment in (ViewBag.User as User).Payments.OfType<MonthlyBill>())
+                                    @foreach (IPayment payment in (ViewBag.User as User).Payments)
                                     {
-                                        <option value="@payment.Id">@payment.Name</option>
+                                        if (payment is MonthlyBill)
+                                        {
+                                            <option value="@payment.Id" class="negative">@payment.Name</option>
+                                        }
+                                        else if (payment is MonthlyIncome)
+                                        {
+                                            <option value="@payment.Id" class="positive">@payment.Name</option>
+                                        }
+
                                     }
                                 </select>
                             </div>
