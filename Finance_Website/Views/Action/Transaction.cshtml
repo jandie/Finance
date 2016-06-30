@@ -1,7 +1,9 @@
-﻿@using Library.Classes.Language
+﻿@using Library.Classes
+@using Library.Classes.Language
 
 @{
     Language language = Session["Language"] as Language;
+    User user = ViewBag.User as User;
 
     ViewBag.Title = $"{language.GetText(60)} {ViewBag.PaymentName}";
 }
@@ -27,6 +29,22 @@
                 <label for="amount">@language.GetText(17)</label>
                 <div class="input-group">
                     <input type="number" step="any" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="balance">@language.GetText(69)</label>
+                <div class="input-group">
+                    <select class="form-control" id="balance" name="balanceId">
+                        <option value="-1" selected>@language.GetText(70)</option>
+                        @if (user != null)
+                        {
+                            foreach (Balance balance in user.Balances)
+                            {
+                                <option value="@balance.Id">@balance.Name</option>
+                            }
+                        }
+                    </select>
                 </div>
             </div>
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
 using Library.Classes;
@@ -90,32 +89,12 @@ namespace Finance_Website.Controllers
 
             ViewBag.PaymentId = paymentId;
             ViewBag.PaymentName = _userUtility.User.Payments.Find(p => p.Id == paymentId).Name;
+            ViewBag.User = _userUtility.User;
 
             return View();
         }
 
-        public ActionResult AddTransaction(int paymentId, string description, decimal amount)
-        {
-            InitializeAction();
-
-            if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
-
-            if (_userUtility.User.Payments.Any(p => p.Id == paymentId))
-            {
-                InsertRepository.Instance.AddTransaction(paymentId, amount, description.Trim());
-
-                Session["Message"] = _userUtility.Language.GetText(49);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
-
-            return RedirectToAction("Index", "Account");
-        }
-
-        public ActionResult AddQuickTransaction(int balanceId, int paymentId, string description, decimal amount)
+        public ActionResult AddTransaction(int paymentId, string description, decimal amount, int balanceId)
         {
             InitializeAction();
 
@@ -125,17 +104,20 @@ namespace Finance_Website.Controllers
             IPayment payment = _userUtility.User.Payments.Find(p => p.Id == paymentId);
             Balance balance = _userUtility.User.Balances.Find(b => b.Id == balanceId);
 
-            if (payment != null && balance != null)
+            if (payment != null)
             {
                 InsertRepository.Instance.AddTransaction(paymentId, amount, description.Trim());
 
-                if (payment is MonthlyBill)
+                if (balance != null)
                 {
-                    ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount - amount);
-                }
-                else if (payment is MonthlyIncome)
-                {
-                    ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount + amount);
+                    if (payment is MonthlyBill)
+                    {
+                        ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount - amount);
+                    }
+                    else if (payment is MonthlyIncome)
+                    {
+                        ChangeRepository.Instance.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount + amount);
+                    }
                 }
 
                 Session["Message"] = _userUtility.Language.GetText(50);

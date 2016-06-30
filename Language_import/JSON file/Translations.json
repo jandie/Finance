@@ -485,6 +485,20 @@
             "Te krijgen",
             "To get"
          ]
+      },
+      {
+         "ID":"69",
+         "Translations":[
+            "Balans updaten",
+            "Upate balance"
+         ]
+      },
+      {
+         "ID":"70",
+         "Translations":[
+            "Handmatig",
+            "Manually"
+         ]
       }
    ]
 }
