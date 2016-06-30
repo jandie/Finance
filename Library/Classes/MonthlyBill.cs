@@ -12,15 +12,15 @@ namespace Library.Classes
 
         public decimal GetSum()
         {
-            decimal paid = 0;
+            decimal toPay = 0;
 
-            Transactions.ForEach(t => paid += t.Amount);
+            Transactions.ForEach(t => toPay += t.Amount);
 
-            paid -= Amount;
+            toPay -= Amount;
 
-            if (paid > 0) paid *= -1;
+            if (toPay > 0) toPay = 0;
 
-            return paid;
+            return toPay;
         }
 
         public decimal GetTotalAmount()

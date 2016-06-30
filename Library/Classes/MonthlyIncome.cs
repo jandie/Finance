@@ -19,7 +19,10 @@ namespace Library.Classes
 
             gotten -= Amount;
 
-            if (gotten < 0) gotten = Math.Abs(gotten);
+            if (gotten < 0)
+                gotten = Math.Abs(gotten);
+            else if (gotten > 0)
+                gotten = 0;
 
             return gotten;
         }
