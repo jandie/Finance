@@ -19,32 +19,38 @@ namespace Finance_Website.Models.Utilities
             {
                 if (!(sessionLanguage is Language))
                 {
-                    Language = LanguageRepository.Instance.LoadLanguage(0);
-
-                    sessionLanguage = Language;
+                    sessionLanguage = LoadAndAssignLanguage(1);
                 }
                 else
                 {
                     Language = (Language) sessionLanguage;
                 }
-            }
-
-            if (!(sessionLanguage is Language))
+            } else if (!(sessionLanguage is Language))
             {
-                Language = LanguageRepository.Instance.LoadLanguage(0);
-
-                sessionLanguage = Language;
+                sessionLanguage = LoadAndAssignLanguage(User.LanguageId);
             }
             else
             {
                 Language = (Language) sessionLanguage;
+
+                if (Language.Id != User.LanguageId)
+                {
+                    sessionLanguage = LoadAndAssignLanguage(User.LanguageId);
+                }
             }
 
             User = DataRepository.Instance.Login(User?.Email, sessionPassword as string, true, true, true);
         }
 
+        private object LoadAndAssignLanguage(int languageId)
+        {
+            Language = LanguageRepository.Instance.LoadLanguage(languageId);
+
+            return Language;
+        }
+
         public User User { get;}
 
-        public Language Language { get; }
+        public Language Language { get; private set; }
     }
 }
