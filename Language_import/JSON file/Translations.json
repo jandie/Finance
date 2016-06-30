@@ -90,8 +90,8 @@
       {
          "ID":"12",
          "Translations":[
-            "Aan het einde van de maand",
-            "At the end of the month"
+            "Overzicht van deze maand",
+            "This month's overview"
          ]
       },
       {
@@ -463,6 +463,27 @@
          "Translations":[
             "Valuta",
             "Currency"
+         ]
+      },
+      {
+         "ID":"66",
+         "Translations":[
+            "Geld over",
+            "Money left"
+         ]
+      },
+      {
+         "ID":"67",
+         "Translations":[
+            "Te betalen",
+            "To pay"
+         ]
+      },
+      {
+         "ID":"68",
+         "Translations":[
+            "Te krijgen",
+            "To get"
          ]
       }
    ]
