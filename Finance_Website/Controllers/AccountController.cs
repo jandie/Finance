@@ -91,13 +91,13 @@ namespace Finance_Website.Controllers
 
             return RedirectToAction("Login", "Account");
         }
-
-        // GET: Account
-        public ActionResult Register()
+       
+        public ActionResult Register(string alphaKey = "")
         {
            
             InitializeAction();
 
+            ViewBag.AlphaKey = alphaKey;
             ViewBag.Languages = DataRepository.Instance.LoadLanguages();
             ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
 
@@ -105,7 +105,7 @@ namespace Finance_Website.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(string name, string lastName, string email, int currencyId, int languageId, string password, string password2)
+        public ActionResult Register(string name, string lastName, string email, int currencyId, int languageId, string password, string password2, string alphaKey)
         {
             
             InitializeAction();
@@ -113,6 +113,9 @@ namespace Finance_Website.Controllers
             ViewBag.Name = name;
             ViewBag.LastName = lastName;
             ViewBag.Email = email;
+            ViewBag.AlphaKey = alphaKey;
+            ViewBag.Languages = DataRepository.Instance.LoadLanguages();
+            ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
 
             if (string.IsNullOrWhiteSpace(name))
                 Session["Exception"] = _userUtility.Language.GetText(35);
@@ -134,6 +137,9 @@ namespace Finance_Website.Controllers
 
             else if (password != password2)
                 Session["Exception"] = _userUtility.Language.GetText(41);
+
+            else if (alphaKey != "E1j6^kr!v4")
+                Session["Exception"] = "Because this website is still in alpha, you need a key to be able to register.";
 
             else
             {

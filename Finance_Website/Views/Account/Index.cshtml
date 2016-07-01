@@ -17,27 +17,24 @@
             <!-- Default panel contents -->
             <div class="panel-heading">@language.GetText(12)</div>
 
-            <div class="panel-body">
-                <table class="table table-hover">
-                    <tbody>
-                    <tr>
-                        <th>@language.GetText(66)</th>
-                        <td>@user.Prediction.ToString("0.00")</td>
-                    </tr>
+            <table class="table table-hover">
+                <tbody>
+                <tr>
+                    <th>@language.GetText(66)</th>
+                    <td>@user.Prediction.ToString("0.00")</td>
+                </tr>
 
-                    <tr>
-                        <th>@language.GetText(67)</th>
-                        <td>@user.ToPay.ToString("0.00")</td>
-                    </tr>
+                <tr>
+                    <th>@language.GetText(67)</th>
+                    <td>@user.ToPay.ToString("0.00")</td>
+                </tr>
 
-                    <tr>
-                        <th>@language.GetText(68)</th>
-                        <td>@user.ToGet.ToString("0.00")</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <p></p>
-            </div>
+                <tr>
+                    <th>@language.GetText(68)</th>
+                    <td>@user.ToGet.ToString("0.00")</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
     </div>
