@@ -202,7 +202,7 @@ namespace Finance_Website.Controllers
             else if (password != password2)
                 Session["Exception"] = _userUtility.Language.GetText(41);
 
-            else if (alphaKey != "E1j6^kr!v4")
+            else if (alphaKey != "E1j6kr!v4")
                 Session["Exception"] = "Because this website is still in alpha, you need a key to be able to register.";
 
             else
