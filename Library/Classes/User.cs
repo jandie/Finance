@@ -40,6 +40,18 @@ namespace Library.Classes
 
         public Currency Currency { get; }
 
+        public decimal TotalBalance
+        {
+            get
+            {
+                decimal total = 0;
+
+                Balances.ForEach(b => total += b.BalanceAmount);
+
+                return total;
+            }
+        }
+
         public decimal Prediction
         {
             get

@@ -51,5 +51,30 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
             }
         }
+
+        public void ChangeUser(string name, string lastName, string email, int currencyId, int languageId,
+            string currentPassword)
+        {
+            try
+            {
+                _context.ChangeUser(name, lastName, email, currencyId, languageId, currentPassword);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        public void ChangePassword(string email, string newPassword, string currentPassword)
+        {
+            try
+            {
+                _context.ChangePassword(email, newPassword, currentPassword);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
     }
 }

@@ -8,21 +8,27 @@
 }
 
 
-@if (Session["user"] is User)
-{
-    var user = Session["user"] as User;
 
-    <ul class="nav navbar-nav navbar-right">
-        <li class="">@Html.ActionLink($"{user.Name}'s {language.GetText(9)}", "Index", "Account", new { area = "" }, new { @class = "primary-content" })</li>
-        <li class="navbar-content">@Html.ActionLink(language.GetText(10), "Loguit", "Account", new { area = "" }, new { @class = "primary-content" })</li>
+
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle primary-content primary-background" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account<span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        @if (Session["user"] is User)
+        {
+            var user = Session["user"] as User;
+
+            <li>@Html.ActionLink($"{language.GetText(11)}", "Index", "Account", new { area = "" }, new { @class = "" })</li>
+            <li role="separator" class="divider"></li>
+            <li>@Html.ActionLink($"{language.GetText(9)}", "MyAccount", "Account", new {area = ""}, new {@class = ""})</li>
+            <li role="separator" class="divider"></li>
+            <li>@Html.ActionLink(language.GetText(10), "Loguit", "Account", new { area = "" }, new { @class = "" })</li>
+
+        }
+        else
+        {
+            <li>@Html.ActionLink(language.GetText(3), "Login", "Account", new { area = "" }, new { @class = "" })</li>
+            <li role="separator" class="divider"></li>
+            <li>@Html.ActionLink(language.GetText(8), "Register", "Account", new { area = "" }, new { @class = "" })</li>
+        }
     </ul>
-
-}
-else
-{
-    <ul class="nav navbar-nav navbar-right">
-        <li class="navbar-content">@Html.ActionLink(language.GetText(3), "Login", "Account", new { area = "" }, new { @class = "primary-content" })</li>
-        <li class="navbar-content">@Html.ActionLink(language.GetText(8), "Register", "Account", new { area = "" }, new { @class = "primary-content" })</li>
-    </ul>
-}
-
+</li>

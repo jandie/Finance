@@ -167,8 +167,8 @@
       {
          "ID":"23",
          "Translations":[
-            "Uitgave/ inkomen",
-            "Bill/ income"
+            "Uitgaves/ inkomsten",
+            "Expenses/ income"
          ]
       },
       {
@@ -195,22 +195,15 @@
       {
          "ID":"27",
          "Translations":[
-            "Maandelijks uitgaven toevoegen",
-            "Add monthly bill"
+            "Uitgave toevoegen",
+            "Add expense"
          ]
       },
       {
          "ID":"28",
          "Translations":[
-            "Maandelijks inkomst toevoegen",
-            "Add monthly income"
-         ]
-      },
-      {
-         "ID":"29",
-         "Translations":[
-            "Acties",
-            "Actions"
+            "Inkomst toevoegen",
+            "Add income"
          ]
       },
       {
@@ -377,15 +370,15 @@
       {
          "ID":"53",
          "Translations":[
-            "Betaling/ inkomst is gewijzigd",
-            "Payment changed"
+            "Uitgave of inkomst is gewijzigd",
+            "Expense or income has been changed"
          ]
       },
       {
          "ID":"54",
          "Translations":[
-            "Betaling/ inkomst is verwijderd",
-            "Payment deleted"
+            "Uitgave of inkomst is verwijderd",
+            "Expense or income has been deleted"
          ]
       },
       {
@@ -498,6 +491,48 @@
          "Translations":[
             "Handmatig",
             "Manually"
+         ]
+      },
+      {
+         "ID":"71",
+         "Translations":[
+            "Huidig totaal",
+            "Current total"
+         ]
+      },
+      {
+         "ID":"72",
+         "Translations":[
+            "Mijn account",
+            "My account"
+         ]
+      },
+      {
+         "ID":"73",
+         "Translations":[
+            "Huidig wachtwoord",
+            "Current password"
+         ]
+      },
+      {
+         "ID":"74",
+         "Translations":[
+            "Nieuw wachtwoord",
+            "New password"
+         ]
+      },
+      {
+         "ID":"75",
+         "Translations":[
+            "Herhaal wachtwoord",
+            "Repeat password"
+         ]
+      },
+      {
+         "ID":"76",
+         "Translations":[
+            "Gebruiker gegevens zijn aangepast",
+            "User data has been changed"
          ]
       }
    ]

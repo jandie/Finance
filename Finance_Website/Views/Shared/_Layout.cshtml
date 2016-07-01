@@ -21,9 +21,9 @@
             @Html.ActionLink("WhatPays.Me", "Index", "Account", new {area = ""}, new {@class = "navbar-brand primary-content" })
         </div>
         <div class="navbar-collapse collapse primary-content">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav navbar-right">
+                @Html.Partial("_LoginPartial")
             </ul>
-            @Html.Partial("_LoginPartial")
         </div>
     </div>
 </nav>
