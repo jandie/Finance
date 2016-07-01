@@ -14,8 +14,8 @@ namespace Language_import
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            //const string path = "E:\\BSync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
-            const string path = "C:\\Users\\Jandie\\BitTorrent Sync\\Bsync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
+            const string path = "E:\\BSync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
+            //const string path = "C:\\Users\\Jandie\\BitTorrent Sync\\Bsync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
             string json = "";
 
             try

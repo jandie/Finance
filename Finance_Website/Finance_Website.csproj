@@ -175,6 +175,7 @@
     <Content Include="Views\Action\Transaction.cshtml" />
     <Content Include="Views\Manage\Transaction.cshtml" />
     <Content Include="scripts\jquery-2.2.4.min.map" />
+    <Content Include="Views\Account\MyAccount.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

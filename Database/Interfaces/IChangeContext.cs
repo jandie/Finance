@@ -7,5 +7,10 @@
         void ChangePayment(int id, string name, decimal amount);
 
         void ChangeTransaction(int id, decimal amount, string description);
+
+        void ChangeUser(string name, string lastName, string email, int currencyId, int languageId,
+            string currentPassword);
+
+        void ChangePassword(string email, string newPassword, string currentPassword);
     }
 }

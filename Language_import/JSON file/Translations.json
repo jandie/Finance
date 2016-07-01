@@ -499,6 +499,41 @@
             "Huidig totaal",
             "Current total"
          ]
+      },
+      {
+         "ID":"72",
+         "Translations":[
+            "Mijn account",
+            "My account"
+         ]
+      },
+      {
+         "ID":"73",
+         "Translations":[
+            "Huidig wachtwoord",
+            "Current password"
+         ]
+      },
+      {
+         "ID":"74",
+         "Translations":[
+            "Nieuw wachtwoord",
+            "New password"
+         ]
+      },
+      {
+         "ID":"75",
+         "Translations":[
+            "Herhaal wachtwoord",
+            "Repeat password"
+         ]
+      },
+      {
+         "ID":"76",
+         "Translations":[
+            "Gebruiker gegevens zijn aangepast",
+            "User data has been changed"
+         ]
       }
    ]
 }

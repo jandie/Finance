@@ -4,6 +4,7 @@ using Finance_Website.Models.Utilities;
 using Library.Classes;
 using Library.Classes.Language;
 using Repository;
+using static System.String;
 
 namespace Finance_Website.Controllers
 {
@@ -50,7 +51,70 @@ namespace Finance_Website.Controllers
             return View();
         }
 
-        // GET: Account
+        public ActionResult MyAccount()
+        {
+            InitializeAction();
+
+            if (_userUtility.User == null)
+                return RedirectToAction("Login", "Account");
+
+            ViewBag.User = _userUtility.User;
+            ViewBag.Languages = DataRepository.Instance.LoadLanguages();
+            ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult MyAccount(string name, string lastName, int currencyId, int languageId, string currentPassword, 
+            string password = "", string password2 = "")
+        {
+
+            InitializeAction();
+
+            if (_userUtility.User == null)
+                return RedirectToAction("Login", "Account");
+            
+            ViewBag.Languages = DataRepository.Instance.LoadLanguages();
+            ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
+
+            if (IsNullOrWhiteSpace(name))
+                Session["Exception"] = _userUtility.Language.GetText(35);
+
+            else if (IsNullOrWhiteSpace(lastName))
+                Session["Exception"] = _userUtility.Language.GetText(36);
+
+            else if (!IsNullOrWhiteSpace(password) && password.Length < 8)
+                Session["Exception"] = _userUtility.Language.GetText(39);
+
+            else if (!IsNullOrWhiteSpace(password) && password.Contains(" "))
+                Session["Exception"] = _userUtility.Language.GetText(40);
+
+            else if (DataRepository.Instance.Login(_userUtility.User.Email, currentPassword, false, false, false) == null)
+                Session["Exception"] = _userUtility.Language.GetText(33);
+
+            else if (!IsNullOrWhiteSpace(password) && password != password2)
+                Session["Exception"] = _userUtility.Language.GetText(41);
+
+            else
+            {
+                ChangeRepository.Instance.ChangeUser(name, lastName, _userUtility.User.Email, currencyId, languageId, currentPassword);
+
+                if (!IsNullOrWhiteSpace(password))
+                {
+                    ChangeRepository.Instance.ChangePassword(_userUtility.User.Email, password, currentPassword);
+
+                    Session["Password"] = password;
+                }
+
+                Session["Message"] = _userUtility.Language.GetText(76);
+
+                return RedirectToAction("Index", "Account");
+            }
+
+            return View();
+        }
+
         public ActionResult Login()
         {
             InitializeAction();
@@ -117,13 +181,13 @@ namespace Finance_Website.Controllers
             ViewBag.Languages = DataRepository.Instance.LoadLanguages();
             ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
 
-            if (string.IsNullOrWhiteSpace(name))
+            if (IsNullOrWhiteSpace(name))
                 Session["Exception"] = _userUtility.Language.GetText(35);
 
-            else if (string.IsNullOrWhiteSpace(lastName))
+            else if (IsNullOrWhiteSpace(lastName))
                 Session["Exception"] = _userUtility.Language.GetText(36);
 
-            else if (string.IsNullOrWhiteSpace(email))
+            else if (IsNullOrWhiteSpace(email))
                 Session["Exception"] = _userUtility.Language.GetText(37);
 
             else if (!RegexUtilities.Instance.IsValidEmail(email))
