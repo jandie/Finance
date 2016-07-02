@@ -9,7 +9,7 @@ namespace Database
         // The following constants may be changed without breaking existing hashes.
         public const int SaltByteSize = 16;
         public const int HashByteSize = 20;
-        public const int Pbkdf2Iterations = 20000;
+        public const int Pbkdf2Iterations = 1000;
 
         public const int IterationIndex = 0;
         public const int SaltIndex = 1;

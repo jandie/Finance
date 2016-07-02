@@ -49,7 +49,18 @@ namespace Language_import
 
         private static void TestValidate(string password, string hashCollection)
         {
-            Console.WriteLine(Hashing.ValidatePassword(password, hashCollection));
+            for (int i = 0; i < 101; i++)
+            {
+
+                Stopwatch s = new Stopwatch();
+                s.Start();
+
+                Console.WriteLine(Hashing.ValidatePassword(password, hashCollection));
+
+                s.Stop();
+
+                Console.WriteLine($"It took me {s.Elapsed.Milliseconds} ms to check");
+            }
         }
 
         private static void UpdateLanguage()
