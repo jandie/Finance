@@ -3,7 +3,7 @@
 @using Library.Classes.Language
 
 @{
-    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
     Language language = userUtility.Language;
 
     List<Currency> currencies = ViewBag.Currencies as List<Currency>;

@@ -6,7 +6,7 @@
     const string classActive = "Class=active";
     const string active = "active";
 
-    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
     User user = userUtility.User;
     Language language = userUtility.Language;
 

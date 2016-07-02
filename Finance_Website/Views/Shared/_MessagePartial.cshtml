@@ -1,7 +1,7 @@
 ﻿@using Finance_Website.Models.Utilities
 @using Library.Classes.Language
 @{
-    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
     Language language = userUtility.Language;
 }
 

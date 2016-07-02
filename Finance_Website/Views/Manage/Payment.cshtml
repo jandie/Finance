@@ -4,7 +4,7 @@
 @using Library.Interfaces
 
 @{
-    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
     Language language = userUtility.Language;
     IPayment payment = ViewBag.Payment as IPayment;
     List<Transaction> transactions = payment.AllTransactions;

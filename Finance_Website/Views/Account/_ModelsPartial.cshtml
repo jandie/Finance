@@ -3,7 +3,7 @@
 @using Library.Classes.Language
 @using Library.Interfaces
 @{
-    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
     Language language = userUtility.Language;
 }
 <div class="modal fade" id="AddBalanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
