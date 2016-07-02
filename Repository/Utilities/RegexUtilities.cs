@@ -8,20 +8,20 @@ namespace Repository.Utilities
     {
         private static RegexUtilities _instance;
 
-        public static RegexUtilities Instance => _instance ?? (_instance = new RegexUtilities());
+        private bool _invalid;
 
-        private bool _invalid = false;
+        public static RegexUtilities Instance => _instance ?? (_instance = new RegexUtilities());
 
         public bool IsValidEmail(string strIn)
         {
             _invalid = false;
-            if (String.IsNullOrEmpty(strIn))
+            if (string.IsNullOrEmpty(strIn))
                 return false;
 
             // Use IdnMapping class to convert Unicode domain names.
             try
             {
-                strIn = Regex.Replace(strIn, @"(@)(.+)$", this.DomainMapper,
+                strIn = Regex.Replace(strIn, @"(@)(.+)$", DomainMapper,
                     RegexOptions.None, TimeSpan.FromMilliseconds(200));
             }
             catch (RegexMatchTimeoutException)
@@ -82,7 +82,7 @@ namespace Repository.Utilities
             if (Regex.Match(password, @"/\d+/", RegexOptions.ECMAScript).Success)
                 score++;
             if (Regex.Match(password, @"/[a-z]/", RegexOptions.ECMAScript).Success &&
-              Regex.Match(password, @"/[A-Z]/", RegexOptions.ECMAScript).Success)
+                Regex.Match(password, @"/[A-Z]/", RegexOptions.ECMAScript).Success)
                 score++;
             if (Regex.Match(password, @"/.[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]/", RegexOptions.ECMAScript).Success)
                 score++;

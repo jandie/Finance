@@ -7,9 +7,18 @@ namespace Database
     {
         private static readonly string CONNECTION_STRING =
             "SERVER=" + DatabaseConfiguration.DatabaseHost + ";" + "DATABASE=" +
-            DatabaseConfiguration.DatabaseName + ";" + "UID=" + DatabaseConfiguration.DatabaseUsername + ";" + "PASSWORD=" + DatabaseConfiguration.DatabasePassword + ";";
+            DatabaseConfiguration.DatabaseName + ";" + "UID=" + DatabaseConfiguration.DatabaseUsername + ";" +
+            "PASSWORD=" + DatabaseConfiguration.DatabasePassword + ";";
 
         private static Database _instance;
+
+
+        private Database()
+        {
+            Connection = new MySqlConnection {ConnectionString = CONNECTION_STRING};
+
+            Connection.Open();
+        }
 
         private bool IsConnected => Connection.State == ConnectionState.Open;
 
@@ -26,14 +35,6 @@ namespace Database
 
                 return _instance;
             }
-        }
-
-
-        private Database()
-        {
-            Connection = new MySqlConnection { ConnectionString = CONNECTION_STRING };
-
-            Connection.Open();
         }
 
         ~Database()

@@ -6,12 +6,10 @@ namespace Repository.Exceptions
     {
         public UserChangeException()
         {
-            
         }
 
         public UserChangeException(string message) : base(message)
         {
-            
         }
     }
 }

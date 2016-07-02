@@ -11,11 +11,61 @@ using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    
     public class DataSqlContext : IDataContext
     {
+        public List<Currency> LoadCurrencies()
+        {
+            List<Currency> currencies = new List<Currency>();
+
+            MySqlConnection connecion = Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME, HTML FROM CURRENCY", connecion)
+            {CommandType = CommandType.Text};
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string abbrevation = reader.GetString(1);
+                string name = reader.GetString(2);
+                string html = reader.GetString(3);
+
+                currencies.Add(new Currency(id, abbrevation, name, html));
+            }
+
+            reader.Close();
+
+            return currencies;
+        }
+
+        public List<Language> LoadLanguages()
+        {
+            List<Language> languages = new List<Language>();
+
+            MySqlConnection connecion = Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME FROM LANGUAGE", connecion)
+            {CommandType = CommandType.Text};
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string abbrevation = reader.GetString(1);
+                string name = reader.GetString(2);
+
+                languages.Add(new Language(id, abbrevation, name));
+            }
+
+            reader.Close();
+
+            return languages;
+        }
+
         #region User
-        public User CreateUser(string name, string lastName, string email, string password, int currencyId, int languageId)
+
+        public User CreateUser(string name, string lastName, string email, string password, int currencyId,
+            int languageId)
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
@@ -35,12 +85,14 @@ namespace Database.SqlContexts
             return LoginUser(email, password, false, false, false);
         }
 
-        public User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments, bool loadTransactions)
+        public User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments,
+            bool loadTransactions)
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
-                new MySqlCommand("SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD FROM USER U " +
-                                 "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
+                new MySqlCommand(
+                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD FROM USER U " +
+                    "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
                     connection) {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@email", email));
@@ -79,11 +131,13 @@ namespace Database.SqlContexts
 
         public List<Balance> GetBankAccountsOfUser(int userId)
         {
-            List<Balance> bankAccounts =  new List<Balance>();
+            List<Balance> bankAccounts = new List<Balance>();
 
             MySqlConnection conneciton = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = @userId AND Active = 1", conneciton)
-                { CommandType = CommandType.Text};
+            MySqlCommand command =
+                new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = @userId AND Active = 1",
+                    conneciton)
+                {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@userId", userId));
 
@@ -107,7 +161,9 @@ namespace Database.SqlContexts
         {
             List<IPayment> payments = new List<IPayment>();
             MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = @userId AND Active = 1", connection)
+            MySqlCommand command =
+                new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = @userId AND Active = 1",
+                    connection)
                 {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@userId", userId));
@@ -119,7 +175,7 @@ namespace Database.SqlContexts
                 int id = reader.GetInt32(0);
                 string name = reader.GetString(1);
                 decimal amount = Convert.ToDecimal(reader.GetString(2));
-                PaymentType type = (PaymentType) Enum.Parse(typeof(PaymentType) ,reader.GetString(3));
+                PaymentType type = (PaymentType) Enum.Parse(typeof(PaymentType), reader.GetString(3));
 
                 switch (type)
                 {
@@ -146,11 +202,14 @@ namespace Database.SqlContexts
             List<Transaction> transactions = new List<Transaction>();
 
             MySqlConnection connecion = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId AND DateAdded LIKE @month AND Active = 1", connecion)
-                {CommandType =  CommandType.Text};
+            MySqlCommand command =
+                new MySqlCommand(
+                    "SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId AND DateAdded LIKE @month AND Active = 1",
+                    connecion)
+                {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@paymentId", payment.Id));
-            command.Parameters.Add(new MySqlParameter("@month", $"%-{DateTime.Now.ToString("MM")}-%" ));
+            command.Parameters.Add(new MySqlParameter("@month", $"%-{DateTime.Now.ToString("MM")}-%"));
 
             MySqlDataReader reader = command.ExecuteReader();
 
@@ -170,55 +229,7 @@ namespace Database.SqlContexts
 
             return transactions;
         }
+
         #endregion User
-
-        public List<Currency> LoadCurrencies()
-        {
-            List<Currency> currencies = new List<Currency>();
-
-            MySqlConnection connecion = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME, HTML FROM CURRENCY", connecion)
-            { CommandType = CommandType.Text };
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                int id = reader.GetInt32(0);
-                string abbrevation = reader.GetString(1);
-                string name = reader.GetString(2);
-                string html = reader.GetString(3);
-
-                currencies.Add(new Currency(id, abbrevation, name, html));
-            }
-
-            reader.Close();
-
-            return currencies;
-        }
-
-        public List<Language> LoadLanguages()
-        {
-            List<Language> languages = new List<Language>();
-
-            MySqlConnection connecion = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME FROM LANGUAGE", connecion)
-            { CommandType = CommandType.Text };
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                int id = reader.GetInt32(0);
-                string abbrevation = reader.GetString(1);
-                string name = reader.GetString(2);
-
-                languages.Add(new Language(id, abbrevation, name));
-            }
-
-            reader.Close();
-
-            return languages;
-        }
     }
 }

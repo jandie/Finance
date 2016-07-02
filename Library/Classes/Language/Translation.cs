@@ -9,7 +9,7 @@
         }
 
         public int Id { get; }
-        
+
         public string TranslationText { get; }
     }
 }

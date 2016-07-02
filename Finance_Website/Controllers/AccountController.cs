@@ -33,7 +33,6 @@ namespace Finance_Website.Controllers
 
         public ActionResult Index()
         {
-           
             InitializeAction();
 
             if (_userUtility.User == null)
@@ -62,19 +61,18 @@ namespace Finance_Website.Controllers
         public ActionResult MyAccount(string name, string lastName, int currencyId, int languageId,
             string currentPassword, string password = "", string password2 = "")
         {
-
             InitializeAction();
 
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            
+
             ViewBag.Languages = DataRepository.Instance.LoadLanguages();
             ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
 
             try
             {
                 ChangeRepository.Instance.ChangeUser(name, lastName, _userUtility.User.Email, currencyId,
-                languageId, currentPassword, password, password2, _userUtility.Language);
+                    languageId, currentPassword, password, password2, _userUtility.Language);
 
                 if (DataRepository.Instance.Login(_userUtility.User.Email, password, false, false, false) != null)
                 {
@@ -125,7 +123,7 @@ namespace Finance_Website.Controllers
 
             return RedirectToAction("Login", "Account");
         }
-       
+
         public ActionResult Register(string alphaKey = "")
         {
             InitializeAction();
@@ -153,7 +151,7 @@ namespace Finance_Website.Controllers
             try
             {
                 _userUtility.User = DataRepository.Instance.CreateUser(name, lastName, email, password, password2,
-                currencyId, languageId, _userUtility.Language, alphaKey);
+                    currencyId, languageId, _userUtility.Language, alphaKey);
 
                 LoginAction(password, email);
 

@@ -6,12 +6,10 @@ namespace Repository.Exceptions
     {
         public RegistrationException()
         {
-            
         }
 
         public RegistrationException(string message) : base(message)
         {
-            
         }
     }
 }

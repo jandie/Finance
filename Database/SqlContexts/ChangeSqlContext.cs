@@ -52,10 +52,11 @@ namespace Database.SqlContexts
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
-                new MySqlCommand("UPDATE USER SET NAME = @name, LASTNAME = @lastName, CURRENCY = @currencyId, LANGUAGE = @languageId " +
-                                 "WHERE EMAIL = @email",
+                new MySqlCommand(
+                    "UPDATE USER SET NAME = @name, LASTNAME = @lastName, CURRENCY = @currencyId, LANGUAGE = @languageId " +
+                    "WHERE EMAIL = @email",
                     connection)
-                { CommandType = CommandType.Text };
+                {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@name", name));
             command.Parameters.Add(new MySqlParameter("@lastName", lastName));
@@ -73,7 +74,7 @@ namespace Database.SqlContexts
                 new MySqlCommand("UPDATE USER SET PASSWORD = @newPassword " +
                                  "WHERE EMAIL = @email",
                     connection)
-                { CommandType = CommandType.Text };
+                {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@newPassword", Hashing.CreateHash(newPassword)));
             command.Parameters.Add(new MySqlParameter("@email", email));

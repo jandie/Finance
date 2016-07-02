@@ -12,17 +12,17 @@ namespace Library.Classes
             Positive = positive;
         }
 
-        public int CompareTo(Transaction other)
-        {
-            return other.Id.CompareTo(this.Id);
-        }
-
-        public int Id { get;}
+        public int Id { get; }
 
         public decimal Amount { get; }
 
         public string Description { get; }
 
         public bool Positive { get; }
+
+        public int CompareTo(Transaction other)
+        {
+            return other.Id.CompareTo(Id);
+        }
     }
 }

@@ -13,6 +13,20 @@ namespace Finance_Website.Models.Utilities
             LastTab = null;
         }
 
+        public User User { get; set; }
+
+        public Language Language { get; set; }
+
+        public string LastTab { get; set; }
+
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
+        public string Exception { get; set; }
+
+        public string Message { get; set; }
+
         public void Refresh(string lastTab = null)
         {
             if (string.IsNullOrWhiteSpace(LastTab) && lastTab != null)
@@ -42,19 +56,5 @@ namespace Finance_Website.Models.Utilities
 
             return Language;
         }
-
-        public User User { get; set; }
-
-        public Language Language { get; set; }
-
-        public string LastTab { get; set; }
-
-        public string Email { get; set; }
-
-        public string Password { get; set; }
-
-        public string Exception { get; set; }
-
-        public string Message { get; set; }
     }
 }

@@ -14,35 +14,13 @@ namespace Database.SqlContexts
             CleanLanguages();
         }
 
-        public void CleanTranslations()
-        {
-            MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command =
-                new MySqlCommand("DELETE FROM TRANSLATION",
-                    connection)
-                { CommandType = CommandType.Text };
-
-            command.ExecuteNonQuery();
-        }
-
-        public void CleanLanguages()
-        {
-            MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command =
-                new MySqlCommand("DELETE FROM LANGUAGE",
-                    connection)
-                { CommandType = CommandType.Text };
-
-            command.ExecuteNonQuery();
-        }
-
         public void AddLaguage(Language language)
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand("INSERT INTO LANGUAGE (ID, ABBREVATION, NAME) VALUES (@Id, @Abbrevation, @Name)",
                     connection)
-                { CommandType = CommandType.Text };
+                {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@Id", language.Id));
             command.Parameters.Add(new MySqlParameter("@Abbrevation", language.Abbrevation));
@@ -53,28 +31,14 @@ namespace Database.SqlContexts
             language.Translations.ForEach(t => AddTranslation(t, language.Id));
         }
 
-        public void AddTranslation(Translation translation, int languageId)
-        {
-            MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command =
-                new MySqlCommand("INSERT INTO TRANSLATION (ID, LANGUAGE_ID, TRANSLATION) VALUES (@Id, @languageId, @TranslationText)",
-                    connection)
-                { CommandType = CommandType.Text };
-
-            command.Parameters.Add(new MySqlParameter("@Id", translation.Id));
-            command.Parameters.Add(new MySqlParameter("@languageId", languageId));
-            command.Parameters.Add(new MySqlParameter("@TranslationText", translation.TranslationText));
-
-            command.ExecuteNonQuery();
-        }
-
         public Language LoadLanguage(int languageId)
         {
             Language language = null;
 
             MySqlConnection conneciton = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME FROM LANGUAGE WHERE ID = @languageId", conneciton)
-            { CommandType = CommandType.Text };
+            MySqlCommand command = new MySqlCommand(
+                "SELECT ID, ABBREVATION, NAME FROM LANGUAGE WHERE ID = @languageId", conneciton)
+            {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@languageId", languageId));
 
@@ -96,13 +60,52 @@ namespace Database.SqlContexts
             return language;
         }
 
-        public List<Translation> LoadTranslations(int languageId) 
+        public void CleanTranslations()
+        {
+            MySqlConnection connection = Database.Instance.Connection;
+            MySqlCommand command =
+                new MySqlCommand("DELETE FROM TRANSLATION",
+                    connection)
+                {CommandType = CommandType.Text};
+
+            command.ExecuteNonQuery();
+        }
+
+        public void CleanLanguages()
+        {
+            MySqlConnection connection = Database.Instance.Connection;
+            MySqlCommand command =
+                new MySqlCommand("DELETE FROM LANGUAGE",
+                    connection)
+                {CommandType = CommandType.Text};
+
+            command.ExecuteNonQuery();
+        }
+
+        public void AddTranslation(Translation translation, int languageId)
+        {
+            MySqlConnection connection = Database.Instance.Connection;
+            MySqlCommand command =
+                new MySqlCommand(
+                    "INSERT INTO TRANSLATION (ID, LANGUAGE_ID, TRANSLATION) VALUES (@Id, @languageId, @TranslationText)",
+                    connection)
+                {CommandType = CommandType.Text};
+
+            command.Parameters.Add(new MySqlParameter("@Id", translation.Id));
+            command.Parameters.Add(new MySqlParameter("@languageId", languageId));
+            command.Parameters.Add(new MySqlParameter("@TranslationText", translation.TranslationText));
+
+            command.ExecuteNonQuery();
+        }
+
+        public List<Translation> LoadTranslations(int languageId)
         {
             List<Translation> translations = new List<Translation>();
 
             MySqlConnection conneciton = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, TRANSLATION FROM TRANSLATION WHERE LANGUAGE_ID = @languageId", conneciton)
-            { CommandType = CommandType.Text };
+            MySqlCommand command =
+                new MySqlCommand("SELECT ID, TRANSLATION FROM TRANSLATION WHERE LANGUAGE_ID = @languageId", conneciton)
+                {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@languageId", languageId));
 

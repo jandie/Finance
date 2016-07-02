@@ -100,7 +100,10 @@ namespace Library.Classes
             {
                 List<Transaction> transactions = new List<Transaction>();
 
-                _payments.ForEach(p => p.AllTransactions.ForEach(t => transactions.Add(new Transaction(t.Id, t.Amount, t.Description, t.Positive))));
+                _payments.ForEach(
+                    p =>
+                        p.AllTransactions.ForEach(
+                            t => transactions.Add(new Transaction(t.Id, t.Amount, t.Description, t.Positive))));
 
                 transactions.Sort();
 

@@ -11,12 +11,12 @@ namespace Repository
         private static ChangeRepository _instance;
         private readonly IChangeContext _context;
 
-        public static ChangeRepository Instance => _instance ?? (_instance = new ChangeRepository());
-
         public ChangeRepository()
         {
             _context = new ChangeSqlContext();
         }
+
+        public static ChangeRepository Instance => _instance ?? (_instance = new ChangeRepository());
 
         public void ChangeBalance(int id, string name, decimal balanceAmount)
         {
