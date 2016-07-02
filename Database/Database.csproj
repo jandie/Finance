@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hashing.cs" />
     <Compile Include="Interfaces\ILanguageContext.cs" />
     <Compile Include="SqlContexts\ChangeSqlContext.cs" />
     <Compile Include="Database.cs" />
