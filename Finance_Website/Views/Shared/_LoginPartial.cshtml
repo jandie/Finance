@@ -1,7 +1,6 @@
 ﻿@using Finance_Website.Models.Utilities
 @using Library.Classes
 @using Library.Classes.Language
-
 @{
     SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
     Language language = userUtility.Language;
@@ -14,19 +13,19 @@
     <ul class="dropdown-menu primary-background">
         @if (userUtility.User != null)
         {
-            var user = Session["user"] as User;
+            User user = Session["user"] as User;
 
-            <li>@Html.ActionLink($"{language.GetText(11)}", "Index", "Account", new { area = "" }, new { @class = "primary-content primary-background" })</li>
+            <li>@Html.ActionLink($"{language.GetText(11)}", "Index", "Account", new {area = ""}, new {@class = "primary-content primary-background"})</li>
             <li role="separator" class="divider"></li>
-            <li>@Html.ActionLink($"{language.GetText(9)}", "MyAccount", "Account", new {area = ""}, new {@class = "primary-content primary-background" })</li>
+            <li>@Html.ActionLink($"{language.GetText(9)}", "MyAccount", "Account", new {area = ""}, new {@class = "primary-content primary-background"})</li>
             <li role="separator" class="divider"></li>
-            <li>@Html.ActionLink(language.GetText(10), "Loguit", "Account", new { area = "" }, new { @class = "primary-content primary-background" })</li>
+            <li>@Html.ActionLink(language.GetText(10), "Loguit", "Account", new {area = ""}, new {@class = "primary-content primary-background"})</li>
         }
         else
         {
-            <li>@Html.ActionLink(language.GetText(3), "Login", "Account", new { area = "" }, new { @class = "primary-content primary-background" })</li>
+            <li>@Html.ActionLink(language.GetText(3), "Login", "Account", new {area = ""}, new {@class = "primary-content primary-background"})</li>
             <li role="separator" class="divider"></li>
-            <li>@Html.ActionLink(language.GetText(8), "Register", "Account", new { area = "" }, new { @class = "primary-content primary-background" })</li>
+            <li>@Html.ActionLink(language.GetText(8), "Register", "Account", new {area = ""}, new {@class = "primary-content primary-background"})</li>
         }
     </ul>
 </li>
