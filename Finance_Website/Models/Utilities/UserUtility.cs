@@ -6,51 +6,55 @@ namespace Finance_Website.Models.Utilities
 {
     public class UserUtility
     {
-        public UserUtility(ref object sessionUser, ref object sessionPassword, ref object sessionLanguage, ref object sessionLastTab, string lastTab)
+        public UserUtility()
         {
-            if (string.IsNullOrWhiteSpace(sessionLastTab as string))
-                sessionLastTab = lastTab;
-
             User = null;
+            Language = null;
+            LastTab = null;
+        }
 
-            User = sessionUser as User;
+        public void Refresh(string lastTab = null)
+        {
+            if (string.IsNullOrWhiteSpace(LastTab) && lastTab != null)
+                LastTab = lastTab;
+
+            User = DataRepository.Instance.Login(Email, Password, true, true, true);
 
             if (User == null)
             {
-                if (!(sessionLanguage is Language))
+                if (Language == null)
                 {
-                    sessionLanguage = LoadAndAssignLanguage(1);
+                    Language = LoadAndAssignLanguage(1);
                 }
-                else
-                {
-                    Language = (Language) sessionLanguage;
-                }
-            } else if (!(sessionLanguage is Language))
-            {
-                sessionLanguage = LoadAndAssignLanguage(User.LanguageId);
             }
             else
             {
-                Language = (Language) sessionLanguage;
-
-                if (Language.Id != User.LanguageId)
+                if (Language == null || Language.Id != User.LanguageId)
                 {
-                    sessionLanguage = LoadAndAssignLanguage(User.LanguageId);
+                    Language = LoadAndAssignLanguage(User.LanguageId);
                 }
             }
-
-            User = DataRepository.Instance.Login(User?.Email, sessionPassword as string, true, true, true);
         }
 
-        private object LoadAndAssignLanguage(int languageId)
+        private Language LoadAndAssignLanguage(int languageId)
         {
             Language = LanguageRepository.Instance.LoadLanguage(languageId);
 
             return Language;
         }
 
-        public User User { get;}
+        public User User { get; set; }
 
-        public Language Language { get; private set; }
+        public Language Language { get; set; }
+
+        public string LastTab { get; set; }
+
+        public string Email { get; set; }
+
+        public string Password { get; set; }
+
+        public string Exception { get; set; }
+
+        public string Message { get; set; }
     }
 }

@@ -1,8 +1,10 @@
-﻿@using Library.Classes
+﻿@using Finance_Website.Models.Utilities
+@using Library.Classes
 @using Library.Classes.Language
 @using Library.Interfaces
 @{
-    Language language = Session["Language"] as Language;
+    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    Language language = userUtility.Language;
 }
 <div class="modal fade" id="AddBalanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">

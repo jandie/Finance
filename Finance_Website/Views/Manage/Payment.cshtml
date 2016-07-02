@@ -1,11 +1,13 @@
-﻿@using Library.Classes
+﻿@using Finance_Website.Models.Utilities
+@using Library.Classes
 @using Library.Classes.Language
 @using Library.Interfaces
 
 @{
+    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    Language language = userUtility.Language;
     IPayment payment = ViewBag.Payment as IPayment;
     List<Transaction> transactions = payment.AllTransactions;
-    Language language = Session["Language"] as Language;
 
     ViewBag.Title = $"{ViewBag.Type} {payment?.Name}";
 }

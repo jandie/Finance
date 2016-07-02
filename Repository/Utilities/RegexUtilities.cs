@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Finance_Website.Models.Utilities
+namespace Repository.Utilities
 {
     public class RegexUtilities
     {

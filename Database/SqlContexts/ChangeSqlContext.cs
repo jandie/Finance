@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using System.Globalization;
 using Database.Interfaces;
-using Library.Classes;
 using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts

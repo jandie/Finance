@@ -1,21 +1,23 @@
-﻿@using Library.Classes.Language
+﻿@using Finance_Website.Models.Utilities
+@using Library.Classes.Language
 @{
-    Language language = Session["Language"] as Language;
+    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    Language language = userUtility.Language;
 }
 
-@if (Session["Exception"] != null)
+@if (Session["Exception"] is string)
 {
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>@language.GetText(63)</strong> @Session["Exception"].ToString()
+        <strong>@language.GetText(63)</strong> @Session["Exception"]
     </div>
 }
 
-@if (Session["Message"] != null)
+@if (Session["Message"] is string)
 {
     <div class="alert alert-success alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>Succes!</strong> @Session["Message"].ToString()
+        <strong>Succes!</strong> @Session["Message"]
     </div>
 }
 

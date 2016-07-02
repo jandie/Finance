@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
 using Library.Classes;
@@ -13,33 +12,15 @@ namespace Finance_Website.Controllers
         private IPayment _payment;
         private UserUtility _userUtility;
 
-        public bool InitializeAction(string lastTab = null)
+        public void InitializeAction(string lastTab = null)
         {
-            bool succes = true;
+            _userUtility = Session["UserUtility"] as UserUtility ?? new UserUtility();
 
-            object sessionUser = Session["User"];
-            object sessionPassword = Session["Password"];
-            object sessionLanguage = Session["Language"];
-            object sessionLastTab = Session["LastTab"];
+            _userUtility.Refresh(lastTab);
 
-            try
-            {
-                _userUtility = new UserUtility(ref sessionUser, ref sessionPassword, ref sessionLanguage, ref sessionLastTab, lastTab);
-            }
-            catch (Exception)
-            {
-                succes = false;
-            }
-
-            Session["User"] = sessionUser;
-            Session["Password"] = sessionPassword;
-            Session["Language"] = sessionLanguage;
-            Session["LastTab"] = sessionLastTab;
-
-            return succes;
+            Session["UserUtility"] = _userUtility;
         }
 
-        // GET: Manage
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Account");

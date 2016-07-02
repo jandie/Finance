@@ -1,13 +1,14 @@
-﻿@using Library.Classes
+﻿@using Finance_Website.Models.Utilities
+@using Library.Classes
 @using Library.Classes.Language
 
 @{
-    User user = ViewBag.User as User;
-
     const string classActive = "Class=active";
     const string active = "active";
 
-    Language language = Session["Language"] as Language;
+    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    User user = userUtility.User;
+    Language language = userUtility.Language;
 
     ViewBag.Title = $"{user.Name.Trim()}'s {language.GetText(11)}";
 }
@@ -50,15 +51,15 @@
         <div class="col-md-12">
             <!-- Nav tabs -->
             <ul class="nav nav-pills" role="tablist">
-                <li role="presentation" @if (Session["LastTab"] == null) { Session["LastTab"] = null; @classActive      }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-menu-hamburger icon-content" aria-hidden="true"></span>@language.GetText(13)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "1") { @classActive     }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-briefcase icon-content" aria-hidden="true"></span>@language.GetText(14)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "2") { @classActive     }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-up icon-content negative" aria-hidden="true"></span>@language.GetText(15)</a></li>
-                <li role="presentation" @if (Session["LastTab"]?.ToString() == "3") { @classActive     }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-down icon-content positive" aria-hidden="true"></span>@language.GetText(16)</a></li>
+                <li role="presentation" @if (userUtility.LastTab == null) { @classActive }><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-menu-hamburger icon-content" aria-hidden="true"></span>@language.GetText(13)</a></li>
+                <li role="presentation" @if (userUtility.LastTab == "1") { @classActive }><a href="#balances" aria-controls="balances" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-briefcase icon-content" aria-hidden="true"></span>@language.GetText(14)</a></li>
+                <li role="presentation" @if (userUtility.LastTab == "2") { @classActive }><a href="#monthlybills" aria-controls="monthlybills" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-up icon-content negative" aria-hidden="true"></span>@language.GetText(15)</a></li>
+                <li role="presentation" @if (userUtility.LastTab == "3") { @classActive }><a href="#monthlyincome" aria-controls="monthlyincome" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-arrow-down icon-content positive" aria-hidden="true"></span>@language.GetText(16)</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane @if (Session["LastTab"] == null) {Session["LastTab"] = null; @active}" id="overview">
+                <div role="tabpanel" class="tab-pane @if (userUtility.LastTab == null) {userUtility.LastTab = null; Session["UserUtility"] = userUtility; @active}" id="overview">
                     <button type="button" class="body-content btn btn-success" data-toggle="modal" data-target="#QuickTransaction">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
@@ -112,7 +113,7 @@
 
                 </div>
 
-                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "1"){ Session["LastTab"] = null; @active}" id="balances">
+                <div role="tabpanel" class="tab-pane @if (userUtility.LastTab == "1"){ userUtility.LastTab = null; Session["UserUtility"] = userUtility; @active}" id="balances">
 
                     <button type="button" class="body-content btn btn-success" data-toggle="modal" data-target="#AddBalanceModal">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
@@ -152,7 +153,7 @@
                     </div>
                 </div>
 
-                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "2") {Session["LastTab"] = null; @active}" id="monthlybills">
+                <div role="tabpanel" class="tab-pane @if (userUtility.LastTab == "2") {userUtility.LastTab = null; Session["UserUtility"] = userUtility; @active}" id="monthlybills">
                     <button type="button" class="body-content btn btn-success" data-toggle="modal" data-target="#AddMonthlyBill">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> @language.GetText(1)
                     </button>
@@ -191,7 +192,7 @@
                     </div>
                 </div>
 
-                <div role="tabpanel" class="tab-pane @if (Session["LastTab"]?.ToString() == "3"){Session["LastTab"] = null; @active}" id="monthlyincome">
+                <div role="tabpanel" class="tab-pane @if (userUtility.LastTab == "3"){userUtility.LastTab = null; Session["UserUtility"] = userUtility; @active}" id="monthlyincome">
 
 
                     <button type="button" class="body-content btn btn-success" data-toggle="modal" data-target="#AddMonthlyIncome">

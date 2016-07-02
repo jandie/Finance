@@ -1,6 +1,8 @@
-﻿@using Library.Classes.Language
+﻿@using Finance_Website.Models.Utilities
+@using Library.Classes.Language
 @{
-    Language language = Session["Language"] as Language;
+    UserUtility userUtility = Session["UserUtility"] as UserUtility;
+    Language language = userUtility.Language;
 
     ViewBag.Title = language.GetText(3);
 }
