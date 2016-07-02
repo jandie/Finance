@@ -26,7 +26,7 @@ namespace Database.SqlContexts
             command.Parameters.Add(new MySqlParameter("@name", name));
             command.Parameters.Add(new MySqlParameter("@lastName", lastName));
             command.Parameters.Add(new MySqlParameter("@email", email));
-            command.Parameters.Add(new MySqlParameter("@password", password));
+            command.Parameters.Add(new MySqlParameter("@password", Hashing.CreateHash(password)));
             command.Parameters.Add(new MySqlParameter("@currencyId", currencyId));
             command.Parameters.Add(new MySqlParameter("@languageId", languageId));
 
@@ -39,12 +39,11 @@ namespace Database.SqlContexts
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
-                new MySqlCommand("SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML FROM USER U " +
-                                 "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND PASSWORD = @password AND ACTIVE = 1;",
+                new MySqlCommand("SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD FROM USER U " +
+                                 "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
                     connection) {CommandType = CommandType.Text};
 
             command.Parameters.Add(new MySqlParameter("@email", email));
-            command.Parameters.Add(new MySqlParameter("@password", password));
 
             MySqlDataReader reader = command.ExecuteReader();
 
@@ -63,15 +62,16 @@ namespace Database.SqlContexts
             string currencyAbbrevation = reader.GetString(5);
             string currencyName = reader.GetString(6);
             string currencyHtml = reader.GetString(7);
+            string hash = reader.GetString(8);
 
             reader.Close();
 
-            Currency currency =  new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
+            if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
 
+            Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
             User user = new User(id, name, lastName, email, languageId, currency);
 
-            if (loadBankAccounts) user.AddBankAccounts(GetBankAccountsOfUser(id)); 
-
+            if (loadBankAccounts) user.AddBankAccounts(GetBankAccountsOfUser(id));
             if (loadPayments) user.AddPayments(GetPaymentsOfUser(id));
 
             return user;
