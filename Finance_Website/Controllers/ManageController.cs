@@ -10,11 +10,11 @@ namespace Finance_Website.Controllers
     public class ManageController : Controller
     {
         private IPayment _payment;
-        private UserUtility _userUtility;
+        private SessionUtility _userUtility;
 
         public void InitializeAction(string lastTab = null)
         {
-            _userUtility = Session["UserUtility"] as UserUtility ?? new UserUtility();
+            _userUtility = Session["UserUtility"] as SessionUtility ?? new SessionUtility();
 
             _userUtility.Refresh(lastTab);
 

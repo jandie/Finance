@@ -9,11 +9,11 @@ namespace Finance_Website.Controllers
 {
     public class ActionController : Controller
     {
-        private UserUtility _userUtility;
+        private SessionUtility _userUtility;
 
         public void InitializeAction(string lastTab = null)
         {
-            _userUtility = Session["UserUtility"] as UserUtility ?? new UserUtility();
+            _userUtility = Session["UserUtility"] as SessionUtility ?? new SessionUtility();
 
             _userUtility.Refresh(lastTab);
 

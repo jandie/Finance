@@ -4,15 +4,8 @@ using Repository;
 
 namespace Finance_Website.Models.Utilities
 {
-    public class UserUtility
+    public class SessionUtility
     {
-        public UserUtility()
-        {
-            User = null;
-            Language = null;
-            LastTab = null;
-        }
-
         public User User { get; set; }
 
         public Language Language { get; set; }
@@ -22,10 +15,6 @@ namespace Finance_Website.Models.Utilities
         public string Email { get; set; }
 
         public string Password { get; set; }
-
-        public string Exception { get; set; }
-
-        public string Message { get; set; }
 
         public void Refresh(string lastTab = null)
         {
