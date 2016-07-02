@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
+using Database;
 using Library.Classes.Language;
 using Newtonsoft.Json.Linq;
 using Repository;
@@ -10,7 +12,47 @@ namespace Language_import
 {
     internal class Program
     {
+        private static string _hashCollection;
+
+        [STAThreadAttribute]
         private static void Main(string[] args)
+        {
+            while (true)
+            {
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        UpdateLanguage();
+                        break;
+                    case "2":
+                        CreateHash(Console.ReadLine());
+                        break;
+                    case "3":
+                        TestValidate(Console.ReadLine(), _hashCollection);
+                        break;
+                    default:
+                        UpdateLanguage();
+                        break;
+                }
+            }
+            // ReSharper disable once FunctionNeverReturns
+        }
+
+        private static void CreateHash(string password)
+        {
+            _hashCollection = Hashing.CreateHash(password);
+
+            Clipboard.SetText(_hashCollection);
+
+            Console.WriteLine(_hashCollection);
+        }
+
+        private static void TestValidate(string password, string hashCollection)
+        {
+            Console.WriteLine(Hashing.ValidatePassword(password, hashCollection));
+        }
+
+        private static void UpdateLanguage()
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -48,7 +90,7 @@ namespace Language_import
                 {
                     languages.Add(new Language(languageId, language.Abbrevation.ToString(), language.Name.ToString()));
 
-                    languageId ++;
+                    languageId++;
                 }
 
                 foreach (dynamic translation in parsedData.Translations)
@@ -89,8 +131,6 @@ namespace Language_import
             stopwatch.Stop();
 
             Console.WriteLine($"Done! ({stopwatch.ElapsedMilliseconds}ms)");
-
-            Console.ReadLine();
         }
     }
 }
