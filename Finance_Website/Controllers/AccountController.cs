@@ -25,7 +25,7 @@ namespace Finance_Website.Controllers
             {
                 _userUtility = new UserUtility(ref sessionUser, ref sessionPassword, ref sessionLanguage, ref sessionLastTab, lastTab);
             }
-            catch (Exception ex) 
+            catch (Exception) 
             {
                 succes = false;
             }

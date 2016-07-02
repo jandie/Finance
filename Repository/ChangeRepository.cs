@@ -57,7 +57,9 @@ namespace Repository
         {
             try
             {
-                _context.ChangeUser(name, lastName, email, currencyId, languageId, currentPassword);
+                DataRepository.Instance.Login(email, currentPassword, false, false, false);
+
+                _context.ChangeUser(name, lastName, email, currencyId, languageId);
             }
             catch (Exception ex)
             {
@@ -69,7 +71,9 @@ namespace Repository
         {
             try
             {
-                _context.ChangePassword(email, newPassword, currentPassword);
+                DataRepository.Instance.Login(email, currentPassword, false, false, false);
+
+                _context.ChangePassword(email, newPassword);
             }
             catch (Exception ex)
             {

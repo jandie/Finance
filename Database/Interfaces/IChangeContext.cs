@@ -8,9 +8,8 @@
 
         void ChangeTransaction(int id, decimal amount, string description);
 
-        void ChangeUser(string name, string lastName, string email, int currencyId, int languageId,
-            string currentPassword);
+        void ChangeUser(string name, string lastName, string email, int currencyId, int languageId);
 
-        void ChangePassword(string email, string newPassword, string currentPassword);
+        void ChangePassword(string email, string newPassword);
     }
 }

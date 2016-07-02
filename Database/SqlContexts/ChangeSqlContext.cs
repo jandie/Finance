@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Globalization;
 using Database.Interfaces;
+using Library.Classes;
 using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
@@ -48,12 +49,12 @@ namespace Database.SqlContexts
             command.ExecuteNonQuery();
         }
 
-        public void ChangeUser(string name, string lastName, string email, int currencyId, int languageId, string currentPassword)
+        public void ChangeUser(string name, string lastName, string email, int currencyId, int languageId)
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand("UPDATE USER SET NAME = @name, LASTNAME = @lastName, CURRENCY = @currencyId, LANGUAGE = @languageId " +
-                                 "WHERE EMAIL = @email AND PASSWORD = @currentPassword",
+                                 "WHERE EMAIL = @email",
                     connection)
                 { CommandType = CommandType.Text };
 
@@ -62,23 +63,21 @@ namespace Database.SqlContexts
             command.Parameters.Add(new MySqlParameter("@currencyId", currencyId));
             command.Parameters.Add(new MySqlParameter("@languageId", languageId));
             command.Parameters.Add(new MySqlParameter("@email", email));
-            command.Parameters.Add(new MySqlParameter("@currentPassword", currentPassword));
 
             command.ExecuteNonQuery();
         }
 
-        public void ChangePassword(string email, string newPassword, string currentPassword)
+        public void ChangePassword(string email, string newPassword)
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand("UPDATE USER SET PASSWORD = @newPassword " +
-                                 "WHERE EMAIL = @email AND PASSWORD = @currentPassword",
+                                 "WHERE EMAIL = @email",
                     connection)
                 { CommandType = CommandType.Text };
 
-            command.Parameters.Add(new MySqlParameter("@newPassword", newPassword));
+            command.Parameters.Add(new MySqlParameter("@newPassword", Hashing.CreateHash(newPassword)));
             command.Parameters.Add(new MySqlParameter("@email", email));
-            command.Parameters.Add(new MySqlParameter("@currentPassword", currentPassword));
 
             command.ExecuteNonQuery();
         }
