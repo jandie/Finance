@@ -3,7 +3,7 @@
 @using Library.Classes.Language
 @{
     const string classActive = "Class=active";
-    const string active = "active";
+    const string active = "active in";
 
     SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
     User user = userUtility.User;
@@ -49,7 +49,7 @@
 <div>
 <div class="col-md-12">
 <!-- Nav tabs -->
-<ul class="nav nav-pills" role="tablist">
+<ul class="nav nav-pills nav-justified" role="tablist">
     <li role="presentation" @if (userUtility.LastTab == null)
                             {
                                 @classActive
@@ -82,7 +82,7 @@
 
 <!-- Tab panes -->
 <div class="tab-content">
-<div role="tabpanel" class="tab-pane @if (userUtility.LastTab == null)
+<div role="tabpanel" class="tab-pane fade @if (userUtility.LastTab == null)
                                      {
                                          userUtility.LastTab = null;
                                          Session["UserUtility"] = userUtility;
@@ -145,7 +145,7 @@
 
 </div>
 
-<div role="tabpanel" class="tab-pane @if (userUtility.LastTab == "1")
+<div role="tabpanel" class="tab-pane fade @if (userUtility.LastTab == "1")
                                      {
                                          userUtility.LastTab = null;
                                          Session["UserUtility"] = userUtility;
@@ -191,7 +191,7 @@
     </div>
 </div>
 
-<div role="tabpanel" class="tab-pane @if (userUtility.LastTab == "2")
+<div role="tabpanel" class="tab-pane fade @if (userUtility.LastTab == "2")
                                      {
                                          userUtility.LastTab = null;
                                          Session["UserUtility"] = userUtility;
@@ -237,7 +237,7 @@
     </div>
 </div>
 
-<div role="tabpanel" class="tab-pane @if (userUtility.LastTab == "3")
+<div role="tabpanel" class="tab-pane fade @if (userUtility.LastTab == "3")
                                      {
                                          userUtility.LastTab = null;
                                          Session["UserUtility"] = userUtility;

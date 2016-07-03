@@ -146,7 +146,7 @@ namespace Database.SqlContexts
             while (reader.Read())
             {
                 int id = reader.GetInt32(0);
-                decimal balance = Convert.ToDecimal(reader.GetString(1));
+                decimal balance = reader.GetDecimal(1);
                 string name = reader.GetString(2);
 
                 bankAccounts.Add(new Balance(id, name, balance));
@@ -174,7 +174,7 @@ namespace Database.SqlContexts
             {
                 int id = reader.GetInt32(0);
                 string name = reader.GetString(1);
-                decimal amount = Convert.ToDecimal(reader.GetString(2));
+                decimal amount = reader.GetDecimal(2);
                 PaymentType type = (PaymentType) Enum.Parse(typeof(PaymentType), reader.GetString(3));
 
                 switch (type)
@@ -216,7 +216,7 @@ namespace Database.SqlContexts
             while (reader.Read())
             {
                 int id = reader.GetInt32(0);
-                decimal amount = Convert.ToDecimal(reader.GetString(1));
+                decimal amount = reader.GetDecimal(1);
                 string description = reader.GetString(2);
 
                 if (payment is MonthlyBill)
