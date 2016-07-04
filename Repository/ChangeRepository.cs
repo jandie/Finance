@@ -11,7 +11,7 @@ namespace Repository
         private static ChangeRepository _instance;
         private readonly IChangeContext _context;
 
-        public ChangeRepository()
+        private ChangeRepository()
         {
             _context = new ChangeSqlContext();
         }

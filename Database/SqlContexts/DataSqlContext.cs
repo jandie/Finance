@@ -129,7 +129,7 @@ namespace Database.SqlContexts
             return user;
         }
 
-        public List<Balance> GetBankAccountsOfUser(int userId)
+        private List<Balance> GetBankAccountsOfUser(int userId)
         {
             List<Balance> bankAccounts = new List<Balance>();
 

@@ -10,7 +10,7 @@ namespace Repository
         private static InsertRepository _instance;
         private readonly IInsertContext _context;
 
-        public InsertRepository()
+        private InsertRepository()
         {
             _context = new InsertSqlContext();
         }

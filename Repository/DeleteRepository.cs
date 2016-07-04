@@ -9,7 +9,7 @@ namespace Repository
         private static DeleteRepository _instance;
         private readonly IDeleteContext _context;
 
-        public DeleteRepository()
+        private DeleteRepository()
         {
             _context = new DeleteSqlContext();
         }
