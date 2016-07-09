@@ -82,11 +82,10 @@ namespace Database.SqlContexts
 
             command.ExecuteNonQuery();
 
-            return LoginUser(email, password, false, false, false);
+            return LoginUser(email, password);
         }
 
-        public User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments,
-            bool loadTransactions)
+        public User LoginUser(string email, string password)
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
@@ -123,8 +122,49 @@ namespace Database.SqlContexts
             Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
             User user = new User(id, name, lastName, email, languageId, currency);
 
-            if (loadBankAccounts) user.AddBankAccounts(GetBankAccountsOfUser(id));
-            if (loadPayments) user.AddPayments(GetPaymentsOfUser(id));
+            user.AddBankAccounts(GetBankAccountsOfUser(id));
+            user.AddPayments(GetPaymentsOfUser(id));
+
+            return user;
+        }
+
+        public User LoadUser(string email)
+        {
+            MySqlConnection connection = Database.Instance.Connection;
+            MySqlCommand command =
+                new MySqlCommand(
+                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML FROM USER U " +
+                    "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
+                    connection)
+                { CommandType = CommandType.Text };
+
+            command.Parameters.Add(new MySqlParameter("@email", email));
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            if (!reader.Read())
+            {
+                reader.Close();
+
+                throw new WrongUsernameOrPasswordException();
+            }
+
+            int id = reader.GetInt32(0);
+            string name = reader.GetString(1);
+            string lastName = reader.GetString(2);
+            int languageId = reader.GetInt32(3);
+            int currencyId = reader.GetInt32(4);
+            string currencyAbbrevation = reader.GetString(5);
+            string currencyName = reader.GetString(6);
+            string currencyHtml = reader.GetString(7);
+
+            reader.Close();
+
+            Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
+            User user = new User(id, name, lastName, email, languageId, currency);
+
+            user.AddBankAccounts(GetBankAccountsOfUser(id));
+            user.AddPayments(GetPaymentsOfUser(id));
 
             return user;
         }

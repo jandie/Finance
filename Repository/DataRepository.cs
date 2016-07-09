@@ -21,11 +21,25 @@ namespace Repository
 
         public static DataRepository Instance => _instance ?? (_instance = new DataRepository());
 
-        public User Login(string email, string password, bool loadBankAccounts, bool loadPayments, bool loadTransactions)
+        public User Login(string email, string password)
         {
             try
             {
-                return _context.LoginUser(email, password, loadBankAccounts, loadPayments, loadTransactions);
+                return _context.LoginUser(email, password);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+                return null;
+            }
+        }
+
+        public User LoadUser(string email)
+        {
+            try
+            {
+                return _context.LoadUser(email);
             }
             catch (Exception ex)
             {

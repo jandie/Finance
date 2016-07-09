@@ -74,7 +74,7 @@ namespace Finance_Website.Controllers
                 ChangeRepository.Instance.ChangeUser(name, lastName, _userUtility.User.Email, currencyId,
                     languageId, currentPassword, password, password2, _userUtility.Language);
 
-                if (DataRepository.Instance.Login(_userUtility.User.Email, password, false, false, false) != null)
+                if (DataRepository.Instance.Login(_userUtility.User.Email, password) != null)
                 {
                     _userUtility.Password = password;
 

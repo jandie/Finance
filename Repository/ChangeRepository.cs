@@ -71,7 +71,7 @@ namespace Repository
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword.Contains(" "))
                     throw new UserChangeException(language.GetText(40));
 
-                if (DataRepository.Instance.Login(email, currentPassword, false, false, false) == null)
+                if (DataRepository.Instance.Login(email, currentPassword) == null)
                     throw new UserChangeException(language.GetText(33));
 
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword != repeatedPassword)

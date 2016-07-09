@@ -8,20 +8,22 @@ namespace Finance_Website.Models.Utilities
     {
         public User User { get; set; }
 
-        public Language Language { get; set; }
+        public Language Language { get; private set; }
 
         public string LastTab { get; set; }
 
-        public string Email { get; set; }
+        public string Email { private get; set; }
 
-        public string Password { get; set; }
+        public string Password { private get; set; }
 
         public void Refresh(string lastTab = null)
         {
             if (string.IsNullOrWhiteSpace(LastTab) && lastTab != null)
                 LastTab = lastTab;
 
-            User = DataRepository.Instance.Login(Email, Password, true, true, true);
+            User = User == null
+                ? DataRepository.Instance.Login(Email, Password)
+                : DataRepository.Instance.LoadUser(Email);
 
             if (User == null)
             {

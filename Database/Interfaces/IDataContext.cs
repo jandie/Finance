@@ -8,7 +8,9 @@ namespace Database.Interfaces
     {
         User CreateUser(string name, string lastName, string email, string password, int currencyId, int languageId);
 
-        User LoginUser(string email, string password, bool loadBankAccounts, bool loadPayments, bool loadTransactions);
+        User LoginUser(string email, string password);
+
+        User LoadUser(string email);
 
         List<Currency> LoadCurrencies();
 
