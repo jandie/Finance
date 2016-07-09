@@ -13,57 +13,18 @@ namespace Database.SqlContexts
 {
     public class DataSqlContext : IDataContext
     {
-        public List<Currency> LoadCurrencies()
-        {
-            List<Currency> currencies = new List<Currency>();
-
-            MySqlConnection connecion = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME, HTML FROM CURRENCY", connecion)
-            {CommandType = CommandType.Text};
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                int id = reader.GetInt32(0);
-                string abbrevation = reader.GetString(1);
-                string name = reader.GetString(2);
-                string html = reader.GetString(3);
-
-                currencies.Add(new Currency(id, abbrevation, name, html));
-            }
-
-            reader.Close();
-
-            return currencies;
-        }
-
-        public List<Language> LoadLanguages()
-        {
-            List<Language> languages = new List<Language>();
-
-            MySqlConnection connecion = Database.Instance.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME FROM LANGUAGE", connecion)
-            {CommandType = CommandType.Text};
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                int id = reader.GetInt32(0);
-                string abbrevation = reader.GetString(1);
-                string name = reader.GetString(2);
-
-                languages.Add(new Language(id, abbrevation, name));
-            }
-
-            reader.Close();
-
-            return languages;
-        }
-
         #region User
 
+        /// <summary>
+        /// Creates a new user and returns the user.
+        /// </summary>
+        /// <param name="name">The name of the user.</param>
+        /// <param name="lastName">The lastname of the user.</param>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <param name="currencyId">The id of the preferred currency.</param>
+        /// <param name="languageId">The id of the preferred language.</param>
+        /// <returns>A user that has been loaded from the database.</returns>
         public User CreateUser(string name, string lastName, string email, string password, int currencyId,
             int languageId)
         {
@@ -85,6 +46,12 @@ namespace Database.SqlContexts
             return LoginUser(email, password);
         }
 
+        /// <summary>
+        /// Loads the user and checks whether or not the password is correct.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>A user that has been loaded from the database.</returns>
         public User LoginUser(string email, string password)
         {
             MySqlConnection connection = Database.Instance.Connection;
@@ -128,6 +95,11 @@ namespace Database.SqlContexts
             return user;
         }
 
+        /// <summary>
+        /// Loads a user from the database.
+        /// </summary>
+        /// <param name="email">The email of the user (to identify).</param>
+        /// <returns>A user that has been loaded from the database.</returns>
         public User LoadUser(string email)
         {
             MySqlConnection connection = Database.Instance.Connection;
@@ -169,6 +141,11 @@ namespace Database.SqlContexts
             return user;
         }
 
+        /// <summary>
+        /// Loads all balances of the user from the database.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <returns>List of balances of the user.</returns>
         private List<Balance> GetBankAccountsOfUser(int userId)
         {
             List<Balance> bankAccounts = new List<Balance>();
@@ -197,7 +174,12 @@ namespace Database.SqlContexts
             return bankAccounts;
         }
 
-        public List<IPayment> GetPaymentsOfUser(int userId)
+        /// <summary>
+        /// Loads payments of a user from the database.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <returns>List of payments of the user.</returns>
+        private List<IPayment> GetPaymentsOfUser(int userId)
         {
             List<IPayment> payments = new List<IPayment>();
             MySqlConnection connection = Database.Instance.Connection;
@@ -237,7 +219,12 @@ namespace Database.SqlContexts
             return payments;
         }
 
-        public List<Transaction> GetTransactionsOfPayment(IPayment payment) //bug
+        /// <summary>
+        /// Loads the transactions of a payment from the database.
+        /// </summary>
+        /// <param name="payment">The payment itself.</param>
+        /// <returns>List of transactions of the payment.</returns>
+        private List<Transaction> GetTransactionsOfPayment(IPayment payment)
         {
             List<Transaction> transactions = new List<Transaction>();
 
@@ -271,5 +258,62 @@ namespace Database.SqlContexts
         }
 
         #endregion User
+
+        /// <summary>
+        /// Loads all exsisting currencies from the database.
+        /// </summary>
+        /// <returns>A list of all exsisting currencies.</returns>
+        public List<Currency> LoadCurrencies()
+        {
+            List<Currency> currencies = new List<Currency>();
+
+            MySqlConnection connecion = Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME, HTML FROM CURRENCY", connecion)
+            { CommandType = CommandType.Text };
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string abbrevation = reader.GetString(1);
+                string name = reader.GetString(2);
+                string html = reader.GetString(3);
+
+                currencies.Add(new Currency(id, abbrevation, name, html));
+            }
+
+            reader.Close();
+
+            return currencies;
+        }
+
+        /// <summary>
+        /// Loads all exsisting languages from the database.
+        /// </summary>
+        /// <returns>A list of all exsisting languages in the database.</returns>
+        public List<Language> LoadLanguages()
+        {
+            List<Language> languages = new List<Language>();
+
+            MySqlConnection connecion = Database.Instance.Connection;
+            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME FROM LANGUAGE", connecion)
+            { CommandType = CommandType.Text };
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                int id = reader.GetInt32(0);
+                string abbrevation = reader.GetString(1);
+                string name = reader.GetString(2);
+
+                languages.Add(new Language(id, abbrevation, name));
+            }
+
+            reader.Close();
+
+            return languages;
+        }
     }
 }

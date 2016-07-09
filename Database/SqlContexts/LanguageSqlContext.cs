@@ -8,12 +8,19 @@ namespace Database.SqlContexts
 {
     public class LanguageSqlContext : ILanguageContext
     {
+        /// <summary>
+        /// Deletes all rows from the language tables.
+        /// </summary>
         public void Clean()
         {
             CleanTranslations();
             CleanLanguages();
         }
 
+        /// <summary>
+        /// Adds a language to the database.
+        /// </summary>
+        /// <param name="language">The language to add.</param>
         public void AddLaguage(Language language)
         {
             MySqlConnection connection = Database.Instance.Connection;
@@ -31,6 +38,11 @@ namespace Database.SqlContexts
             language.Translations.ForEach(t => AddTranslation(t, language.Id));
         }
 
+        /// <summary>
+        /// Loads a language from the database.
+        /// </summary>
+        /// <param name="languageId">The id of the language to identify.</param>
+        /// <returns>A language</returns>
         public Language LoadLanguage(int languageId)
         {
             Language language = null;
@@ -60,7 +72,10 @@ namespace Database.SqlContexts
             return language;
         }
 
-        public void CleanTranslations()
+        /// <summary>
+        /// Deletes all rows from translation table.
+        /// </summary>
+        private void CleanTranslations()
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
@@ -71,7 +86,10 @@ namespace Database.SqlContexts
             command.ExecuteNonQuery();
         }
 
-        public void CleanLanguages()
+        /// <summary>
+        /// Deletes all rows from language table.
+        /// </summary>
+        private void CleanLanguages()
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
@@ -82,7 +100,12 @@ namespace Database.SqlContexts
             command.ExecuteNonQuery();
         }
 
-        public void AddTranslation(Translation translation, int languageId)
+        /// <summary>
+        /// Adds a translation to the database.
+        /// </summary>
+        /// <param name="translation">The translation to add.</param>
+        /// <param name="languageId">The id of the language the translation belongs to.</param>
+        private void AddTranslation(Translation translation, int languageId)
         {
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
@@ -98,7 +121,12 @@ namespace Database.SqlContexts
             command.ExecuteNonQuery();
         }
 
-        public List<Translation> LoadTranslations(int languageId)
+        /// <summary>
+        /// Loads translations of a language from the database.
+        /// </summary>
+        /// <param name="languageId">The id of the language the translations belong to.</param>
+        /// <returns>List of translations</returns>
+        private List<Translation> LoadTranslations(int languageId)
         {
             List<Translation> translations = new List<Translation>();
 
