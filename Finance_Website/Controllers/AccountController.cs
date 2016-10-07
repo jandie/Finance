@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
+using Library.Exceptions;
 using Repository;
 using Repository.Exceptions;
 
@@ -77,7 +78,7 @@ namespace Finance_Website.Controllers
 
                 Session["Message"] = _userUtility.Language.GetText(76);
             }
-            catch (UserChangeException ex)
+            catch (ChangeUserException ex)
             {
                 Session["Exception"] = ex.Message;
             }

@@ -2,6 +2,7 @@
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes.Language;
+using Library.Exceptions;
 using Repository.Exceptions;
 
 namespace Repository
@@ -60,22 +61,22 @@ namespace Repository
             try
             {
                 if (string.IsNullOrWhiteSpace(name))
-                    throw new UserChangeException(language.GetText(35));
+                    throw new ChangeUserException(language.GetText(35));
 
                 if (string.IsNullOrWhiteSpace(lastName))
-                    throw new UserChangeException(language.GetText(36));
+                    throw new ChangeUserException(language.GetText(36));
 
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword.Length < 8)
-                    throw new UserChangeException(language.GetText(39));
+                    throw new ChangeUserException(language.GetText(39));
 
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword.Contains(" "))
-                    throw new UserChangeException(language.GetText(40));
+                    throw new ChangeUserException(language.GetText(40));
 
                 if (DataRepository.Instance.Login(email, currentPassword) == null)
-                    throw new UserChangeException(language.GetText(33));
+                    throw new ChangeUserException(language.GetText(33));
 
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword != repeatedPassword)
-                    throw new UserChangeException(language.GetText(41));
+                    throw new ChangeUserException(language.GetText(41));
 
                 _context.ChangeUser(name, lastName, email, currencyId, languageId);
 
