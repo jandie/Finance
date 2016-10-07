@@ -13,9 +13,7 @@ namespace Finance_Website.Controllers
 
         public void InitializeAction(string lastTab = null)
         {
-            _userUtility = Session["UserUtility"] as SessionUtility ?? new SessionUtility();
-
-            _userUtility.Refresh(lastTab);
+            _userUtility = SessionUtility.InitializeUtil(Session["UserUtility"], lastTab);
 
             Session["UserUtility"] = _userUtility;
         }

@@ -1,4 +1,5 @@
-﻿using Library.Classes;
+﻿using System;
+using Library.Classes;
 using Library.Classes.Language;
 using Repository;
 
@@ -46,6 +47,28 @@ namespace Finance_Website.Models.Utilities
             Language = LanguageRepository.Instance.LoadLanguage(languageId);
 
             return Language;
+        }
+
+        public static SessionUtility InitializeUtil(Object util, string lastTab = null)
+        {
+            SessionUtility userUtility = util as SessionUtility ?? new SessionUtility();
+
+            userUtility.Refresh(lastTab);
+
+            return userUtility;
+        }
+
+        public static SessionUtility Login(string password, string email)
+        {
+            SessionUtility userUtility = new SessionUtility
+            {
+                Email = email,
+                Password = password
+            };
+
+            userUtility.Refresh();
+
+            return userUtility;
         }
     }
 }
