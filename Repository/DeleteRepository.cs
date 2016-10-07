@@ -9,12 +9,12 @@ namespace Repository
         private static DeleteRepository _instance;
         private readonly IDeleteContext _context;
 
-        public static DeleteRepository Instance => _instance ?? (_instance = new DeleteRepository());
-
-        public DeleteRepository()
+        private DeleteRepository()
         {
             _context = new DeleteSqlContext();
         }
+
+        public static DeleteRepository Instance => _instance ?? (_instance = new DeleteRepository());
 
         public void DeleteBalance(int id)
         {

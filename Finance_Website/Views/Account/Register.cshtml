@@ -1,8 +1,9 @@
-﻿@using Library.Classes
+﻿@using Finance_Website.Models.Utilities
+@using Library.Classes
 @using Library.Classes.Language
-
 @{
-    Language language = Session["Language"] as Language;
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
+    Language language = userUtility.Language;
 
     List<Currency> currencies = ViewBag.Currencies as List<Currency>;
     List<Language> languages = ViewBag.Languages as List<Language>;
@@ -36,8 +37,8 @@
                     <input type="email" class="form-control" id="email" name="email" value="@ViewBag.Email" required>
                 </div>
             </div>
-            
-            <div class="form-group"> 
+
+            <div class="form-group">
                 <label for="currency">@language.GetText(65)</label>
                 @if (currencies != null)
                 {
@@ -54,12 +55,12 @@
                 <label for="language">@language.GetText(64)</label>
                 @if (languages != null)
                 {
-                <select class="form-control" id="language" name="languageId" style="max-width: 196px">
-                    @foreach (Language l in languages)
-                    {
-                        <option value="@l.Id">@l.Name</option>
-                    }
-                </select>
+                    <select class="form-control" id="language" name="languageId" style="max-width: 196px">
+                        @foreach (Language l in languages)
+                        {
+                            <option value="@l.Id">@l.Name</option>
+                        }
+                    </select>
                 }
             </div>
 

@@ -1,46 +1,30 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
-using Library.Classes;
-using Library.Classes.Language;
 using Repository;
-using static System.String;
+using Repository.Exceptions;
 
 namespace Finance_Website.Controllers
 {
     public class AccountController : Controller
     {
-        private UserUtility _userUtility;
+        private SessionUtility _userUtility;
 
-        public bool InitializeAction(string lastTab = null)
+        public void InitializeAction(string lastTab = null)
         {
-            bool succes = true;
+            _userUtility = SessionUtility.InitializeUtil(Session["UserUtility"], lastTab);
 
-            object sessionUser = Session["User"];
-            object sessionPassword = Session["Password"];
-            object sessionLanguage = Session["Language"];
-            object sessionLastTab = Session["LastTab"];
+            Session["UserUtility"] = _userUtility;
+        }
 
-            try
-            {
-                _userUtility = new UserUtility(ref sessionUser, ref sessionPassword, ref sessionLanguage, ref sessionLastTab, lastTab);
-            }
-            catch (Exception) 
-            {
-                succes = false;
-            }
+        public void LoginAction(string password, string email)
+        {
+            _userUtility = SessionUtility.Login(password, email);
 
-            Session["User"] = sessionUser;
-            Session["Password"] = sessionPassword;
-            Session["Language"] = sessionLanguage;
-            Session["LastTab"] = sessionLastTab;
-
-            return succes;
+            Session["UserUtility"] = _userUtility;
         }
 
         public ActionResult Index()
         {
-           
             InitializeAction();
 
             if (_userUtility.User == null)
@@ -66,50 +50,36 @@ namespace Finance_Website.Controllers
         }
 
         [HttpPost]
-        public ActionResult MyAccount(string name, string lastName, int currencyId, int languageId, string currentPassword, 
-            string password = "", string password2 = "")
+        public ActionResult MyAccount(string name, string lastName, int currencyId, int languageId,
+            string currentPassword, string password = "", string password2 = "")
         {
-
             InitializeAction();
 
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            
+
             ViewBag.Languages = DataRepository.Instance.LoadLanguages();
             ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
 
-            if (IsNullOrWhiteSpace(name))
-                Session["Exception"] = _userUtility.Language.GetText(35);
-
-            else if (IsNullOrWhiteSpace(lastName))
-                Session["Exception"] = _userUtility.Language.GetText(36);
-
-            else if (!IsNullOrWhiteSpace(password) && password.Length < 8)
-                Session["Exception"] = _userUtility.Language.GetText(39);
-
-            else if (!IsNullOrWhiteSpace(password) && password.Contains(" "))
-                Session["Exception"] = _userUtility.Language.GetText(40);
-
-            else if (DataRepository.Instance.Login(_userUtility.User.Email, currentPassword, false, false, false) == null)
-                Session["Exception"] = _userUtility.Language.GetText(33);
-
-            else if (!IsNullOrWhiteSpace(password) && password != password2)
-                Session["Exception"] = _userUtility.Language.GetText(41);
-
-            else
+            try
             {
-                ChangeRepository.Instance.ChangeUser(name, lastName, _userUtility.User.Email, currencyId, languageId, currentPassword);
+                ChangeRepository.Instance.ChangeUser(name, lastName, _userUtility.User.Email, currencyId,
+                    languageId, currentPassword, password, password2, _userUtility.Language);
 
-                if (!IsNullOrWhiteSpace(password))
+                if (DataRepository.Instance.Login(_userUtility.User.Email, password) != null)
                 {
-                    ChangeRepository.Instance.ChangePassword(_userUtility.User.Email, password, currentPassword);
+                    _userUtility.Password = password;
 
-                    Session["Password"] = password;
+                    Session["UserUtility"] = _userUtility;
                 }
 
-                Session["Message"] = _userUtility.Language.GetText(76);
+                InitializeAction();
 
-                return RedirectToAction("Index", "Account");
+                Session["Message"] = _userUtility.Language.GetText(76);
+            }
+            catch (UserChangeException ex)
+            {
+                Session["Exception"] = ex.Message;
             }
 
             return View();
@@ -125,40 +95,29 @@ namespace Finance_Website.Controllers
         [HttpPost]
         public ActionResult Login(string email, string password)
         {
-            Language language = Session["Language"] as Language;
+            LoginAction(password, email);
 
-            User user = DataRepository.Instance.Login(email, password, false, false, false);
-
-            if (user == null)
+            if (_userUtility.User == null)
             {
-                Session["Exception"] = language.GetText(33);
+                Session["Exception"] = _userUtility.Language?.GetText(33);
 
                 return RedirectToAction("Login");
             }
 
-            Session["User"] = user;
-
-            Session["Password"] = password;
-
-            Session["Message"] = language.GetText(57);
+            Session["Message"] = _userUtility.Language?.GetText(57);
 
             return RedirectToAction("Index", "Account");
         }
 
         public ActionResult Loguit()
         {
-            InitializeAction();
-
-            Session["User"] = null;
-
-            Session["Message"] = _userUtility.Language.GetText(34);
+            Session.Clear();
 
             return RedirectToAction("Login", "Account");
         }
-       
+
         public ActionResult Register(string alphaKey = "")
         {
-           
             InitializeAction();
 
             ViewBag.AlphaKey = alphaKey;
@@ -169,9 +128,9 @@ namespace Finance_Website.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(string name, string lastName, string email, int currencyId, int languageId, string password, string password2, string alphaKey)
+        public ActionResult Register(string name, string lastName, string email, int currencyId, int languageId,
+            string password, string password2, string alphaKey)
         {
-            
             InitializeAction();
 
             ViewBag.Name = name;
@@ -181,48 +140,20 @@ namespace Finance_Website.Controllers
             ViewBag.Languages = DataRepository.Instance.LoadLanguages();
             ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
 
-            if (IsNullOrWhiteSpace(name))
-                Session["Exception"] = _userUtility.Language.GetText(35);
-
-            else if (IsNullOrWhiteSpace(lastName))
-                Session["Exception"] = _userUtility.Language.GetText(36);
-
-            else if (IsNullOrWhiteSpace(email))
-                Session["Exception"] = _userUtility.Language.GetText(37);
-
-            else if (!RegexUtilities.Instance.IsValidEmail(email))
-                Session["Exception"] = _userUtility.Language.GetText(38);
-
-            else if (password.Length < 8)
-                Session["Exception"] = _userUtility.Language.GetText(39);
-
-            else if (password.Contains(" "))
-                Session["Exception"] = _userUtility.Language.GetText(40);
-
-            else if (password != password2)
-                Session["Exception"] = _userUtility.Language.GetText(41);
-
-            else if (alphaKey != "E1j6kr!v4")
-                Session["Exception"] = "Because this website is still in alpha, you need a key to be able to register.";
-
-            else
+            try
             {
-                User user = DataRepository.Instance.CreateUser(name.Trim(), lastName.Trim(), email.Trim(), password.Trim(), currencyId, languageId);
+                _userUtility.User = DataRepository.Instance.CreateUser(name, lastName, email, password, password2,
+                    currencyId, languageId, _userUtility.Language, alphaKey);
 
-                if (user == null)
-                {
-                    Session["Exception"] = _userUtility.Language.GetText(42);
-
-                    return View();
-                }
-
-                Session["User"] = user;
-
-                Session["Password"] = password;
+                LoginAction(password, email);
 
                 Session["Message"] = _userUtility.Language.GetText(43);
 
-                return RedirectToAction("Index", "Account");
+                return RedirectToAction("Index");
+            }
+            catch (RegistrationException ex)
+            {
+                Session["Exception"] = ex.Message;
             }
 
             return View();

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
 using Library.Classes;
@@ -11,35 +10,15 @@ namespace Finance_Website.Controllers
     public class ManageController : Controller
     {
         private IPayment _payment;
-        private UserUtility _userUtility;
+        private SessionUtility _userUtility;
 
-        public bool InitializeAction(string lastTab = null)
+        public void InitializeAction(string lastTab = null)
         {
-            bool succes = true;
+            _userUtility = SessionUtility.InitializeUtil(Session["UserUtility"], lastTab);
 
-            object sessionUser = Session["User"];
-            object sessionPassword = Session["Password"];
-            object sessionLanguage = Session["Language"];
-            object sessionLastTab = Session["LastTab"];
-
-            try
-            {
-                _userUtility = new UserUtility(ref sessionUser, ref sessionPassword, ref sessionLanguage, ref sessionLastTab, lastTab);
-            }
-            catch (Exception)
-            {
-                succes = false;
-            }
-
-            Session["User"] = sessionUser;
-            Session["Password"] = sessionPassword;
-            Session["Language"] = sessionLanguage;
-            Session["LastTab"] = sessionLastTab;
-
-            return succes;
+            Session["UserUtility"] = _userUtility;
         }
 
-        // GET: Manage
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Account");
@@ -60,14 +39,14 @@ namespace Finance_Website.Controllers
 
             return View();
         }
-        
+
         public ActionResult ChangeBalance(int id, string name, decimal balanceAmount)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            
+
             Balance balance = _userUtility.User.Balances.Find(b => b.Id == id);
 
             if (balance != null)
@@ -91,7 +70,7 @@ namespace Finance_Website.Controllers
 
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            
+
             Balance balance = _userUtility.User.Balances.Find(b => b.Id == id);
 
             if (balance != null)
@@ -126,14 +105,14 @@ namespace Finance_Website.Controllers
 
             return View();
         }
-        
+
         public ActionResult ChangePayment(int id, string name, decimal amount)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            
+
             IPayment payment = _userUtility.User.Payments.Find(p => p.Id == id);
 
             if (payment != null)
@@ -157,7 +136,7 @@ namespace Finance_Website.Controllers
 
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            
+
             _payment = _userUtility.User.Payments.Find(p => p.Id == id);
 
             if (_payment != null)
@@ -188,7 +167,7 @@ namespace Finance_Website.Controllers
 
             _payment = _userUtility.User.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
 
-            Transaction transaction =_payment?.AllTransactions.Find(t => t.Id == id);
+            Transaction transaction = _payment?.AllTransactions.Find(t => t.Id == id);
 
             ViewBag.Transaction = transaction;
             ViewBag.PaymentId = _payment?.Id;
@@ -204,10 +183,10 @@ namespace Finance_Website.Controllers
 
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            
+
             _payment = _userUtility.User.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
 
-            Transaction transaction =_payment.AllTransactions.Find(t => t.Id == id);
+            Transaction transaction = _payment.AllTransactions.Find(t => t.Id == id);
 
             if (transaction != null)
             {
@@ -229,7 +208,7 @@ namespace Finance_Website.Controllers
 
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
-            
+
             _payment = _userUtility.User.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
 
             Transaction transaction = _payment.AllTransactions.Find(t => t.Id == id);
@@ -245,9 +224,9 @@ namespace Finance_Website.Controllers
 
             if (quick || _payment == null)
                 return RedirectToAction("Index", "Account");
-            
+
             return RedirectToAction("Payment", "Manage",
-                new { id = _payment.Id, lastTab = Session["LastTab"] });
+                new {id = _payment.Id, lastTab = Session["LastTab"]});
         }
 
         #endregion Transaction

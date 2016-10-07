@@ -1,11 +1,12 @@
-﻿@using Library.Classes
+﻿@using Finance_Website.Models.Utilities
+@using Library.Classes
 @using Library.Classes.Language
 @using Library.Interfaces
-
 @{
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
+    Language language = userUtility.Language;
     IPayment payment = ViewBag.Payment as IPayment;
     List<Transaction> transactions = payment.AllTransactions;
-    Language language = Session["Language"] as Language;
 
     ViewBag.Title = $"{ViewBag.Type} {payment?.Name}";
 }
@@ -46,41 +47,43 @@
     </div>
     if (transactions != null)
     {
-         <div class="row">
-             <div class="col-md-12">
-                 <div class="panel panel-primary">
-                     <!-- Default panel contents -->
-                     <div class="panel-heading">@language.GetText(13)</div>
-                     <!-- Table -->
-                     <table class="table table-hover">
-                         <thead>
-                             <tr>
-                                 <th>@language.GetText(17)</th>
-                                 <th>@language.GetText(18)</th>
-                                 <th></th>
-                             </tr>
-                         </thead>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">@language.GetText(13)</div>
+                    <!-- Table -->
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>@language.GetText(17)</th>
+                            <th>@language.GetText(18)</th>
+                            <th></th>
+                        </tr>
+                        </thead>
 
-                         <tbody>
-                             @foreach (Transaction t in transactions)
-                             {
-                                 <tr>
-                                     <td>@t.Amount.ToString("0.00")</td>
-                                     <td>@t.Description</td>
-                                     <td>
-                                         <div class="btn-group">
-                                             <a class="btn btn-primary btn-sm" role="button" href="~/Manage/Transaction?id=@t.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                                             <a class="btn btn-danger btn-sm" role="button" href="~/Manage/DeleteTransaction?id=@t.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
-                                         </div>
-                                     </td>
-                                 </tr>
-                             }
-                         </tbody>
-                     </table>
-                 </div>
-             </div>
-         </div>
-     }
+                        <tbody>
+                        @foreach (Transaction t in transactions)
+                        {
+                            <tr>
+                                <td>@t.Amount.ToString("0.00")</td>
+                                <td>@t.Description</td>
+                                <td>
+                                    <div class="btn-group-vertical">
+                                        <a class="btn btn-primary btn-sm" role="button" href="~/Manage/Transaction?id=@t.Id">
+                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                                        <a class="btn btn-danger btn-sm" role="button" href="~/Manage/DeleteTransaction?id=@t.Id">
+                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
 }
 else
 {

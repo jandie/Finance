@@ -11,12 +11,12 @@ namespace Repository
         private static LanguageRepository _instance;
         private readonly ILanguageContext _context;
 
-        public static LanguageRepository Instance => _instance ?? (_instance = new LanguageRepository());
-
         private LanguageRepository()
         {
             _context = new LanguageSqlContext();
         }
+
+        public static LanguageRepository Instance => _instance ?? (_instance = new LanguageRepository());
 
         public void AddLanguages(List<Language> language)
         {
@@ -29,7 +29,7 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                 
+
                 throw;
             }
         }
@@ -44,7 +44,7 @@ namespace Repository
             {
                 Console.WriteLine(ex.ToString());
 
-                throw ;
+                throw;
             }
         }
     }

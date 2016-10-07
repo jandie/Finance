@@ -5,9 +5,9 @@ namespace Library.Classes
 {
     public class MonthlyBill : Payment, IPayment
     {
-        public MonthlyBill(int id, string name, decimal amount, PaymentType paymentType) : base(id, name, amount, paymentType)
+        public MonthlyBill(int id, string name, decimal amount, PaymentType paymentType)
+            : base(id, name, amount, paymentType)
         {
-            
         }
 
         public decimal GetSum()

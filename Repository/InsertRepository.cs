@@ -9,12 +9,14 @@ namespace Repository
     {
         private static InsertRepository _instance;
         private readonly IInsertContext _context;
-        public static InsertRepository Instance => _instance ?? (_instance = new InsertRepository());
 
-        public InsertRepository()
+        private InsertRepository()
         {
             _context = new InsertSqlContext();
         }
+
+        public static InsertRepository Instance => _instance ?? (_instance = new InsertRepository());
+
         public void AddBankAccount(int userId, string name, decimal balance)
         {
             try

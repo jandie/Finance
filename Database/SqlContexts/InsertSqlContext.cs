@@ -9,6 +9,12 @@ namespace Database.SqlContexts
 {
     public class InsertSqlContext : IInsertContext
     {
+        /// <summary>
+        /// Adds a balance to the databse.
+        /// </summary>
+        /// <param name="userId">The id of the user the balance belongs to.</param>
+        /// <param name="name">The name of the balance.</param>
+        /// <param name="balance">The balance of the balance.</param>
         public void AddBankAccount(int userId, string name, decimal balance)
         {
             MySqlConnection connection = Database.Instance.Connection;
@@ -24,6 +30,13 @@ namespace Database.SqlContexts
             command.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Adds a payment to the database.
+        /// </summary>
+        /// <param name="userId">The id of the user the payment belongs to.</param>
+        /// <param name="name">The name of the payment.</param>
+        /// <param name="amount">The amount of the payment.</param>
+        /// <param name="type">The type of the payment.</param>
         public void AddPayment(int userId, string name, decimal amount, PaymentType type)
         {
             MySqlConnection connection = Database.Instance.Connection;
@@ -41,6 +54,12 @@ namespace Database.SqlContexts
             command.ExecuteNonQuery();
         }
 
+        /// <summary>
+        /// Adds a transaction to the databse.
+        /// </summary>
+        /// <param name="paymentId">The id of the payment the transaction belongs to.</param>
+        /// <param name="amount">The amount of the transaction.</param>
+        /// <param name="description">The description of the transaction.</param>
         public void AddTransaction(int paymentId, decimal amount, string description)
         {
             MySqlConnection connection = Database.Instance.Connection;

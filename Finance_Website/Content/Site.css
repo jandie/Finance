@@ -9,22 +9,27 @@
     margin-bottom: 10px !important;
 }
 
+/*Make sure text color is white. This overrides bootstrap css.*/
 .primary-content {
     color: #ffffff !important;
 }
 
+/*Make sure background color is #337ab7 (blue). This overrides bootstrap css.*/
 .primary-background {
     background-color: #337ab7 !important;
 }
 
+/*Some padding to the right. This is used for glyphicons*/
 .icon-content {
     margin-right: 10px;
 }
 
+/*Make sure color is green. This is used for telling if a payment or transaction is ingoing*/
 .positive {
     color: green !important;
 }
 
+/*Make sure color is red. This is used for telling if a payment or transaction is outgoing*/
 .negative {
     color: red !important;
 }

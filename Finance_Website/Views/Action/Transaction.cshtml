@@ -1,9 +1,10 @@
-﻿@using Library.Classes
+﻿@using Finance_Website.Models.Utilities
+@using Library.Classes
 @using Library.Classes.Language
-
 @{
-    Language language = Session["Language"] as Language;
-    User user = ViewBag.User as User;
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
+    Language language = userUtility.Language;
+    User user = userUtility.User;
 
     ViewBag.Title = $"{language.GetText(60)} {ViewBag.PaymentName}";
 }
@@ -56,4 +57,3 @@
         }
     </div>
 </div>
-

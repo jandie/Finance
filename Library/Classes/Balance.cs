@@ -13,6 +13,6 @@
 
         public string Name { get; }
 
-        public decimal BalanceAmount { get;}
+        public decimal BalanceAmount { get; }
     }
 }

@@ -1,12 +1,12 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Finance</title>
-    <link rel="shortcut icon" type="image/x-icon" href="~/Content/Icon/favicon.ico" />
-    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/Icon/favicon.ico"/>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css"/>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <script src="~/Scripts/modernizr-2.8.3.js"></script>
 </head>
 <body>
@@ -19,7 +19,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            @Html.ActionLink("WhatPays.Me", "Index", "Account", new {area = ""}, new {@class = "navbar-brand primary-content" })
+            @Html.ActionLink("WhatPays.Me", "Index", "Account", new {area = ""}, new {@class = "navbar-brand primary-content"})
         </div>
         <div class="navbar-collapse collapse primary-content">
             <ul class="nav navbar-nav navbar-right">
@@ -28,7 +28,7 @@
         </div>
     </div>
 </nav>
-    
+
 <div class="container body-content">
     @Html.Partial("_MessagePartial")
     @RenderBody()

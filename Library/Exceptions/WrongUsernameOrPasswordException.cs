@@ -6,12 +6,10 @@ namespace Library.Exceptions
     {
         public WrongUsernameOrPasswordException()
         {
-            
         }
 
         public WrongUsernameOrPasswordException(string message) : base(message)
         {
-            
         }
     }
 }

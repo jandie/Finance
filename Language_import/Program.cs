@@ -14,7 +14,7 @@ namespace Language_import
     {
         private static string _hashCollection;
 
-        [STAThreadAttribute]
+        [STAThread]
         private static void Main(string[] args)
         {
             while (true)
@@ -51,7 +51,6 @@ namespace Language_import
         {
             for (int i = 0; i < 101; i++)
             {
-
                 Stopwatch s = new Stopwatch();
                 s.Start();
 
@@ -67,12 +66,14 @@ namespace Language_import
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            const string path = "E:\\BSync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
+            const string path =
+                "E:\\BSync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
             //const string path = "C:\\Users\\Jandie\\BitTorrent Sync\\Bsync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
             string json = "";
 
             try
-            {   // Open the text file using a stream reader.
+            {
+                // Open the text file using a stream reader.
                 using (StreamReader sr = new StreamReader(path))
                 {
                     // Read the stream to a string, and write the string to the console.
@@ -115,7 +116,8 @@ namespace Language_import
 
                     for (int i = 0; i < translationsCount; i++)
                     {
-                        languages[i].AddTranslation(new Translation(Convert.ToInt32(translation.ID), translation.Translations[i].ToString()));
+                        languages[i].AddTranslation(new Translation(Convert.ToInt32(translation.ID),
+                            translation.Translations[i].ToString()));
                     }
                 }
 

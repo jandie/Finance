@@ -7,13 +7,13 @@ namespace Database
     public static class Hashing
     {
         // The following constants may be changed without breaking existing hashes.
-        public const int SaltByteSize = 16;
-        public const int HashByteSize = 20;
-        public const int Pbkdf2Iterations = 1000;
+        private const int SaltByteSize = 16;
+        private const int HashByteSize = 20;
+        private const int Pbkdf2Iterations = 20000;
 
-        public const int IterationIndex = 0;
-        public const int SaltIndex = 1;
-        public const int Pbkdf2Index = 2;
+        private const int IterationIndex = 0;
+        private const int SaltIndex = 1;
+        private const int Pbkdf2Index = 2;
 
         /// <summary>
         /// Creates a salted PBKDF2 hash of the password.
