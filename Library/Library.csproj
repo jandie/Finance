@@ -50,6 +50,11 @@
     <Compile Include="Classes\Transaction.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="Enums\PaymentType.cs" />
+    <Compile Include="Exceptions\ChangeBalanceException.cs" />
+    <Compile Include="Exceptions\ChangePasswordException.cs" />
+    <Compile Include="Exceptions\ChangePaymentException.cs" />
+    <Compile Include="Exceptions\ChangeTransactionException.cs" />
+    <Compile Include="Exceptions\ChangeUserException.cs" />
     <Compile Include="Exceptions\DeleteBalanceException.cs" />
     <Compile Include="Exceptions\DeletePaymentException.cs" />
     <Compile Include="Exceptions\DeleteTransactionException.cs" />
