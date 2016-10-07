@@ -58,6 +58,7 @@
     <Compile Include="Exceptions\DeleteBalanceException.cs" />
     <Compile Include="Exceptions\DeletePaymentException.cs" />
     <Compile Include="Exceptions\DeleteTransactionException.cs" />
+    <Compile Include="Exceptions\RegistrationException.cs" />
     <Compile Include="Exceptions\WrongUsernameOrPasswordException.cs" />
     <Compile Include="Interfaces\IPayment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
