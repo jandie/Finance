@@ -50,6 +50,9 @@
     <Compile Include="Classes\Transaction.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="Enums\PaymentType.cs" />
+    <Compile Include="Exceptions\AddBankAccountException.cs" />
+    <Compile Include="Exceptions\AddPaymentException.cs" />
+    <Compile Include="Exceptions\AddTransactionException.cs" />
     <Compile Include="Exceptions\ChangeBalanceException.cs" />
     <Compile Include="Exceptions\ChangePasswordException.cs" />
     <Compile Include="Exceptions\ChangePaymentException.cs" />
