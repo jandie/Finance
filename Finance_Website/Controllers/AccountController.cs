@@ -2,7 +2,6 @@
 using Finance_Website.Models.Utilities;
 using Library.Exceptions;
 using Repository;
-using Repository.Exceptions;
 
 namespace Finance_Website.Controllers
 {

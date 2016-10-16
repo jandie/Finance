@@ -4,7 +4,7 @@ using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
 using Library.Classes.Language;
-using Repository.Exceptions;
+using Library.Exceptions;
 using Repository.Utilities;
 
 namespace Repository

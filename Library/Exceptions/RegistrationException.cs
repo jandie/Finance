@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Repository.Exceptions
+namespace Library.Exceptions
 {
     public class RegistrationException : Exception
     {

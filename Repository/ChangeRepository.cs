@@ -3,7 +3,6 @@ using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes.Language;
 using Library.Exceptions;
-using Repository.Exceptions;
 
 namespace Repository
 {
