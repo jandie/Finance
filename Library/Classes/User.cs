@@ -116,9 +116,19 @@ namespace Library.Classes
             _balances = new List<Balance>(bankAccounts);
         }
 
+        public void AddBankAccount(Balance bankAccount)
+        {
+            _balances.Add(bankAccount);
+        }
+
         public void AddPayments(List<IPayment> payments)
         {
             _payments = new List<IPayment>(payments);
+        }
+
+        public void AddPayment(IPayment payment)
+        {
+            _payments.Add(payment);
         }
     }
 }

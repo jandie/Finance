@@ -16,7 +16,7 @@ namespace Library.Interfaces
 
         List<Transaction> AllTransactions { get; }
 
-        void AddTransactions(List<Transaction> transactions);
+        void AddTransaction(Transaction transaction);
 
         decimal GetSum();
 

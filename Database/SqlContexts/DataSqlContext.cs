@@ -214,7 +214,7 @@ namespace Database.SqlContexts
 
             reader.Close();
 
-            payments.ForEach(p => p.AddTransactions(GetTransactionsOfPayment(p)));
+            payments.ForEach(p => GetTransactionsOfPayment(p).ForEach(p.AddTransaction));
 
             return payments;
         }
