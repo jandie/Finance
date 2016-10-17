@@ -6,8 +6,16 @@ namespace Library.Utils
 {
     public static class RanUtil
     {
+        /// <summary>
+        /// The static random that is used in this utility.
+        /// </summary>
         private static Random _random;
 
+        /// <summary>
+        /// Generates a random string of lowercase letters and numbers.
+        /// </summary>
+        /// <param name="size">The length of the string.</param>
+        /// <returns>The random string.</returns>
         public static string RandomString(int size)
         {
             if (_random == null) _random = new Random();

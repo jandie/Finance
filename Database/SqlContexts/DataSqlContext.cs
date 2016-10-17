@@ -121,6 +121,12 @@ namespace Database.SqlContexts
             return ranString;
         }
 
+        /// <summary>
+        /// Checks wether or not the token of the user was changed.
+        /// </summary>
+        /// <param name="email">The email of the user where the token is checked.</param>
+        /// <param name="token">The token itself.</param>
+        /// <returns>Wether or not the token is changed.</returns>
         public bool TokenChanged(string email, string token)
         {
             string tokenFromDb = null;
@@ -144,53 +150,6 @@ namespace Database.SqlContexts
             reader.Close();
 
             return tokenFromDb != token;
-        }
-
-        /// <summary>
-        /// Loads a user from the database.
-        /// </summary>
-        /// <param name="email">The email of the user (to identify).</param>
-        /// <returns>A user that has been loaded from the database.</returns>
-        public User LoadUser(string email)
-        {
-            MySqlConnection connection = Database.Instance.Connection;
-            MySqlCommand command =
-                new MySqlCommand(
-                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.TOKEN FROM USER U " +
-                    "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
-                    connection)
-                { CommandType = CommandType.Text };
-
-            command.Parameters.Add(new MySqlParameter("@email", email));
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            if (!reader.Read())
-            {
-                reader.Close();
-
-                throw new WrongUsernameOrPasswordException();
-            }
-
-            int id = reader.GetInt32(0);
-            string name = reader.GetString(1);
-            string lastName = reader.GetString(2);
-            int languageId = reader.GetInt32(3);
-            int currencyId = reader.GetInt32(4);
-            string currencyAbbrevation = reader.GetString(5);
-            string currencyName = reader.GetString(6);
-            string currencyHtml = reader.GetString(7);
-            string token = reader.GetString(8);
-
-            reader.Close();
-
-            Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
-            User user = new User(id, name, lastName, email, languageId, currency, token);
-
-            user.AddBankAccounts(GetBankAccountsOfUser(id));
-            user.AddPayments(GetPaymentsOfUser(id));
-
-            return user;
         }
 
         /// <summary>
