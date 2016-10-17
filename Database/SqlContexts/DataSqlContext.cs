@@ -7,6 +7,7 @@ using Library.Classes.Language;
 using Library.Enums;
 using Library.Exceptions;
 using Library.Interfaces;
+using Library.Utils;
 using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
@@ -87,12 +88,62 @@ namespace Database.SqlContexts
             if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
 
             Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
-            User user = new User(id, name, lastName, email, languageId, currency);
+            User user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email));
 
             user.AddBankAccounts(GetBankAccountsOfUser(id));
             user.AddPayments(GetPaymentsOfUser(id));
 
             return user;
+        }
+
+        /// <summary>
+        /// Updates the token in the databse and returns it.
+        /// </summary>
+        /// <param name="email">The email of the User where the token
+        /// must be updated</param>
+        /// <returns>The random token.</returns>
+        private string UpdateToken(string email)
+        {
+            string ranString = RanUtil.RandomString(10);
+
+            MySqlConnection connection = Database.Instance.Connection;
+            MySqlCommand command =
+                new MySqlCommand(
+                    "UPDATE user SET Token = @ranString WHERE email = @email",
+                    connection)
+                { CommandType = CommandType.Text };
+
+            command.Parameters.Add(new MySqlParameter("@ranString", ranString));
+            command.Parameters.Add(new MySqlParameter("@email", email));
+
+            command.ExecuteNonQuery();
+
+            return ranString;
+        }
+
+        public bool TokenChanged(string email, string token)
+        {
+            string tokenFromDb = null;
+
+            MySqlConnection connection = Database.Instance.Connection;
+            MySqlCommand command =
+                new MySqlCommand(
+                    "SELECT TOKEN FROM USER WHERE EMAIL = @email",
+                    connection)
+                { CommandType = CommandType.Text };
+
+            command.Parameters.Add(new MySqlParameter("@email", email));
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                tokenFromDb = reader.GetString(1);
+            }
+
+            reader.Close();
+
+            return tokenFromDb != token;
         }
 
         /// <summary>
@@ -105,7 +156,7 @@ namespace Database.SqlContexts
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML FROM USER U " +
+                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.TOKEN FROM USER U " +
                     "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
                     connection)
                 { CommandType = CommandType.Text };
@@ -129,11 +180,12 @@ namespace Database.SqlContexts
             string currencyAbbrevation = reader.GetString(5);
             string currencyName = reader.GetString(6);
             string currencyHtml = reader.GetString(7);
+            string token = reader.GetString(8);
 
             reader.Close();
 
             Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
-            User user = new User(id, name, lastName, email, languageId, currency);
+            User user = new User(id, name, lastName, email, languageId, currency, token);
 
             user.AddBankAccounts(GetBankAccountsOfUser(id));
             user.AddPayments(GetPaymentsOfUser(id));

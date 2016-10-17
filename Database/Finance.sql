@@ -39,13 +39,13 @@ CREATE TABLE `user` (
   `Active` int(11) DEFAULT '1',
   `Currency` int(11) DEFAULT '1',
   `Language` int(11) DEFAULT '0',
+  `Token` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Email` (`Email`),
   KEY `Currency` (`Currency`),
-  KEY `Language` (`Language`),
-  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`Currency`) REFERENCES `currency` (`Id`),
-  CONSTRAINT `user_ibfk_2` FOREIGN KEY (`Language`) REFERENCES `language` (`Id`)
+  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`Currency`) REFERENCES `currency` (`Id`)
 );
+
 
 CREATE TABLE BankAccount (
     Id INT NOT NULL AUTO_INCREMENT,

@@ -26,6 +26,8 @@ namespace Database.Interfaces
         /// <returns>A user that has been loaded from the database.</returns>
         User LoginUser(string email, string password);
 
+        bool TokenChanged(string email, string token);
+
         /// <summary>
         /// Loads a user from the database.
         /// </summary>

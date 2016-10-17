@@ -31,6 +31,7 @@ namespace Finance_Website.Controllers
                 return RedirectToAction("Login", "Account");
 
             InsertRepository.Instance.AddBankAccount(_userUtility.User, name.Trim(), balance);
+
             SaveAction();
 
             Session["Message"] = _userUtility.Language.GetText(44);
@@ -46,6 +47,7 @@ namespace Finance_Website.Controllers
                 return RedirectToAction("Login", "Account");
 
             InsertRepository.Instance.AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyBill);
+
             SaveAction();
 
             Session["Message"] = _userUtility.Language.GetText(46);
@@ -61,6 +63,7 @@ namespace Finance_Website.Controllers
                 return RedirectToAction("Login", "Account");
 
             InsertRepository.Instance.AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyIncome);
+
             SaveAction();
 
             Session["Message"] = _userUtility.Language.GetText(48);

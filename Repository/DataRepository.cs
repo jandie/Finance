@@ -35,11 +35,11 @@ namespace Repository
             }
         }
 
-        public User LoadUser(string email)
+        public User CheckUser(User user)
         {
             try
             {
-                return _context.LoadUser(email);
+                return _context.TokenChanged(user.Email, user.Token) ? null : user;
             }
             catch (Exception ex)
             {
