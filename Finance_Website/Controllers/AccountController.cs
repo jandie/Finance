@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using Finance_Website.Models.Utilities;
+using Library.Exceptions;
 using Repository;
-using Repository.Exceptions;
 
 namespace Finance_Website.Controllers
 {
@@ -63,7 +63,7 @@ namespace Finance_Website.Controllers
 
             try
             {
-                ChangeRepository.Instance.ChangeUser(name, lastName, _userUtility.User.Email, currencyId,
+                ChangeRepository.Instance.ChangeUser(_userUtility.User, name, lastName, _userUtility.User.Email, currencyId,
                     languageId, currentPassword, password, password2, _userUtility.Language);
 
                 if (DataRepository.Instance.Login(_userUtility.User.Email, password) != null)
@@ -77,7 +77,7 @@ namespace Finance_Website.Controllers
 
                 Session["Message"] = _userUtility.Language.GetText(76);
             }
-            catch (UserChangeException ex)
+            catch (ChangeUserException ex)
             {
                 Session["Exception"] = ex.Message;
             }

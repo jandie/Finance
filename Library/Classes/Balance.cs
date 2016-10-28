@@ -11,8 +11,8 @@
 
         public int Id { get; }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public decimal BalanceAmount { get; }
+        public decimal BalanceAmount { get; set; }
     }
 }

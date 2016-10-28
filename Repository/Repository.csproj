@@ -44,8 +44,6 @@
     <Compile Include="DataRepository.cs" />
     <Compile Include="DeleteRepository.cs" />
     <Compile Include="Exceptions\DatabaseException.cs" />
-    <Compile Include="Exceptions\RegistrationException.cs" />
-    <Compile Include="Exceptions\UserChangeException.cs" />
     <Compile Include="InsertRepository.cs" />
     <Compile Include="LanguageRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

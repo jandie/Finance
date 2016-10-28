@@ -27,9 +27,14 @@ namespace Library.Classes
 
         public List<Transaction> AllTransactions => new List<Transaction>(Transactions);
 
-        public void AddTransactions(List<Transaction> transactions)
+        public void AddTransaction(Transaction transaction)
         {
-            Transactions = new List<Transaction>(transactions);
+            Transactions.Add(transaction);
+        }
+
+        public void DeleteTransaction(int id)
+        {
+            Transactions.Remove(Transactions.Find(t => t.Id == id));
         }
     }
 }

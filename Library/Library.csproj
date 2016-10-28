@@ -50,9 +50,22 @@
     <Compile Include="Classes\Transaction.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="Enums\PaymentType.cs" />
+    <Compile Include="Exceptions\AddBankAccountException.cs" />
+    <Compile Include="Exceptions\AddPaymentException.cs" />
+    <Compile Include="Exceptions\AddTransactionException.cs" />
+    <Compile Include="Exceptions\ChangeBalanceException.cs" />
+    <Compile Include="Exceptions\ChangePasswordException.cs" />
+    <Compile Include="Exceptions\ChangePaymentException.cs" />
+    <Compile Include="Exceptions\ChangeTransactionException.cs" />
+    <Compile Include="Exceptions\ChangeUserException.cs" />
+    <Compile Include="Exceptions\DeleteBalanceException.cs" />
+    <Compile Include="Exceptions\DeletePaymentException.cs" />
+    <Compile Include="Exceptions\DeleteTransactionException.cs" />
+    <Compile Include="Exceptions\RegistrationException.cs" />
     <Compile Include="Exceptions\WrongUsernameOrPasswordException.cs" />
     <Compile Include="Interfaces\IPayment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\RanUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

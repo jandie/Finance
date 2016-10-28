@@ -1,8 +1,10 @@
 ﻿using System;
 using Database.Interfaces;
 using Database.SqlContexts;
+using Library.Classes;
 using Library.Classes.Language;
-using Repository.Exceptions;
+using Library.Exceptions;
+using Library.Interfaces;
 
 namespace Repository
 {
@@ -18,11 +20,14 @@ namespace Repository
 
         public static ChangeRepository Instance => _instance ?? (_instance = new ChangeRepository());
 
-        public void ChangeBalance(int id, string name, decimal balanceAmount)
+        public void ChangeBalance(Balance balance, string name, decimal balanceAmount)
         {
             try
             {
-                _context.ChangeBalance(id, name, balanceAmount);
+                _context.ChangeBalance(balance.Id, name, balanceAmount);
+
+                balance.Name = name;
+                balance.BalanceAmount = balanceAmount;
             }
             catch (Exception ex)
             {
@@ -30,11 +35,14 @@ namespace Repository
             }
         }
 
-        public void ChangePayment(int id, string name, decimal amount)
+        public void ChangePayment(IPayment payment, string name, decimal amount)
         {
             try
             {
-                _context.ChangePayment(id, name, amount);
+                _context.ChangePayment(payment.Id, name, amount);
+
+                payment.Name = name;
+                payment.Amount = amount;
             }
             catch (Exception ex)
             {
@@ -42,11 +50,14 @@ namespace Repository
             }
         }
 
-        public void ChangeTransaction(int id, decimal amount, string description)
+        public void ChangeTransaction(Transaction transaction, decimal amount, string description)
         {
             try
             {
-                _context.ChangeTransaction(id, amount, description);
+                _context.ChangeTransaction(transaction.Id, amount, description);
+
+                transaction.Amount = amount;
+                transaction.Description = description;
             }
             catch (Exception ex)
             {
@@ -54,30 +65,35 @@ namespace Repository
             }
         }
 
-        public void ChangeUser(string name, string lastName, string email, int currencyId, int languageId,
+        public void ChangeUser(User user, string name, string lastName, string email, int currencyId, int languageId,
             string currentPassword, string newPassword, string repeatedPassword, Language language)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(name))
-                    throw new UserChangeException(language.GetText(35));
+                    throw new ChangeUserException(language.GetText(35));
 
                 if (string.IsNullOrWhiteSpace(lastName))
-                    throw new UserChangeException(language.GetText(36));
+                    throw new ChangeUserException(language.GetText(36));
 
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword.Length < 8)
-                    throw new UserChangeException(language.GetText(39));
+                    throw new ChangeUserException(language.GetText(39));
 
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword.Contains(" "))
-                    throw new UserChangeException(language.GetText(40));
+                    throw new ChangeUserException(language.GetText(40));
 
                 if (DataRepository.Instance.Login(email, currentPassword) == null)
-                    throw new UserChangeException(language.GetText(33));
+                    throw new ChangeUserException(language.GetText(33));
 
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword != repeatedPassword)
-                    throw new UserChangeException(language.GetText(41));
+                    throw new ChangeUserException(language.GetText(41));
 
                 _context.ChangeUser(name, lastName, email, currencyId, languageId);
+
+                user.Name = name;
+                user.LastName = lastName;
+                user.Currency.Id = currencyId;
+                user.LanguageId = languageId;
 
                 if (string.IsNullOrWhiteSpace(newPassword)) return;
 
