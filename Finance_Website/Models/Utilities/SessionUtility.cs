@@ -28,6 +28,9 @@ namespace Finance_Website.Models.Utilities
 
             if (User == null)
             {
+                Email = null;
+                Password = null;
+
                 if (Language == null)
                 {
                     Language = LoadAndAssignLanguage(1);
