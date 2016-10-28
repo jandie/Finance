@@ -10,7 +10,7 @@
             Html = html;
         }
 
-        public int Id { get; }
+        public int Id { get; set; }
 
         public string Abbrevation { get; }
 

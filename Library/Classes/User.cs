@@ -31,13 +31,13 @@ namespace Library.Classes
 
         public int Id { get; }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public string LastName { get; }
+        public string LastName { get; set; }
 
         public string Email { get; }
 
-        public int LanguageId { get; }
+        public int LanguageId { get; set; }
 
         public Currency Currency { get; }
 

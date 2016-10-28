@@ -51,7 +51,7 @@ namespace Finance_Website.Controllers
 
             if (balance != null)
             {
-                ChangeRepository.Instance.ChangeBalance(id, name, balanceAmount);
+                ChangeRepository.Instance.ChangeBalance(balance, name, balanceAmount);
 
                 Session["Message"] = _userUtility.Language.GetText(51);
             }
@@ -117,7 +117,7 @@ namespace Finance_Website.Controllers
 
             if (payment != null)
             {
-                ChangeRepository.Instance.ChangePayment(id, name, amount);
+                ChangeRepository.Instance.ChangePayment(payment, name, amount);
 
                 Session["Message"] = _userUtility.Language.GetText(53);
             }

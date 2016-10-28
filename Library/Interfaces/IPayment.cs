@@ -8,9 +8,9 @@ namespace Library.Interfaces
     {
         int Id { get; set; }
 
-        string Name { get; }
+        string Name { get; set; }
 
-        decimal Amount { get; }
+        decimal Amount { get; set; }
 
         PaymentType PaymentType { get; }
 
