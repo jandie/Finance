@@ -55,6 +55,8 @@ namespace Database.SqlContexts
         /// <returns>A user that has been loaded from the database.</returns>
         public User LoginUser(string email, string password)
         {
+            User user = null;
+
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand(
@@ -64,34 +66,35 @@ namespace Database.SqlContexts
 
             command.Parameters.Add(new MySqlParameter("@email", email));
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            if (!reader.Read())
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
+                if (!reader.Read())
+                {
+                    reader.Close();
+
+                    throw new WrongUsernameOrPasswordException();
+                }
+
+                int id = reader.GetInt32(0);
+                string name = reader.GetString(1);
+                string lastName = reader.GetString(2);
+                int languageId = reader.GetInt32(3);
+                int currencyId = reader.GetInt32(4);
+                string currencyAbbrevation = reader.GetString(5);
+                string currencyName = reader.GetString(6);
+                string currencyHtml = reader.GetString(7);
+                string hash = reader.GetString(8);
+
                 reader.Close();
 
-                throw new WrongUsernameOrPasswordException();
+                if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
+
+                Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
+                user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email));
+
+                GetBalancesOfUser(id).ForEach(b => user.AddBalance(b));
+                GetPaymentsOfUser(id).ForEach(p => user.AddPayment(p));
             }
-
-            int id = reader.GetInt32(0);
-            string name = reader.GetString(1);
-            string lastName = reader.GetString(2);
-            int languageId = reader.GetInt32(3);
-            int currencyId = reader.GetInt32(4);
-            string currencyAbbrevation = reader.GetString(5);
-            string currencyName = reader.GetString(6);
-            string currencyHtml = reader.GetString(7);
-            string hash = reader.GetString(8);
-
-            reader.Close();
-
-            if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
-
-            Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
-            User user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email));
-
-            GetBalancesOfUser(id).ForEach(b => user.AddBalance(b));
-            GetPaymentsOfUser(id).ForEach(p => user.AddPayment(p));
 
             return user;
         }
@@ -140,14 +143,13 @@ namespace Database.SqlContexts
 
             command.Parameters.Add(new MySqlParameter("@email", email));
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            if (reader.Read())
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                tokenFromDb = reader.GetString(0);
+                if (reader.Read())
+                {
+                    tokenFromDb = reader.GetString(0);
+                }
             }
-
-            reader.Close();
 
             return tokenFromDb != token;
         }
@@ -169,18 +171,17 @@ namespace Database.SqlContexts
 
             command.Parameters.Add(new MySqlParameter("@userId", userId));
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                int id = reader.GetInt32(0);
-                decimal balance = reader.GetDecimal(1);
-                string name = reader.GetString(2);
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    decimal balance = reader.GetDecimal(1);
+                    string name = reader.GetString(2);
 
-                bankAccounts.Add(new Balance(id, name, balance));
+                    bankAccounts.Add(new Balance(id, name, balance));
+                }
             }
-
-            reader.Close();
 
             return bankAccounts;
         }
@@ -201,29 +202,28 @@ namespace Database.SqlContexts
 
             command.Parameters.Add(new MySqlParameter("@userId", userId));
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                int id = reader.GetInt32(0);
-                string name = reader.GetString(1);
-                decimal amount = reader.GetDecimal(2);
-                PaymentType type = (PaymentType) Enum.Parse(typeof(PaymentType), reader.GetString(3));
-
-                switch (type)
+                while (reader.Read())
                 {
-                    case PaymentType.MonthlyBill:
-                        payments.Add(new MonthlyBill(id, name, amount, type));
-                        break;
-                    case PaymentType.MonthlyIncome:
-                        payments.Add(new MonthlyIncome(id, name, amount, type));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    int id = reader.GetInt32(0);
+                    string name = reader.GetString(1);
+                    decimal amount = reader.GetDecimal(2);
+                    PaymentType type = (PaymentType)Enum.Parse(typeof(PaymentType), reader.GetString(3));
+
+                    switch (type)
+                    {
+                        case PaymentType.MonthlyBill:
+                            payments.Add(new MonthlyBill(id, name, amount, type));
+                            break;
+                        case PaymentType.MonthlyIncome:
+                            payments.Add(new MonthlyIncome(id, name, amount, type));
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
             }
-
-            reader.Close();
 
             payments.ForEach(p => GetTransactionsOfPayment(p).ForEach(p.AddTransaction));
 
@@ -249,21 +249,20 @@ namespace Database.SqlContexts
             command.Parameters.Add(new MySqlParameter("@paymentId", payment.Id));
             command.Parameters.Add(new MySqlParameter("@month", $"%-{DateTime.Now.ToString("MM")}-%"));
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                int id = reader.GetInt32(0);
-                decimal amount = reader.GetDecimal(1);
-                string description = reader.GetString(2);
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    decimal amount = reader.GetDecimal(1);
+                    string description = reader.GetString(2);
 
-                if (payment is MonthlyBill)
-                    transactions.Add(new Transaction(id, amount, description, false));
-                else if (payment is MonthlyIncome)
-                    transactions.Add(new Transaction(id, amount, description, true));
+                    if (payment is MonthlyBill)
+                        transactions.Add(new Transaction(id, amount, description, false));
+                    else if (payment is MonthlyIncome)
+                        transactions.Add(new Transaction(id, amount, description, true));
+                }
             }
-
-            reader.Close();
 
             return transactions;
         }
@@ -282,19 +281,18 @@ namespace Database.SqlContexts
             MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME, HTML FROM CURRENCY", connecion)
             { CommandType = CommandType.Text };
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                int id = reader.GetInt32(0);
-                string abbrevation = reader.GetString(1);
-                string name = reader.GetString(2);
-                string html = reader.GetString(3);
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    string abbrevation = reader.GetString(1);
+                    string name = reader.GetString(2);
+                    string html = reader.GetString(3);
 
-                currencies.Add(new Currency(id, abbrevation, name, html));
+                    currencies.Add(new Currency(id, abbrevation, name, html));
+                }
             }
-
-            reader.Close();
 
             return currencies;
         }
@@ -311,18 +309,18 @@ namespace Database.SqlContexts
             MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME FROM LANGUAGE", connecion)
             { CommandType = CommandType.Text };
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                int id = reader.GetInt32(0);
-                string abbrevation = reader.GetString(1);
-                string name = reader.GetString(2);
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    string abbrevation = reader.GetString(1);
+                    string name = reader.GetString(2);
 
-                languages.Add(new Language(id, abbrevation, name));
+                    languages.Add(new Language(id, abbrevation, name));
+                }
+
             }
-
-            reader.Close();
 
             return languages;
         }

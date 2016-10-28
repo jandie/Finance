@@ -54,18 +54,17 @@ namespace Database.SqlContexts
 
             command.Parameters.Add(new MySqlParameter("@languageId", languageId));
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            if (reader.Read())
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                int id = reader.GetInt32(0);
-                string abbrevation = reader.GetString(1);
-                string name = reader.GetString(2);
+                if (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    string abbrevation = reader.GetString(1);
+                    string name = reader.GetString(2);
 
-                language = new Language(id, abbrevation, name);
+                    language = new Language(id, abbrevation, name);
+                }
             }
-
-            reader.Close();
 
             LoadTranslations(languageId).ForEach(t => language?.AddTranslation(t));
 
@@ -137,17 +136,16 @@ namespace Database.SqlContexts
 
             command.Parameters.Add(new MySqlParameter("@languageId", languageId));
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            using (MySqlDataReader reader = command.ExecuteReader())
             {
-                int id = reader.GetInt32(0);
-                string translationText = reader.GetString(1);
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    string translationText = reader.GetString(1);
 
-                translations.Add(new Translation(id, translationText));
+                    translations.Add(new Translation(id, translationText));
+                }
             }
-
-            reader.Close();
 
             return translations;
         }
