@@ -3,7 +3,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using Database.Interfaces;
-using Library.Classes;
 using Library.Exceptions;
 using MySql.Data.MySqlClient;
 
