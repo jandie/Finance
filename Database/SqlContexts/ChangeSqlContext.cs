@@ -14,10 +14,10 @@ namespace Database.SqlContexts
         /// <summary>
         /// Changes a balance in the database.
         /// </summary>
-        /// <param name="balance">The balance itself.</param>
+        /// <param name="id">The id of the balance itself.</param>
         /// <param name="name">The name of the balance.</param>
         /// <param name="balanceAmount">The amount of the balance.</param>
-        public void ChangeBalance(Balance balance, string name, decimal balanceAmount)
+        public void ChangeBalance(int id, string name, decimal balanceAmount)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace Database.SqlContexts
 
                 command.Parameters.Add(new MySqlParameter("@name", name));
                 command.Parameters.Add(new MySqlParameter("@balanceAmount", balanceAmount));
-                command.Parameters.Add(new MySqlParameter("@id", balance.Id));
+                command.Parameters.Add(new MySqlParameter("@id", id));
 
                 command.ExecuteNonQuery();
             }

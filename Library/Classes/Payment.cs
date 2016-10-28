@@ -31,5 +31,10 @@ namespace Library.Classes
         {
             Transactions.Add(transaction);
         }
+
+        public void DeleteTransaction(int id)
+        {
+            Transactions.Remove(Transactions.Find(t => t.Id == id));
+        }
     }
 }

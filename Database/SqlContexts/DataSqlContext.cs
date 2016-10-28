@@ -90,8 +90,8 @@ namespace Database.SqlContexts
             Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
             User user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email));
 
-            user.AddBankAccounts(GetBankAccountsOfUser(id));
-            user.AddPayments(GetPaymentsOfUser(id));
+            GetBalancesOfUser(id).ForEach(b => user.AddBalance(b));
+            GetPaymentsOfUser(id).ForEach(p => user.AddPayment(p));
 
             return user;
         }
@@ -144,7 +144,7 @@ namespace Database.SqlContexts
 
             if (reader.Read())
             {
-                tokenFromDb = reader.GetString(1);
+                tokenFromDb = reader.GetString(0);
             }
 
             reader.Close();
@@ -157,7 +157,7 @@ namespace Database.SqlContexts
         /// </summary>
         /// <param name="userId">The id of the user.</param>
         /// <returns>List of balances of the user.</returns>
-        private List<Balance> GetBankAccountsOfUser(int userId)
+        private List<Balance> GetBalancesOfUser(int userId)
         {
             List<Balance> bankAccounts = new List<Balance>();
 

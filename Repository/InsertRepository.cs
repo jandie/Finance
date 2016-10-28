@@ -29,7 +29,7 @@ namespace Repository
 
                 Balance b = new Balance(id, name, balance);
 
-                user.AddBankAccount(b);
+                user.AddBalance(b);
             }
             catch (Exception ex)
             {
@@ -73,7 +73,19 @@ namespace Repository
             {
                 int id = _context.AddTransaction(payment.Id, amount, description);
 
-                payment.AddTransaction(new Transaction(id, amount, description, amount >= 0));
+                switch (payment.PaymentType)
+                {
+                    case PaymentType.MonthlyBill:
+                        payment.AddTransaction(new Transaction(id, amount, description, false));
+
+                        break;
+                    case PaymentType.MonthlyIncome:
+                        payment.AddTransaction(new Transaction(id, amount, description, true));
+
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             catch (Exception ex)
             {

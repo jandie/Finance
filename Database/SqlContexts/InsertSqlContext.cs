@@ -58,7 +58,7 @@ namespace Database.SqlContexts
                 {
                     if (reader.Read())
                     {
-                        return reader.GetInt32(1);
+                        return reader.GetInt32(0);
                     }
                 }
             }
@@ -121,7 +121,7 @@ namespace Database.SqlContexts
                 {
                     if (reader.Read())
                     {
-                        return reader.GetInt32(1);
+                        return reader.GetInt32(0);
                     }
                 }
             }
@@ -183,7 +183,7 @@ namespace Database.SqlContexts
                 {
                     if (reader.Read())
                     {
-                        return reader.GetInt32(1);
+                        return reader.GetInt32(0);
                     }
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Database.Interfaces;
 using Database.SqlContexts;
+using Library.Classes;
 
 namespace Repository
 {
@@ -16,11 +17,13 @@ namespace Repository
 
         public static DeleteRepository Instance => _instance ?? (_instance = new DeleteRepository());
 
-        public void DeleteBalance(int id)
+        public void DeleteBalance(User user, int id)
         {
             try
             {
                 _context.DeleteBalance(id);
+
+                user.DeleteBalance(id);
             }
             catch (Exception ex)
             {
@@ -28,11 +31,13 @@ namespace Repository
             }
         }
 
-        public void DeletePayment(int id)
+        public void DeletePayment(User user, int id)
         {
             try
             {
                 _context.DeletePayment(id);
+
+                user.DeletePayment(id);
             }
             catch (Exception ex)
             {
@@ -40,11 +45,13 @@ namespace Repository
             }
         }
 
-        public void DeleteTransaction(int id)
+        public void DeleteTransaction(Payment payment, int id)
         {
             try
             {
                 _context.DeleteTransaction(id);
+
+                payment.DeleteTransaction(id);
             }
             catch (Exception ex)
             {

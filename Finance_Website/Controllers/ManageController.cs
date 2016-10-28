@@ -75,7 +75,7 @@ namespace Finance_Website.Controllers
 
             if (balance != null)
             {
-                DeleteRepository.Instance.DeleteBalance(id);
+                DeleteRepository.Instance.DeleteBalance(_userUtility.User, id);
 
                 Session["Message"] = _userUtility.Language.GetText(52);
             }
@@ -141,7 +141,7 @@ namespace Finance_Website.Controllers
 
             if (_payment != null)
             {
-                DeleteRepository.Instance.DeletePayment(_payment.Id);
+                DeleteRepository.Instance.DeletePayment(_userUtility.User, _payment.Id);
 
                 Session["Message"] = _userUtility.Language.GetText(54);
             }
@@ -190,7 +190,7 @@ namespace Finance_Website.Controllers
 
             if (transaction != null)
             {
-                ChangeRepository.Instance.ChangeTransaction(id, amount, description);
+                ChangeRepository.Instance.ChangeTransaction(transaction, amount, description);
 
                 Session["Message"] = _userUtility.Language.GetText(55);
             }
@@ -215,7 +215,7 @@ namespace Finance_Website.Controllers
 
             if (transaction != null)
             {
-                DeleteRepository.Instance.DeleteTransaction(id);
+                DeleteRepository.Instance.DeleteTransaction(_payment as Payment, id);
 
                 Session["Message"] = _userUtility.Language.GetText(56);
             }

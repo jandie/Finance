@@ -114,24 +114,24 @@ namespace Library.Classes
             }
         }
 
-        public void AddBankAccounts(List<Balance> bankAccounts)
-        {
-            _balances = new List<Balance>(bankAccounts);
-        }
-
-        public void AddBankAccount(Balance bankAccount)
+        public void AddBalance(Balance bankAccount)
         {
             _balances.Add(bankAccount);
         }
 
-        public void AddPayments(List<IPayment> payments)
+        public void DeleteBalance(int id)
         {
-            _payments = new List<IPayment>(payments);
+            _balances.Remove(_balances.Find(b => b.Id == id));
         }
 
         public void AddPayment(IPayment payment)
         {
             _payments.Add(payment);
+        }
+
+        public void DeletePayment(int id)
+        {
+            _payments.Remove(_payments.Find(p => p.Id == id));
         }
     }
 }
