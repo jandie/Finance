@@ -27,11 +27,12 @@ namespace Database.Interfaces
         User LoginUser(string email, string password);
 
         /// <summary>
-        /// Loads a user from the database.
+        /// Checks wether or not the token of the user was changed.
         /// </summary>
-        /// <param name="email">The email of the user (to identify).</param>
-        /// <returns>A user that has been loaded from the database.</returns>
-        User LoadUser(string email);
+        /// <param name="email">The email of the user where the token is checked.</param>
+        /// <param name="token">The token itself.</param>
+        /// <returns>Wether or not the token is changed.</returns>
+        bool TokenChanged(string email, string token);
 
         /// <summary>
         /// Loads all exsisting currencies from the database.

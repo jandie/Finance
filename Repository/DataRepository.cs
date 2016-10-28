@@ -4,7 +4,7 @@ using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
 using Library.Classes.Language;
-using Repository.Exceptions;
+using Library.Exceptions;
 using Repository.Utilities;
 
 namespace Repository
@@ -35,11 +35,11 @@ namespace Repository
             }
         }
 
-        public User LoadUser(string email)
+        public User CheckUser(User user)
         {
             try
             {
-                return _context.LoadUser(email);
+                return _context.TokenChanged(user.Email, user.Token) ? null : user;
             }
             catch (Exception ex)
             {

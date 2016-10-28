@@ -11,7 +11,7 @@ namespace Library.Classes
 
         private List<IPayment> _payments;
 
-        public User(int id, string name, string lastName, string email, int languageId, Currency currency)
+        public User(int id, string name, string lastName, string email, int languageId, Currency currency, string token)
         {
             Id = id;
             Name = name;
@@ -19,6 +19,7 @@ namespace Library.Classes
             Email = email;
             LanguageId = languageId;
             Currency = currency;
+            Token = token;
 
             _balances = new List<Balance>();
             _payments = new List<IPayment>();
@@ -30,15 +31,17 @@ namespace Library.Classes
 
         public int Id { get; }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public string LastName { get; }
+        public string LastName { get; set; }
 
         public string Email { get; }
 
-        public int LanguageId { get; }
+        public int LanguageId { get; set; }
 
         public Currency Currency { get; }
+
+        public string Token { get; }
 
         public decimal TotalBalance
         {
@@ -111,14 +114,24 @@ namespace Library.Classes
             }
         }
 
-        public void AddBankAccounts(List<Balance> bankAccounts)
+        public void AddBalance(Balance bankAccount)
         {
-            _balances = new List<Balance>(bankAccounts);
+            _balances.Add(bankAccount);
         }
 
-        public void AddPayments(List<IPayment> payments)
+        public void DeleteBalance(int id)
         {
-            _payments = new List<IPayment>(payments);
+            _balances.Remove(_balances.Find(b => b.Id == id));
+        }
+
+        public void AddPayment(IPayment payment)
+        {
+            _payments.Add(payment);
+        }
+
+        public void DeletePayment(int id)
+        {
+            _payments.Remove(_payments.Find(p => p.Id == id));
         }
     }
 }

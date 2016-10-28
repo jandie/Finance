@@ -7,6 +7,7 @@ using Library.Classes.Language;
 using Library.Enums;
 using Library.Exceptions;
 using Library.Interfaces;
+using Library.Utils;
 using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
@@ -87,26 +88,53 @@ namespace Database.SqlContexts
             if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
 
             Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
-            User user = new User(id, name, lastName, email, languageId, currency);
+            User user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email));
 
-            user.AddBankAccounts(GetBankAccountsOfUser(id));
-            user.AddPayments(GetPaymentsOfUser(id));
+            GetBalancesOfUser(id).ForEach(b => user.AddBalance(b));
+            GetPaymentsOfUser(id).ForEach(p => user.AddPayment(p));
 
             return user;
         }
 
         /// <summary>
-        /// Loads a user from the database.
+        /// Updates the token in the databse and returns it.
         /// </summary>
-        /// <param name="email">The email of the user (to identify).</param>
-        /// <returns>A user that has been loaded from the database.</returns>
-        public User LoadUser(string email)
+        /// <param name="email">The email of the User where the token
+        /// must be updated</param>
+        /// <returns>The random token.</returns>
+        private string UpdateToken(string email)
         {
+            string ranString = RanUtil.RandomString(10);
+
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML FROM USER U " +
-                    "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
+                    "UPDATE user SET Token = @ranString WHERE email = @email",
+                    connection)
+                { CommandType = CommandType.Text };
+
+            command.Parameters.Add(new MySqlParameter("@ranString", ranString));
+            command.Parameters.Add(new MySqlParameter("@email", email));
+
+            command.ExecuteNonQuery();
+
+            return ranString;
+        }
+
+        /// <summary>
+        /// Checks wether or not the token of the user was changed.
+        /// </summary>
+        /// <param name="email">The email of the user where the token is checked.</param>
+        /// <param name="token">The token itself.</param>
+        /// <returns>Wether or not the token is changed.</returns>
+        public bool TokenChanged(string email, string token)
+        {
+            string tokenFromDb = null;
+
+            MySqlConnection connection = Database.Instance.Connection;
+            MySqlCommand command =
+                new MySqlCommand(
+                    "SELECT TOKEN FROM USER WHERE EMAIL = @email",
                     connection)
                 { CommandType = CommandType.Text };
 
@@ -114,31 +142,14 @@ namespace Database.SqlContexts
 
             MySqlDataReader reader = command.ExecuteReader();
 
-            if (!reader.Read())
+            if (reader.Read())
             {
-                reader.Close();
-
-                throw new WrongUsernameOrPasswordException();
+                tokenFromDb = reader.GetString(0);
             }
-
-            int id = reader.GetInt32(0);
-            string name = reader.GetString(1);
-            string lastName = reader.GetString(2);
-            int languageId = reader.GetInt32(3);
-            int currencyId = reader.GetInt32(4);
-            string currencyAbbrevation = reader.GetString(5);
-            string currencyName = reader.GetString(6);
-            string currencyHtml = reader.GetString(7);
 
             reader.Close();
 
-            Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
-            User user = new User(id, name, lastName, email, languageId, currency);
-
-            user.AddBankAccounts(GetBankAccountsOfUser(id));
-            user.AddPayments(GetPaymentsOfUser(id));
-
-            return user;
+            return tokenFromDb != token;
         }
 
         /// <summary>
@@ -146,7 +157,7 @@ namespace Database.SqlContexts
         /// </summary>
         /// <param name="userId">The id of the user.</param>
         /// <returns>List of balances of the user.</returns>
-        private List<Balance> GetBankAccountsOfUser(int userId)
+        private List<Balance> GetBalancesOfUser(int userId)
         {
             List<Balance> bankAccounts = new List<Balance>();
 
@@ -214,7 +225,7 @@ namespace Database.SqlContexts
 
             reader.Close();
 
-            payments.ForEach(p => p.AddTransactions(GetTransactionsOfPayment(p)));
+            payments.ForEach(p => GetTransactionsOfPayment(p).ForEach(p.AddTransaction));
 
             return payments;
         }

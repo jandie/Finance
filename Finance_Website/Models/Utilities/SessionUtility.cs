@@ -17,14 +17,14 @@ namespace Finance_Website.Models.Utilities
 
         public string Password { private get; set; }
 
-        public void Refresh(string lastTab = null)
+        private void Refresh(string lastTab = null)
         {
             if (string.IsNullOrWhiteSpace(LastTab) && lastTab != null)
                 LastTab = lastTab;
 
             User = User == null
                 ? DataRepository.Instance.Login(Email, Password)
-                : DataRepository.Instance.LoadUser(Email);
+                : DataRepository.Instance.CheckUser(User);
 
             if (User == null)
             {
