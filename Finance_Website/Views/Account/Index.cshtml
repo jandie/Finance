@@ -220,7 +220,7 @@
                     decimal totalAmount = bill.GetTotalAmount();
                     decimal amount = bill.Amount;
                     int percentage = Convert.ToInt32(totalAmount / (amount + (decimal)0.001) * 100);
-                    string percentageString = percentage + "%";
+                    string percentageString = (percentage > 100 ? 100 : percentage) + "%";
 
                     <tr>
                         <td>@bill.Name</td>
@@ -240,7 +240,7 @@
                         <td colspan="4">
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width: @percentageString">
-                                    @percentageString
+                                    @percentage %
                                 </div>
                             </div>
                         </td>
@@ -284,7 +284,7 @@
                     decimal totalAmount = income.GetTotalAmount();
                     decimal amount = income.Amount;
                     int percentage = Convert.ToInt32(totalAmount / (amount + (decimal)0.001) * 100);
-                    string percentageString = percentage + "%";
+                    string percentageString = (percentage > 100 ? 100 : percentage) + "%";
 
                     <tr>
                         <td>@income.Name</td>
@@ -304,7 +304,7 @@
                         <td colspan="4">
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width: @percentageString">
-                                    @percentageString
+                                    @percentage %
                                 </div>
                             </div>
                         </td>
