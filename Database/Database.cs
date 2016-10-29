@@ -1,21 +1,23 @@
 ﻿using System.Data;
+using Database.Properties;
 using MySql.Data.MySqlClient;
 
 namespace Database
 {
     public class Database
     {
-        private static readonly string CONNECTION_STRING =
-            "SERVER=" + DatabaseConfiguration.DatabaseHost + ";" + "DATABASE=" +
-            DatabaseConfiguration.DatabaseName + ";" + "UID=" + DatabaseConfiguration.DatabaseUsername + ";" +
-            "PASSWORD=" + DatabaseConfiguration.DatabasePassword + ";";
-
         private static Database _instance;
-
 
         private Database()
         {
-            Connection = new MySqlConnection {ConnectionString = CONNECTION_STRING};
+            string connectionString =
+                $"SERVER={Settings.Default.DatabaseHost};" +
+                $"PORT={Settings.Default.DatabasePort};" +
+                $"DATABASE={Settings.Default.DatabaseName};" +
+                $"UID={Settings.Default.DatabaseUsername};" +
+                $"PASSWORD={Settings.Default.DatabasePassword};";
+
+            Connection = new MySqlConnection {ConnectionString = connectionString};
 
             Connection.Open();
         }
@@ -38,11 +40,6 @@ namespace Database
         }
 
         ~Database()
-        {
-            Close();
-        }
-
-        public void Close()
         {
             Connection.Close();
         }
