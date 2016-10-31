@@ -11,7 +11,8 @@ namespace Library.Classes
 
         private List<IPayment> _payments;
 
-        public User(int id, string name, string lastName, string email, int languageId, Currency currency, string token)
+        public User(int id, string name, string lastName, 
+            string email, int languageId, Currency currency, string token)
         {
             Id = id;
             Name = name;
@@ -79,7 +80,8 @@ namespace Library.Classes
             {
                 decimal toPay = 0;
 
-                Payments.OfType<MonthlyBill>().ToList().ForEach(p => toPay += Math.Abs(p.GetSum()));
+                Payments.OfType<MonthlyBill>()
+                    .ToList().ForEach(p => toPay += Math.Abs(p.GetSum()));
 
                 return toPay;
             }
@@ -91,7 +93,8 @@ namespace Library.Classes
             {
                 decimal toGet = 0;
 
-                Payments.OfType<MonthlyIncome>().ToList().ForEach(p => toGet += p.GetSum());
+                Payments.OfType<MonthlyIncome>()
+                    .ToList().ForEach(p => toGet += p.GetSum());
 
                 return toGet;
             }
@@ -106,7 +109,9 @@ namespace Library.Classes
                 _payments.ForEach(
                     p =>
                         p.AllTransactions.ForEach(
-                            t => transactions.Add(new Transaction(t.Id, t.Amount, t.Description, t.Positive))));
+                            t => transactions.Add(
+                                new Transaction(
+                                    t.Id, t.Amount, t.Description, t.Positive))));
 
                 transactions.Sort();
 
