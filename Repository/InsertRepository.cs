@@ -19,11 +19,11 @@ namespace Repository
 
         public static InsertRepository Instance => _instance ?? (_instance = new InsertRepository());
 
-        public void AddBankAccount(User user, string name, decimal balance)
+        public void AddBankAccount(User user, string name, decimal balance, string password, string salt)
         {
             try
             {
-                int id = _context.AddBankAccount(user.Id, name, balance);
+                int id = _context.AddBankAccount(user.Id, name, balance, password, salt);
 
                 Balance b = new Balance(id, name, balance);
 
@@ -35,11 +35,11 @@ namespace Repository
             }
         }
 
-        public void AddPayment(User user, string name, decimal amount, PaymentType type)
+        public void AddPayment(User user, string name, decimal amount, PaymentType type, string password, string salt)
         {
             try
             {
-                int id = _context.AddPayment(user.Id, name, amount, type);
+                int id = _context.AddPayment(user.Id, name, amount, type, password, salt);
 
                 IPayment payment;
 
@@ -65,11 +65,11 @@ namespace Repository
             }
         }
 
-        public void AddTransaction(IPayment payment, decimal amount, string description)
+        public void AddTransaction(IPayment payment, decimal amount, string description, string password, string salt)
         {
             try
             {
-                int id = _context.AddTransaction(payment.Id, amount, description);
+                int id = _context.AddTransaction(payment.Id, amount, description, password, salt);
 
                 switch (payment.PaymentType)
                 {

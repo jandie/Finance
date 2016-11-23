@@ -15,7 +15,7 @@ namespace Finance_Website.Models.Utilities
 
         public string Email { private get; set; }
 
-        public string Password { private get; set; }
+        public string Password { get; set; }
 
         private void Refresh(string lastTab = null)
         {

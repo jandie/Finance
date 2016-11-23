@@ -64,7 +64,7 @@ namespace Finance_Website.Controllers
             try
             {
                 ChangeRepository.Instance.ChangeUser(_userUtility.User, name, lastName, _userUtility.User.Email, currencyId,
-                    languageId, currentPassword, password, password2, _userUtility.Language);
+                    languageId, currentPassword, password, password2, _userUtility.Language, _userUtility.User.Salt);
 
                 if (DataRepository.Instance.Login(_userUtility.User.Email, password) != null)
                 {

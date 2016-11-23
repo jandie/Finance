@@ -34,9 +34,10 @@ namespace Database.SqlContexts
                 new MySqlCommand(
                     "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD, CURRENCY, LANGUAGE) VALUES (@name, @lastName, @email, @password, @currencyId, @languageId)",
                     connection) {CommandType = CommandType.Text};
-
-            command.Parameters.Add(new MySqlParameter("@name", name));
-            command.Parameters.Add(new MySqlParameter("@lastName", lastName));
+            string hash = Hashing.CreateHash(password);
+            string salt = Hashing.ExtractSalt(hash);
+            command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(name, password, salt)));
+            command.Parameters.Add(new MySqlParameter("@lastName", Encryption.Instance.EncryptText(lastName, password, salt)));
             command.Parameters.Add(new MySqlParameter("@email", email));
             command.Parameters.Add(new MySqlParameter("@password", Hashing.CreateHash(password)));
             command.Parameters.Add(new MySqlParameter("@currencyId", currencyId));
@@ -60,7 +61,7 @@ namespace Database.SqlContexts
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD, U.ENCRYPTED FROM USER U " +
+                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD FROM USER U " +
                     "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
                     connection) {CommandType = CommandType.Text};
 
@@ -75,35 +76,26 @@ namespace Database.SqlContexts
                     throw new WrongUsernameOrPasswordException();
                 }
 
+                string hash = reader.GetString(8);
+                string salt = Hashing.ExtractSalt(hash);
                 int id = reader.GetInt32(0);
-                string name = reader.GetString(1);
-                string lastName = reader.GetString(2);
+                string name = Encryption.Instance.DecryptText(reader.GetString(1), password, salt);
+                string lastName = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
                 int languageId = reader.GetInt32(3);
                 int currencyId = reader.GetInt32(4);
                 string currencyAbbrevation = reader.GetString(5);
                 string currencyName = reader.GetString(6);
                 string currencyHtml = reader.GetString(7);
-                string hash = reader.GetString(8);
-                int encrypted = reader.GetInt32(9);
 
                 reader.Close();
 
                 if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
 
-                if (encrypted > 0)
-                {
-                    Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
-                    user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email));
+                Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
+                user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt);
 
-                    GetBalancesOfUser(id).ForEach(b => user.AddBalance(b));
-                    GetPaymentsOfUser(id).ForEach(p => user.AddPayment(p));
-
-                }
-                else
-                {
-                    
-                }
-                
+                GetBalancesOfUser(id, password, salt).ForEach(b => user.AddBalance(b));
+                GetPaymentsOfUser(id, password, salt).ForEach(p => user.AddPayment(p));
             }
 
             return user;
@@ -168,8 +160,10 @@ namespace Database.SqlContexts
         /// Loads all balances of the user from the database.
         /// </summary>
         /// <param name="userId">The id of the user.</param>
+        /// <param name="password">The password used of decrypting data.</param>
+        /// <param name="salt">The salt used for decrypting data.</param>
         /// <returns>List of balances of the user.</returns>
-        private List<Balance> GetBalancesOfUser(int userId)
+        private List<Balance> GetBalancesOfUser(int userId, string password, string salt)
         {
             List<Balance> bankAccounts = new List<Balance>();
 
@@ -186,8 +180,8 @@ namespace Database.SqlContexts
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(0);
-                    decimal balance = reader.GetDecimal(1);
-                    string name = reader.GetString(2);
+                    decimal balance = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, salt));
+                    string name = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
 
                     bankAccounts.Add(new Balance(id, name, balance));
                 }
@@ -200,8 +194,10 @@ namespace Database.SqlContexts
         /// Loads payments of a user from the database.
         /// </summary>
         /// <param name="userId">The id of the user.</param>
+        /// <param name="password">The password used of decrypting data.</param>
+        /// <param name="salt">The salt used for decrypting data.</param>
         /// <returns>List of payments of the user.</returns>
-        private List<IPayment> GetPaymentsOfUser(int userId)
+        private List<IPayment> GetPaymentsOfUser(int userId, string password, string salt)
         {
             List<IPayment> payments = new List<IPayment>();
             MySqlConnection connection = Database.Instance.Connection;
@@ -217,8 +213,8 @@ namespace Database.SqlContexts
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(0);
-                    string name = reader.GetString(1);
-                    decimal amount = reader.GetDecimal(2);
+                    string name = Encryption.Instance.DecryptText(reader.GetString(1), password, salt);
+                    decimal amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(2), password, salt));
                     PaymentType type = (PaymentType)Enum.Parse(typeof(PaymentType), reader.GetString(3));
 
                     switch (type)
@@ -235,7 +231,7 @@ namespace Database.SqlContexts
                 }
             }
 
-            payments.ForEach(p => GetTransactionsOfPayment(p).ForEach(p.AddTransaction));
+            payments.ForEach(p => GetTransactionsOfPayment(p, password, salt).ForEach(p.AddTransaction));
 
             return payments;
         }
@@ -244,8 +240,10 @@ namespace Database.SqlContexts
         /// Loads the transactions of a payment from the database.
         /// </summary>
         /// <param name="payment">The payment itself.</param>
+        /// <param name="password">The password used of decrypting data.</param>
+        /// <param name="salt">The salt used for decrypting data.</param>
         /// <returns>List of transactions of the payment.</returns>
-        private List<Transaction> GetTransactionsOfPayment(IPayment payment)
+        private List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string salt)
         {
             List<Transaction> transactions = new List<Transaction>();
 
@@ -264,8 +262,8 @@ namespace Database.SqlContexts
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(0);
-                    decimal amount = reader.GetDecimal(1);
-                    string description = reader.GetString(2);
+                    decimal amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, salt));
+                    string description = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
 
                     if (payment is MonthlyBill)
                         transactions.Add(new Transaction(id, amount, description, false));

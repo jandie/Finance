@@ -20,11 +20,11 @@ namespace Repository
 
         public static ChangeRepository Instance => _instance ?? (_instance = new ChangeRepository());
 
-        public void ChangeBalance(Balance balance, string name, decimal balanceAmount)
+        public void ChangeBalance(Balance balance, string name, decimal balanceAmount, string password, string salt)
         {
             try
             {
-                _context.ChangeBalance(balance.Id, name, balanceAmount);
+                _context.ChangeBalance(balance.Id, name, balanceAmount, password, salt);
 
                 balance.Name = name;
                 balance.BalanceAmount = balanceAmount;
@@ -35,11 +35,11 @@ namespace Repository
             }
         }
 
-        public void ChangePayment(IPayment payment, string name, decimal amount)
+        public void ChangePayment(IPayment payment, string name, decimal amount, string password, string salt)
         {
             try
             {
-                _context.ChangePayment(payment.Id, name, amount);
+                _context.ChangePayment(payment.Id, name, amount, password, salt);
 
                 payment.Name = name;
                 payment.Amount = amount;
@@ -50,11 +50,11 @@ namespace Repository
             }
         }
 
-        public void ChangeTransaction(Transaction transaction, decimal amount, string description)
+        public void ChangeTransaction(Transaction transaction, decimal amount, string description, string password, string salt)
         {
             try
             {
-                _context.ChangeTransaction(transaction.Id, amount, description);
+                _context.ChangeTransaction(transaction.Id, amount, description, password, salt);
 
                 transaction.Amount = amount;
                 transaction.Description = description;
@@ -66,7 +66,7 @@ namespace Repository
         }
 
         public void ChangeUser(User user, string name, string lastName, string email, int currencyId, int languageId,
-            string currentPassword, string newPassword, string repeatedPassword, Language language)
+            string currentPassword, string newPassword, string repeatedPassword, Language language, string salt)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace Repository
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword != repeatedPassword)
                     throw new ChangeUserException(language.GetText(41));
 
-                _context.ChangeUser(name, lastName, email, currencyId, languageId);
+                _context.ChangeUser(name, lastName, email, currencyId, languageId, currentPassword, salt);
 
                 user.Name = name;
                 user.LastName = lastName;

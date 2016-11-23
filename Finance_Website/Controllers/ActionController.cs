@@ -30,7 +30,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            InsertRepository.Instance.AddBankAccount(_userUtility.User, name.Trim(), balance);
+            InsertRepository.Instance.AddBankAccount(_userUtility.User, name.Trim(), balance, _userUtility.Password, _userUtility.User.Salt);
 
             SaveAction();
 
@@ -46,7 +46,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            InsertRepository.Instance.AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyBill);
+            InsertRepository.Instance.AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyBill, _userUtility.Password, _userUtility.User.Salt);
 
             SaveAction();
 
@@ -62,7 +62,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            InsertRepository.Instance.AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyIncome);
+            InsertRepository.Instance.AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyIncome, _userUtility.Password, _userUtility.User.Salt);
 
             SaveAction();
 
@@ -97,17 +97,17 @@ namespace Finance_Website.Controllers
 
             if (payment != null)
             {
-                InsertRepository.Instance.AddTransaction(payment, amount, description.Trim());
+                InsertRepository.Instance.AddTransaction(payment, amount, description.Trim(), _userUtility.Password, _userUtility.User.Salt);
 
                 if (balance != null)
                 {
                     if (payment is MonthlyBill)
                     {
-                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount - amount);
+                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount - amount, _userUtility.Password, _userUtility.User.Salt);
                     }
                     else if (payment is MonthlyIncome)
                     {
-                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount + amount);
+                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount + amount, _userUtility.Password, _userUtility.User.Salt);
                     }
                 }
 

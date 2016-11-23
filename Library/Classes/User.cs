@@ -11,7 +11,7 @@ namespace Library.Classes
 
         private List<IPayment> _payments;
 
-        public User(int id, string name, string lastName, string email, int languageId, Currency currency, string token)
+        public User(int id, string name, string lastName, string email, int languageId, Currency currency, string token, string salt)
         {
             Id = id;
             Name = name;
@@ -20,6 +20,7 @@ namespace Library.Classes
             LanguageId = languageId;
             Currency = currency;
             Token = token;
+            Salt = salt;
 
             _balances = new List<Balance>();
             _payments = new List<IPayment>();
@@ -42,6 +43,8 @@ namespace Library.Classes
         public Currency Currency { get; }
 
         public string Token { get; }
+
+        public string Salt { get; set; }
 
         public decimal TotalBalance
         {

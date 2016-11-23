@@ -14,6 +14,7 @@ namespace Finance.Tests.Library.Classes
         private const string Email = "jandie@hendriks.com";
         private const int LanguageId = 0;
         private const string Token = "hjwbdqui32uhewyr3982iowjq9ioheusygvhwadsb";
+        private const string Salt = "x31717c1x11xn78yn178y178r==";
         private User _user;
         private const int CurrencyId = 0;
         private const string CurrencyAbbrevation = "eur";
@@ -27,7 +28,7 @@ namespace Finance.Tests.Library.Classes
             _currency = new Currency(CurrencyId, CurrencyAbbrevation, 
                 CurrencyName, CurrencyHtml);
             _user = new User(Id, Name, LastName, Email, LanguageId,
-                _currency, Token);
+                _currency, Token, Salt);
         }
 
         [TestMethod]
