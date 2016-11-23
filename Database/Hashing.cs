@@ -55,6 +55,20 @@ namespace Database
         }
 
         /// <summary>
+        /// Extracts the salt from the total hash.
+        /// </summary>
+        /// <param name="correctHash">A hash of the correct password.</param>
+        /// <returns>The salt.</returns>
+        public static string ExtractSalt(string correctHash)
+        {
+            // Extract the parameters from the hash
+            char[] delimiter = new[] { ':' };
+            string[] split = correctHash.Split(delimiter);
+
+            return split[SaltIndex];
+        }
+
+        /// <summary>
         /// Compares two byte arrays in length-constant time. This comparison
         /// method is used so that password hashes cannot be extracted from
         /// on-line systems using a timing attack and then attacked off-line.

@@ -8,7 +8,7 @@
         /// <param name="id">The id of the balance.</param>
         /// <param name="name">The name of the balance.</param>
         /// <param name="balanceAmount">The amount of the balance.</param>
-        void ChangeBalance(int id, string name, decimal balanceAmount);
+        void ChangeBalance(int id, string name, decimal balanceAmount, string password, string salt);
 
         /// <summary>
         /// Changes a payment in the databse.
@@ -16,7 +16,7 @@
         /// <param name="id">The id of the payment</param>
         /// <param name="name">The name of the payment</param>
         /// <param name="amount">The amount of the payment.</param>
-        void ChangePayment(int id, string name, decimal amount);
+        void ChangePayment(int id, string name, decimal amount, string password, string salt);
 
         /// <summary>
         /// Changes a transaction in the database.
@@ -24,7 +24,7 @@
         /// <param name="id">The id of the transaction.</param>
         /// <param name="amount">The amount of the transaction.</param>
         /// <param name="description">The description of the transaction.</param>
-        void ChangeTransaction(int id, decimal amount, string description);
+        void ChangeTransaction(int id, decimal amount, string description, string password, string salt);
 
         /// <summary>
         /// Changes everything but the password of a user in the database.
@@ -34,7 +34,7 @@
         /// <param name="email">The email of the user (to identify).</param>
         /// <param name="currencyId">The id of the prefferred currency of the user.</param>
         /// <param name="languageId">The id of the prefferred language of the user.</param>
-        void ChangeUser(string name, string lastName, string email, int currencyId, int languageId);
+        void ChangeUser(string name, string lastName, string email, int currencyId, int languageId, string password, string salt);
 
         /// <summary>
         /// Changes a password of a user in the database.

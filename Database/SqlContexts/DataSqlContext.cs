@@ -60,7 +60,7 @@ namespace Database.SqlContexts
             MySqlConnection connection = Database.Instance.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD FROM USER U " +
+                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD, U.ENCRYPTED FROM USER U " +
                     "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
                     connection) {CommandType = CommandType.Text};
 
@@ -84,16 +84,26 @@ namespace Database.SqlContexts
                 string currencyName = reader.GetString(6);
                 string currencyHtml = reader.GetString(7);
                 string hash = reader.GetString(8);
+                int encrypted = reader.GetInt32(9);
 
                 reader.Close();
 
                 if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
 
-                Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
-                user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email));
+                if (encrypted > 0)
+                {
+                    Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
+                    user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email));
 
-                GetBalancesOfUser(id).ForEach(b => user.AddBalance(b));
-                GetPaymentsOfUser(id).ForEach(p => user.AddPayment(p));
+                    GetBalancesOfUser(id).ForEach(b => user.AddBalance(b));
+                    GetPaymentsOfUser(id).ForEach(p => user.AddPayment(p));
+
+                }
+                else
+                {
+                    
+                }
+                
             }
 
             return user;
