@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
@@ -10,6 +11,7 @@ namespace Repository
         private static DeleteRepository _instance;
         private readonly IDeleteContext _context;
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private DeleteRepository()
         {
             _context = new DeleteSqlContext();
@@ -17,6 +19,7 @@ namespace Repository
 
         public static DeleteRepository Instance => _instance ?? (_instance = new DeleteRepository());
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void DeleteBalance(User user, int id)
         {
             try
@@ -31,6 +34,7 @@ namespace Repository
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void DeletePayment(User user, int id)
         {
             try
@@ -45,6 +49,7 @@ namespace Repository
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public void DeleteTransaction(Payment payment, int id)
         {
             try

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
@@ -14,6 +15,7 @@ namespace Repository
         private static DataRepository _instance;
         private readonly IDataContext _context;
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private DataRepository()
         {
             _context = new DataSqlContext();
@@ -21,6 +23,7 @@ namespace Repository
 
         public static DataRepository Instance => _instance ?? (_instance = new DataRepository());
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public User Login(string email, string password)
         {
             try
@@ -35,6 +38,7 @@ namespace Repository
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public User CheckUser(User user)
         {
             try
@@ -49,6 +53,7 @@ namespace Repository
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public User CreateUser(string name, string lastName, string email, string password, string password2,
             int currencyId, int languageId,
             Language language, string alphaKey)
@@ -97,6 +102,7 @@ namespace Repository
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public List<Language> LoadLanguages()
         {
             try
@@ -111,6 +117,7 @@ namespace Repository
             }
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public List<Currency> LoadCurrencies()
         {
             try

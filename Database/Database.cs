@@ -30,12 +30,12 @@ namespace Database
         {
             get
             {
-                if (_instance == null || !_instance.IsConnected)
-                {
-                    return _instance = new Database();
-                }
+                //if (_instance == null || !_instance.IsConnected)
+                //{
+                //    return _instance = new Database();
+                //}
 
-                return _instance;
+                return new Database();
             }
         }
 
