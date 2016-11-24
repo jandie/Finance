@@ -14,6 +14,13 @@ namespace Database.SqlContexts
 {
     public class DataSqlContext : IDataContext
     {
+        private Database _db;
+
+        public DataSqlContext()
+        {
+            _db = Database.Instance;
+        }
+
         #region User
 
         /// <summary>
@@ -29,7 +36,7 @@ namespace Database.SqlContexts
         public User CreateUser(string name, string lastName, string email, string password, int currencyId,
             int languageId)
         {
-            MySqlConnection connection = Database.Instance.Connection;
+            MySqlConnection connection = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
                     "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD, CURRENCY, LANGUAGE) VALUES (@name, @lastName, @email, @password, @currencyId, @languageId)",
@@ -58,7 +65,7 @@ namespace Database.SqlContexts
         {
             User user = null;
 
-            MySqlConnection connection = Database.Instance.Connection;
+            MySqlConnection connection = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
                     "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD FROM USER U " +
@@ -111,7 +118,7 @@ namespace Database.SqlContexts
         {
             string ranString = RanUtil.RandomString(10);
 
-            MySqlConnection connection = Database.Instance.Connection;
+            MySqlConnection connection = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
                     "UPDATE user SET Token = @ranString WHERE email = @email",
@@ -136,7 +143,7 @@ namespace Database.SqlContexts
         {
             string tokenFromDb = null;
 
-            MySqlConnection connection = Database.Instance.Connection;
+            MySqlConnection connection = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
                     "SELECT TOKEN FROM USER WHERE EMAIL = @email",
@@ -167,7 +174,7 @@ namespace Database.SqlContexts
         {
             List<Balance> bankAccounts = new List<Balance>();
 
-            MySqlConnection conneciton = Database.Instance.Connection;
+            MySqlConnection conneciton = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = @userId AND Active = 1",
                     conneciton)
@@ -200,7 +207,7 @@ namespace Database.SqlContexts
         private List<IPayment> GetPaymentsOfUser(int userId, string password, string salt)
         {
             List<IPayment> payments = new List<IPayment>();
-            MySqlConnection connection = Database.Instance.Connection;
+            MySqlConnection connection = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = @userId AND Active = 1",
                     connection)
@@ -247,7 +254,7 @@ namespace Database.SqlContexts
         {
             List<Transaction> transactions = new List<Transaction>();
 
-            MySqlConnection connecion = Database.Instance.Connection;
+            MySqlConnection connecion = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
                     "SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId AND DateAdded LIKE @month AND Active = 1",
@@ -285,7 +292,7 @@ namespace Database.SqlContexts
         {
             List<Currency> currencies = new List<Currency>();
 
-            MySqlConnection connecion = Database.Instance.Connection;
+            MySqlConnection connecion = _db.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME, HTML FROM CURRENCY", connecion)
             { CommandType = CommandType.Text };
 
@@ -313,7 +320,7 @@ namespace Database.SqlContexts
         {
             List<Language> languages = new List<Language>();
 
-            MySqlConnection connecion = Database.Instance.Connection;
+            MySqlConnection connecion = _db.Connection;
             MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME FROM LANGUAGE", connecion)
             { CommandType = CommandType.Text };
 

@@ -10,6 +10,12 @@ namespace Database.SqlContexts
 {
     public class ChangeSqlContext : IChangeContext
     {
+        private Database _db;
+
+        public ChangeSqlContext()
+        {
+            _db = Database.Instance;
+        }
         /// <summary>
         /// Changes a balance in the database.
         /// </summary>
@@ -22,7 +28,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.Instance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand("UPDATE BANKACCOUNT SET NAME = @name, BALANCE = @balanceAmount WHERE ID = @id",
                         connection)
@@ -55,7 +61,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.Instance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command = new MySqlCommand("UPDATE PAYMENT SET NAME = @name, AMOUNT = @amount WHERE ID = @id",
                     connection)
                 { CommandType = CommandType.Text };
@@ -86,7 +92,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.Instance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand("UPDATE TRANSACTION SET AMOUNT = @amount, DESCRIPTION = @description WHERE ID = @id",
                         connection)
@@ -120,7 +126,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.Instance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand(
                         "UPDATE USER SET NAME = @name, LASTNAME = @lastName, CURRENCY = @currencyId, LANGUAGE = @languageId " +
@@ -153,7 +159,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.Instance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand("UPDATE USER SET PASSWORD = @newPassword " +
                                      "WHERE EMAIL = @email",
