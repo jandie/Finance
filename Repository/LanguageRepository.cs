@@ -8,7 +8,6 @@ namespace Repository
 {
     public class LanguageRepository
     {
-        private static LanguageRepository _instance;
         private readonly ILanguageContext _context;
 
         private LanguageRepository()

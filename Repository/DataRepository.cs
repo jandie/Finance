@@ -11,7 +11,6 @@ namespace Repository
 {
     public class DataRepository
     {
-        private static DataRepository _instance;
         private readonly IDataContext _context;
 
         private DataRepository()

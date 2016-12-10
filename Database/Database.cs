@@ -6,8 +6,6 @@ namespace Database
 {
     public class Database
     {
-        private static Database _instance;
-
         private Database()
         {
             string connectionString =

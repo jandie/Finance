@@ -9,7 +9,6 @@ namespace Repository
 {
     public class InsertRepository
     {
-        private static InsertRepository _instance;
         private readonly IInsertContext _context;
 
         private InsertRepository()

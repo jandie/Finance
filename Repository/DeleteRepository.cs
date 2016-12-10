@@ -7,7 +7,6 @@ namespace Repository
 {
     public class DeleteRepository
     {
-        private static DeleteRepository _instance;
         private readonly IDeleteContext _context;
 
         private DeleteRepository()

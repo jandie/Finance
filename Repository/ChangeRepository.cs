@@ -10,7 +10,6 @@ namespace Repository
 {
     public class ChangeRepository
     {
-        private static ChangeRepository _instance;
         private readonly IChangeContext _context;
 
         private ChangeRepository()
