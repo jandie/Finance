@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
@@ -13,15 +12,13 @@ namespace Repository
         private static InsertRepository _instance;
         private readonly IInsertContext _context;
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         private InsertRepository()
         {
             _context = new InsertSqlContext();
         }
 
-        public static InsertRepository Instance => _instance ?? (_instance = new InsertRepository());
+        public static InsertRepository Instance => new InsertRepository();
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddBankAccount(User user, string name, decimal balance, string password, string salt)
         {
             try
@@ -38,7 +35,6 @@ namespace Repository
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddPayment(User user, string name, decimal amount, PaymentType type, string password, string salt)
         {
             try
@@ -69,7 +65,6 @@ namespace Repository
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void AddTransaction(IPayment payment, decimal amount, string description, string password, string salt)
         {
             try

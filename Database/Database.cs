@@ -26,18 +26,7 @@ namespace Database
 
         public MySqlConnection Connection { get; }
 
-        public static Database Instance
-        {
-            get
-            {
-                //if (_instance == null || !_instance.IsConnected)
-                //{
-                //    return _instance = new Database();
-                //}
-
-                return new Database();
-            }
-        }
+        public static Database Instance => new Database();
 
         ~Database()
         {

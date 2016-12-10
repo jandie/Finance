@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
@@ -14,15 +13,13 @@ namespace Repository
         private static ChangeRepository _instance;
         private readonly IChangeContext _context;
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         private ChangeRepository()
         {
             _context = new ChangeSqlContext();
         }
 
-        public static ChangeRepository Instance => _instance ?? (_instance = new ChangeRepository());
+        public static ChangeRepository Instance => new ChangeRepository();
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void ChangeBalance(Balance balance, string name, decimal balanceAmount, string password, string salt)
         {
             try
@@ -38,7 +35,6 @@ namespace Repository
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void ChangePayment(IPayment payment, string name, decimal amount, string password, string salt)
         {
             try
@@ -54,7 +50,6 @@ namespace Repository
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void ChangeTransaction(Transaction transaction, decimal amount, string description, string password, string salt)
         {
             try
@@ -70,7 +65,6 @@ namespace Repository
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void ChangeUser(User user, string name, string lastName, string email, int currencyId, int languageId,
             string currentPassword, string newPassword, string repeatedPassword, Language language, string salt)
         {
