@@ -30,13 +30,20 @@ namespace Database.SqlContexts
             {
                 MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
-                    new MySqlCommand("UPDATE BANKACCOUNT SET NAME = @name, BALANCE = @balanceAmount WHERE ID = @id",
+                    new MySqlCommand("UPDATE BANKACCOUNT " +
+                                     "SET NAME = @name, BALANCE = @balanceAmount, NAMESALT = @nameSalt, BALANCESALT = @balanceSalt " +
+                                     "WHERE ID = @id",
                         connection)
                     { CommandType = CommandType.Text };
+
+                string nameSalt = Hashing.ExtractSalt(Hashing.CreateHash(name));
+                string balanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(balanceAmount)));
 
                 command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(name, password, salt)));
                 command.Parameters.Add(new MySqlParameter("@balanceAmount", 
                     Encryption.Instance.EncryptText(Convert.ToString(balanceAmount), password, salt)));
+                command.Parameters.Add(new MySqlParameter("@nameSalt", nameSalt));
+                command.Parameters.Add(new MySqlParameter("@balanceSalt", balanceSalt));
                 command.Parameters.Add(new MySqlParameter("@id", id));
 
                 command.ExecuteNonQuery();
@@ -62,12 +69,19 @@ namespace Database.SqlContexts
             try
             {
                 MySqlConnection connection = _db.Connection;
-                MySqlCommand command = new MySqlCommand("UPDATE PAYMENT SET NAME = @name, AMOUNT = @amount WHERE ID = @id",
+                MySqlCommand command = new MySqlCommand("UPDATE PAYMENT " +
+                                                        "SET NAME = @name, AMOUNT = @amount, NAMESALT = @nameSalt, AMOUNTSALT = @amountSalt " +
+                                                        "WHERE ID = @id",
                     connection)
                 { CommandType = CommandType.Text };
 
+                string nameSalt = Hashing.ExtractSalt(Hashing.CreateHash(name));
+                string amountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(amount)));
+
                 command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(name, password, salt)));
                 command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(amount.ToString(), password, salt)));
+                command.Parameters.Add(new MySqlParameter("@nameSalt", nameSalt));
+                command.Parameters.Add(new MySqlParameter("@amountSalt", amountSalt));
                 command.Parameters.Add(new MySqlParameter("@id", id));
 
                 command.ExecuteNonQuery();
@@ -94,12 +108,19 @@ namespace Database.SqlContexts
             {
                 MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
-                    new MySqlCommand("UPDATE TRANSACTION SET AMOUNT = @amount, DESCRIPTION = @description WHERE ID = @id",
+                    new MySqlCommand("UPDATE TRANSACTION " +
+                                     "SET AMOUNT = @amount, DESCRIPTION = @description, AMOUNTSALT = @amountSalt, DESCRIPTIONSALT = @descriptionSalt " +
+                                     "WHERE ID = @id",
                         connection)
                     { CommandType = CommandType.Text };
 
+                string amountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(amount)));
+                string descriptionSalt = Hashing.ExtractSalt(Hashing.CreateHash(description));
+
                 command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(amount.ToString(), password, salt)));
                 command.Parameters.Add(new MySqlParameter("@description", Encryption.Instance.EncryptText(description, password, salt)));
+                command.Parameters.Add(new MySqlParameter("@amountSalt", amountSalt));
+                command.Parameters.Add(new MySqlParameter("@descriptionSalt", descriptionSalt));
                 command.Parameters.Add(new MySqlParameter("@id", id));
 
                 command.ExecuteNonQuery();
