@@ -13,6 +13,20 @@ namespace Library.Classes
             Amount = amount;
             PaymentType = paymentType;
             Name = name;
+            NameSalt = null;
+            AmountSalt = null;
+
+            Transactions = new List<Transaction>();
+        }
+
+        protected Payment(int id, string name, decimal amount, PaymentType paymentType, string nameSalt, string amountSalt)
+        {
+            Id = id;
+            Amount = amount;
+            PaymentType = paymentType;
+            Name = name;
+            NameSalt = nameSalt;
+            AmountSalt = amountSalt;
 
             Transactions = new List<Transaction>();
         }
@@ -22,6 +36,10 @@ namespace Library.Classes
         public string Name { get; set; }
 
         public decimal Amount { get; set; }
+
+        public string NameSalt { get; set; }
+
+        public string AmountSalt { get; set; }
 
         public PaymentType PaymentType { get; }
 
