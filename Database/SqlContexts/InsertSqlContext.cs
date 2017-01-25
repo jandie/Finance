@@ -2,7 +2,7 @@
 using System.Data;
 using System.Globalization;
 using Database.Interfaces;
-using Library.Enums;
+using Library.Classes;
 using Library.Exceptions;
 using MySql.Data.MySqlClient;
 
@@ -14,23 +14,29 @@ namespace Database.SqlContexts
         /// Adds a balance to the databse.
         /// </summary>
         /// <param name="userId">The id of the user the balance belongs to.</param>
-        /// <param name="name">The name of the balance.</param>
-        /// <param name="balance">The balance of the balance.</param>
+        /// <param name="balance">The new balance.</param>
         /// <param name="password">The password used of decrypting data.</param>
-        /// <param name="salt">The salt used for decrypting data.</param>
-        public int AddBankAccount(int userId, string name, decimal balance, string password, string salt)
+        public int AddBankAccount(int userId, Balance balance, string password)
         {
             try
             {
                 MySqlConnection connection = Database.Instance.Connection;
                 MySqlCommand command =
-                    new MySqlCommand("INSERT INTO BANKACCOUNT (USER_ID, NAME, BALANCE) VALUES (@userId, @name, @balance)",
+                    new MySqlCommand("INSERT INTO BANKACCOUNT (USER_ID, NAME, BALANCE, NAMESALT, BALANCESALT) " +
+                                     "VALUES (@userId, @name, @balance, @nameSalt, @balanceSalt)",
                         connection)
                     { CommandType = CommandType.Text };
 
+                balance.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(balance.Name));
+                balance.BalanceAmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(balance.BalanceAmount)));
+
                 command.Parameters.Add(new MySqlParameter("@userId", userId));
-                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(name, password, salt)));
-                command.Parameters.Add(new MySqlParameter("@balance", Encryption.Instance.EncryptText(balance.ToString(CultureInfo.InvariantCulture), password, salt)));
+                command.Parameters.Add(new MySqlParameter("@name", 
+                    Encryption.Instance.EncryptText(balance.Name, password, balance.NameSalt)));
+                command.Parameters.Add(new MySqlParameter("@balance", 
+                    Encryption.Instance.EncryptText(balance.BalanceAmount.ToString(CultureInfo.InvariantCulture), password, balance.BalanceAmountSalt)));
+                command.Parameters.Add(new MySqlParameter("@nameSalt", balance.NameSalt));
+                command.Parameters.Add(new MySqlParameter("@balanceSalt", balance.BalanceAmountSalt));
 
                 command.ExecuteNonQuery();
 
@@ -77,26 +83,31 @@ namespace Database.SqlContexts
         /// Adds a payment to the database.
         /// </summary>
         /// <param name="userId">The id of the user the payment belongs to.</param>
-        /// <param name="name">The name of the payment.</param>
-        /// <param name="amount">The amount of the payment.</param>
-        /// <param name="type">The type of the payment.</param>
+        /// <param name="payment">The new payment.</param>
         /// <param name="password">The password used of decrypting data.</param>
-        /// <param name="salt">The salt used for decrypting data.</param>
-        public int AddPayment(int userId, string name, decimal amount, PaymentType type, string password, string salt)
+        public int AddPayment(int userId, Payment payment, string password)
         {
             try
             {
                 MySqlConnection connection = Database.Instance.Connection;
                 MySqlCommand command =
                     new MySqlCommand(
-                        "INSERT INTO PAYMENT (USER_ID, NAME, AMOUNT, TYPE) VALUES(@userId, @name, @amount, @type)",
+                        "INSERT INTO PAYMENT (USER_ID, NAME, AMOUNT, TYPE, NAMESALT, AMOUNTSALT) " +
+                        "VALUES(@userId, @name, @amount, @type, @nameSalt, @amountSalt)",
                         connection)
                     { CommandType = CommandType.Text };
 
+                payment.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(payment.Name));
+                payment.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(payment.Amount)));
+
                 command.Parameters.Add(new MySqlParameter("@userId", userId));
-                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(name, password, salt)));
-                command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(amount.ToString(CultureInfo.InvariantCulture), password, salt)));
-                command.Parameters.Add(new MySqlParameter("@type", type.ToString()));
+                command.Parameters.Add(new MySqlParameter("@name",
+                    Encryption.Instance.EncryptText(payment.Name, password, payment.NameSalt)));
+                command.Parameters.Add(new MySqlParameter("@amount", 
+                    Encryption.Instance.EncryptText(payment.Amount.ToString(CultureInfo.InvariantCulture), password, payment.AmountSalt)));
+                command.Parameters.Add(new MySqlParameter("@type", payment.PaymentType.ToString()));
+                command.Parameters.Add(new MySqlParameter("@nameSalt", payment.NameSalt));
+                command.Parameters.Add(new MySqlParameter("@amountSalt", payment.AmountSalt));
 
                 command.ExecuteNonQuery();
 
@@ -142,25 +153,31 @@ namespace Database.SqlContexts
         /// Adds a transaction to the databse.
         /// </summary>
         /// <param name="paymentId">The id of the payment the transaction belongs to.</param>
-        /// <param name="amount">The amount of the transaction.</param>
-        /// <param name="description">The description of the transaction.</param>
+        /// <param name="transaction">The new transaction.</param>
         /// <param name="password">The password used of decrypting data.</param>
-        /// <param name="salt">The salt used for decrypting data.</param>
-        public int AddTransaction(int paymentId, decimal amount, string description, string password, string salt)
+        public int AddTransaction(int paymentId, Transaction transaction, string password)
         {
             try
             {
                 MySqlConnection connection = Database.Instance.Connection;
                 MySqlCommand command =
                     new MySqlCommand(
-                        "INSERT INTO TRANSACTION (PAYMENT_ID, AMOUNT, DESCRIPTION, DateAdded) VALUES(@paymentId, @amount, @description, @dateAdded)",
+                        "INSERT INTO TRANSACTION (PAYMENT_ID, AMOUNT, DESCRIPTION, DateAdded, AMOUNTSALT, DESCRIPTIONSALT) " +
+                        "VALUES(@paymentId, @amount, @description, @dateAdded, @amountSalt, @descriptionSalt)",
                         connection)
                     { CommandType = CommandType.Text };
 
+                transaction.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(transaction.Amount)));
+                transaction.DescriptionSalt = Hashing.ExtractSalt(Hashing.CreateHash(transaction.Description));
+
                 command.Parameters.Add(new MySqlParameter("@paymentId", paymentId));
-                command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(amount.ToString(CultureInfo.InvariantCulture), password, salt)));
-                command.Parameters.Add(new MySqlParameter("@description", Encryption.Instance.EncryptText(description, password, salt)));
+                command.Parameters.Add(new MySqlParameter("@amount", 
+                    Encryption.Instance.EncryptText(transaction.Amount.ToString(CultureInfo.InvariantCulture), password, transaction.AmountSalt)));
+                command.Parameters.Add(new MySqlParameter("@description", 
+                    Encryption.Instance.EncryptText(transaction.Description, password, transaction.DescriptionSalt)));
                 command.Parameters.Add(new MySqlParameter("@dateAdded", DateTime.Now.ToString("yyyy-MM-dd")));
+                command.Parameters.Add(new MySqlParameter("@amountSalt", transaction.AmountSalt));
+                command.Parameters.Add(new MySqlParameter("@descriptionSalt", transaction.DescriptionSalt));
 
                 command.ExecuteNonQuery();
 

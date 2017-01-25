@@ -63,7 +63,7 @@ namespace Database.SqlContexts
         /// <returns>A user that has been loaded from the database.</returns>
         public User LoginUser(string email, string password)
         {
-            User user = null;
+            User user;
 
             MySqlConnection connection = _db.Connection;
             MySqlCommand command =
@@ -176,7 +176,9 @@ namespace Database.SqlContexts
 
             MySqlConnection conneciton = _db.Connection;
             MySqlCommand command =
-                new MySqlCommand("SELECT ID, BALANCE, NAME FROM BANKACCOUNT WHERE USER_ID = @userId AND Active = 1",
+                new MySqlCommand("SELECT ID, BALANCE, NAME, BALANCESALT, NAMESALT " +
+                                 "FROM BANKACCOUNT " +
+                                 "WHERE USER_ID = @userId AND Active = 1",
                     conneciton)
                 {CommandType = CommandType.Text};
 
@@ -187,8 +189,27 @@ namespace Database.SqlContexts
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(0);
-                    decimal balance = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, salt));
-                    string name = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
+                    decimal balance;
+                    string name;
+
+                    //Ensure backwards compability with old encryption protocol
+                    if (reader.IsDBNull(3) || reader.IsDBNull(4)) 
+                    {
+                        balance = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, salt));
+                        name = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
+
+                        Balance objBalance = new Balance(id, name, balance);
+
+                        new ChangeSqlContext().ChangeBalance(objBalance, password);
+                    }
+                    else
+                    {
+                        string balanceSalt = reader.GetString(3);
+                        string nameSalt = reader.GetString(4);
+
+                        balance = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, balanceSalt));
+                        name = Encryption.Instance.DecryptText(reader.GetString(2), password, nameSalt);
+                    }
 
                     bankAccounts.Add(new Balance(id, name, balance));
                 }
@@ -207,9 +228,12 @@ namespace Database.SqlContexts
         private List<IPayment> GetPaymentsOfUser(int userId, string password, string salt)
         {
             List<IPayment> payments = new List<IPayment>();
+
             MySqlConnection connection = _db.Connection;
             MySqlCommand command =
-                new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE FROM PAYMENT WHERE USER_ID = @userId AND Active = 1",
+                new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE, NAMESALT, AMOUNTSALT " +
+                                 "FROM PAYMENT " +
+                                 "WHERE USER_ID = @userId AND Active = 1",
                     connection)
                 {CommandType = CommandType.Text};
 
@@ -220,9 +244,28 @@ namespace Database.SqlContexts
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(0);
-                    string name = Encryption.Instance.DecryptText(reader.GetString(1), password, salt);
-                    decimal amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(2), password, salt));
+                    string name;
+                    decimal amount;
                     PaymentType type = (PaymentType)Enum.Parse(typeof(PaymentType), reader.GetString(3));
+
+                    //Ensure backwards compability with old encryption protocol
+                    if (reader.IsDBNull(4) || reader.IsDBNull(5))
+                    {
+                        name = Encryption.Instance.DecryptText(reader.GetString(1), password, salt);
+                        amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(2), password, salt));
+
+                        Payment payment = new MonthlyBill(id, name, amount, type);
+                        
+                        new ChangeSqlContext().ChangePayment(payment, password);
+                    }
+                    else
+                    {
+                        string nameSalt = reader.GetString(4);
+                        string amountSalt = reader.GetString(5);
+
+                        name = Encryption.Instance.DecryptText(reader.GetString(1), password, nameSalt);
+                        amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(2), password, amountSalt));
+                    }
 
                     switch (type)
                     {
@@ -257,7 +300,9 @@ namespace Database.SqlContexts
             MySqlConnection connecion = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "SELECT ID, AMOUNT, DESCRIPTION FROM TRANSACTION WHERE PAYMENT_ID = @paymentId AND DateAdded LIKE @month AND Active = 1",
+                    "SELECT ID, AMOUNT, DESCRIPTION, AMOUNTSALT, DESCRIPTIONSALT " +
+                    "FROM TRANSACTION " +
+                    "WHERE PAYMENT_ID = @paymentId AND DateAdded LIKE @month AND Active = 1",
                     connecion)
                 {CommandType = CommandType.Text};
 
@@ -269,8 +314,27 @@ namespace Database.SqlContexts
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(0);
-                    decimal amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, salt));
-                    string description = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
+                    decimal amount;
+                    string description;
+
+                    //Ensure backwards compability with old encryption protocol
+                    if (reader.IsDBNull(3) || reader.IsDBNull(4))
+                    {
+                        amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, salt));
+                        description = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
+
+                        Transaction transaction = new Transaction(id, amount, description, false);
+
+                        new ChangeSqlContext().ChangeTransaction(transaction, password);
+                    }
+                    else
+                    {
+                        string amountSalt = reader.GetString(3);
+                        string descriptionSalt = reader.GetString(4);
+
+                        amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, amountSalt));
+                        description = Encryption.Instance.DecryptText(reader.GetString(2), password, descriptionSalt);
+                    }
 
                     if (payment is MonthlyBill)
                         transactions.Add(new Transaction(id, amount, description, false));

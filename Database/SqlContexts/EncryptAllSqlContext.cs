@@ -82,7 +82,7 @@ namespace Database.SqlContexts
 
             foreach (Balance balance in bankAccounts)
             {
-                c.ChangeBalance(balance.Id, balance.Name, balance.BalanceAmount, password, salt);
+                c.ChangeBalance(balance, password);
             }
         }
 
@@ -124,7 +124,7 @@ namespace Database.SqlContexts
 
             foreach (IPayment payment in payments)
             {
-                c.ChangePayment(payment.Id, payment.Name, payment.Amount, password, salt);
+                c.ChangePayment(payment as Payment, password);
 
                 EncryptTransactions(payment, password, salt);
             }
@@ -162,7 +162,7 @@ namespace Database.SqlContexts
 
             foreach (Transaction transaction in transactions)
             {
-                c.ChangeTransaction(transaction.Id, transaction.Amount, transaction.Description, password, salt);   
+                c.ChangeTransaction(transaction, password);   
             }
         }
     }

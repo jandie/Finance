@@ -1,4 +1,6 @@
-﻿namespace Library.Classes
+﻿using System;
+
+namespace Library.Classes
 {
     public class Balance
     {
@@ -7,12 +9,27 @@
             Id = id;
             Name = name;
             BalanceAmount = balanceAmount;
+            NameSalt = null;
+            BalanceAmountSalt = null;
         }
 
-        public int Id { get; }
+        public Balance(int id, string name, decimal balanceAmount, string nameSalt, string balanceAmountSalt)
+        {
+            Id = id;
+            Name = name;
+            BalanceAmount = balanceAmount;
+            NameSalt = nameSalt;
+            BalanceAmountSalt = balanceAmountSalt;
+        }
+
+        public int Id { get; set; }
 
         public string Name { get; set; }
 
         public decimal BalanceAmount { get; set; }
+
+        public string NameSalt { get; set; }
+
+        public string BalanceAmountSalt { get; set; }
     }
 }

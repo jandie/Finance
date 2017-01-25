@@ -44,7 +44,7 @@ namespace Library.Classes
 
         public string Token { get; }
 
-        public string Salt { get; set; }
+        public string Salt { get; }
 
         public decimal TotalBalance
         {

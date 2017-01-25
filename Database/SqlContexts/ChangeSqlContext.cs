@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Diagnostics;
-using System.Globalization;
 using Database.Interfaces;
+using Library.Classes;
 using Library.Exceptions;
 using MySql.Data.MySqlClient;
 
@@ -16,28 +16,33 @@ namespace Database.SqlContexts
         {
             _db = Database.Instance;
         }
+
         /// <summary>
         /// Changes a balance in the database.
         /// </summary>
-        /// <param name="id">The id of the balance itself.</param>
-        /// <param name="name">The name of the balance.</param>
-        /// <param name="balanceAmount">The amount of the balance.</param>
+        /// <param name="balance">The balance to be saved.</param>
         /// <param name="password">Password used for encryption.</param>
-        /// <param name="salt">Salt used for encryption.</param>
-        public void ChangeBalance(int id, string name, decimal balanceAmount, string password, string salt)
+        public void ChangeBalance(Balance balance, string password)
         {
             try
             {
                 MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
-                    new MySqlCommand("UPDATE BANKACCOUNT SET NAME = @name, BALANCE = @balanceAmount WHERE ID = @id",
+                    new MySqlCommand("UPDATE BANKACCOUNT " +
+                                     "SET NAME = @name, BALANCE = @balanceAmount, NAMESALT = @nameSalt, BALANCESALT = @balanceSalt " +
+                                     "WHERE ID = @id",
                         connection)
                     { CommandType = CommandType.Text };
 
-                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(name, password, salt)));
+                balance.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(balance.Name));
+                balance.BalanceAmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(balance.BalanceAmount)));
+
+                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(balance.Name, password, balance.NameSalt)));
                 command.Parameters.Add(new MySqlParameter("@balanceAmount", 
-                    Encryption.Instance.EncryptText(Convert.ToString(balanceAmount), password, salt)));
-                command.Parameters.Add(new MySqlParameter("@id", id));
+                    Encryption.Instance.EncryptText(Convert.ToString(balance.BalanceAmount), password, balance.BalanceAmountSalt)));
+                command.Parameters.Add(new MySqlParameter("@nameSalt", balance.NameSalt));
+                command.Parameters.Add(new MySqlParameter("@balanceSalt", balance.BalanceAmountSalt));
+                command.Parameters.Add(new MySqlParameter("@id", balance.Id));
 
                 command.ExecuteNonQuery();
             }
@@ -50,25 +55,29 @@ namespace Database.SqlContexts
         }
 
         /// <summary>
-        /// Changes a payment in the databse.
+        /// Changes a payment in the database.
         /// </summary>
-        /// <param name="id">The id of the payment</param>
-        /// <param name="name">The name of the payment</param>
-        /// <param name="amount">The amount of the payment.</param>
+        /// <param name="payment">The payment to be saved.</param>
         /// <param name="password">Password used for encryption.</param>
-        /// <param name="salt">Salt used for encryption.</param>
-        public void ChangePayment(int id, string name, decimal amount, string password, string salt)
+        public void ChangePayment(Payment payment, string password)
         {
             try
             {
                 MySqlConnection connection = _db.Connection;
-                MySqlCommand command = new MySqlCommand("UPDATE PAYMENT SET NAME = @name, AMOUNT = @amount WHERE ID = @id",
+                MySqlCommand command = new MySqlCommand("UPDATE PAYMENT " +
+                                                        "SET NAME = @name, AMOUNT = @amount, NAMESALT = @nameSalt, AMOUNTSALT = @amountSalt " +
+                                                        "WHERE ID = @id",
                     connection)
                 { CommandType = CommandType.Text };
 
-                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(name, password, salt)));
-                command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(amount.ToString(), password, salt)));
-                command.Parameters.Add(new MySqlParameter("@id", id));
+                payment.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(payment.Name));
+                payment.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(payment.Amount)));
+
+                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(payment.Name, password, payment.NameSalt)));
+                command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(payment.Amount.ToString(), password, payment.AmountSalt)));
+                command.Parameters.Add(new MySqlParameter("@nameSalt", payment.NameSalt));
+                command.Parameters.Add(new MySqlParameter("@amountSalt", payment.AmountSalt));
+                command.Parameters.Add(new MySqlParameter("@id", payment.Id));
 
                 command.ExecuteNonQuery();
             }
@@ -83,24 +92,28 @@ namespace Database.SqlContexts
         /// <summary>
         /// Changes a transaction in the database.
         /// </summary>
-        /// <param name="id">The id of the transaction.</param>
-        /// <param name="amount">The amount of the transaction.</param>
-        /// <param name="description">The description of the transaction.</param>
+        /// <param name="transaction">The transaction to be saved.</param>
         /// <param name="password">Password used for encryption.</param>
-        /// <param name="salt">Salt used for encryption.</param>
-        public void ChangeTransaction(int id, decimal amount, string description, string password, string salt)
+        public void ChangeTransaction(Transaction transaction, string password)
         {
             try
             {
                 MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
-                    new MySqlCommand("UPDATE TRANSACTION SET AMOUNT = @amount, DESCRIPTION = @description WHERE ID = @id",
+                    new MySqlCommand("UPDATE TRANSACTION " +
+                                     "SET AMOUNT = @amount, DESCRIPTION = @description, AMOUNTSALT = @amountSalt, DESCRIPTIONSALT = @descriptionSalt " +
+                                     "WHERE ID = @id",
                         connection)
                     { CommandType = CommandType.Text };
 
-                command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(amount.ToString(), password, salt)));
-                command.Parameters.Add(new MySqlParameter("@description", Encryption.Instance.EncryptText(description, password, salt)));
-                command.Parameters.Add(new MySqlParameter("@id", id));
+                transaction.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(transaction.Amount)));
+                transaction.DescriptionSalt = Hashing.ExtractSalt(Hashing.CreateHash(transaction.Description));
+
+                command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(transaction.Amount.ToString(), password, transaction.AmountSalt)));
+                command.Parameters.Add(new MySqlParameter("@description", Encryption.Instance.EncryptText(transaction.Description, password, transaction.DescriptionSalt)));
+                command.Parameters.Add(new MySqlParameter("@amountSalt", transaction.AmountSalt));
+                command.Parameters.Add(new MySqlParameter("@descriptionSalt", transaction.DescriptionSalt));
+                command.Parameters.Add(new MySqlParameter("@id", transaction.Id));
 
                 command.ExecuteNonQuery();
             }
@@ -157,6 +170,8 @@ namespace Database.SqlContexts
         /// <param name="newPassword">The new password of the user.</param>
         public void ChangePassword(string email, string newPassword)
         {
+            throw new NotImplementedException();
+
             try
             {
                 MySqlConnection connection = _db.Connection;
@@ -166,8 +181,8 @@ namespace Database.SqlContexts
                         connection)
                     { CommandType = CommandType.Text };
 
-                //command.Parameters.Add(new MySqlParameter("@newPassword", Hashing.CreateHash(newPassword)));
-                //command.Parameters.Add(new MySqlParameter("@email", email));
+                command.Parameters.Add(new MySqlParameter("@newPassword", Hashing.CreateHash(newPassword)));
+                command.Parameters.Add(new MySqlParameter("@email", email));
 
                 command.ExecuteNonQuery();
             }

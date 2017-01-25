@@ -19,11 +19,13 @@ namespace Repository
 
         public static ChangeRepository Instance => new ChangeRepository();
 
-        public void ChangeBalance(Balance balance, string name, decimal balanceAmount, string password, string salt)
+        public void ChangeBalance(Balance balance, string name, decimal balanceAmount, string password)
         {
             try
             {
-                _context.ChangeBalance(balance.Id, name, balanceAmount, password, salt);
+                Balance dummyBalance = new Balance(balance.Id, name, balanceAmount);
+
+                _context.ChangeBalance(dummyBalance, password);
 
                 balance.Name = name;
                 balance.BalanceAmount = balanceAmount;
@@ -34,11 +36,20 @@ namespace Repository
             }
         }
 
-        public void ChangePayment(IPayment payment, string name, decimal amount, string password, string salt)
+        public void ChangePayment(IPayment payment, string name, decimal amount, string password)
         {
             try
             {
-                _context.ChangePayment(payment.Id, name, amount, password, salt);
+                Payment dummyPayment = payment as Payment;
+
+                if (dummyPayment == null) throw new NullReferenceException();
+
+                dummyPayment = (Payment)dummyPayment.Clone();
+
+                dummyPayment.Name = name;
+                dummyPayment.Amount = amount;
+
+                _context.ChangePayment(dummyPayment, password);
 
                 payment.Name = name;
                 payment.Amount = amount;
@@ -49,11 +60,13 @@ namespace Repository
             }
         }
 
-        public void ChangeTransaction(Transaction transaction, decimal amount, string description, string password, string salt)
+        public void ChangeTransaction(Transaction transaction, decimal amount, string description, string password)
         {
             try
             {
-                _context.ChangeTransaction(transaction.Id, amount, description, password, salt);
+                Transaction dummyTransaction = new Transaction(transaction.Id, amount, description, transaction.Positive);
+
+                _context.ChangeTransaction(dummyTransaction, password);
 
                 transaction.Amount = amount;
                 transaction.Description = description;

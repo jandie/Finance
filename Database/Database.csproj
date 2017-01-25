@@ -58,7 +58,6 @@
     </Compile>
     <Compile Include="SqlContexts\ChangeSqlContext.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="DatabaseConfiguration.cs" />
     <Compile Include="SqlContexts\DataSqlContext.cs" />
     <Compile Include="SqlContexts\DeleteSqlContext.cs" />
     <Compile Include="SqlContexts\EncryptAllSqlContext.cs" />
