@@ -1,30 +1,29 @@
-﻿namespace Database.Interfaces
+﻿using Library.Classes;
+
+namespace Database.Interfaces
 {
     public interface IChangeContext
     {
         /// <summary>
         /// Changes a balance in the database.
         /// </summary>
-        /// <param name="id">The id of the balance.</param>
-        /// <param name="name">The name of the balance.</param>
-        /// <param name="balanceAmount">The amount of the balance.</param>
-        void ChangeBalance(int id, string name, decimal balanceAmount, string password, string salt);
+        /// <param name="balance">The balance to be saved.</param>
+        /// <param name="password">Password used for encryption.</param>
+        void ChangeBalance(Balance balance, string password);
 
         /// <summary>
-        /// Changes a payment in the databse.
+        /// Changes a payment in the database.
         /// </summary>
-        /// <param name="id">The id of the payment</param>
-        /// <param name="name">The name of the payment</param>
-        /// <param name="amount">The amount of the payment.</param>
-        void ChangePayment(int id, string name, decimal amount, string password, string salt);
+        /// <param name="payment">The payment to be saved.</param>
+        /// <param name="password">Password used for encryption.</param>
+        void ChangePayment(Payment payment, string password);
 
         /// <summary>
         /// Changes a transaction in the database.
         /// </summary>
-        /// <param name="id">The id of the transaction.</param>
-        /// <param name="amount">The amount of the transaction.</param>
-        /// <param name="description">The description of the transaction.</param>
-        void ChangeTransaction(int id, decimal amount, string description, string password, string salt);
+        /// <param name="transaction">The transaction to be saved.</param>
+        /// <param name="password">Password used for encryption.</param>
+        void ChangeTransaction(Transaction transaction, string password);
 
         /// <summary>
         /// Changes everything but the password of a user in the database.

@@ -51,7 +51,7 @@ namespace Finance_Website.Controllers
 
             if (balance != null)
             {
-                ChangeRepository.Instance.ChangeBalance(balance, name, balanceAmount, _userUtility.Password, _userUtility.User.Salt);
+                ChangeRepository.Instance.ChangeBalance(balance, name, balanceAmount, _userUtility.Password);
 
                 Session["Message"] = _userUtility.Language.GetText(51);
             }
@@ -117,7 +117,7 @@ namespace Finance_Website.Controllers
 
             if (payment != null)
             {
-                ChangeRepository.Instance.ChangePayment(payment, name, amount, _userUtility.Password, _userUtility.User.Salt);
+                ChangeRepository.Instance.ChangePayment(payment, name, amount, _userUtility.Password);
 
                 Session["Message"] = _userUtility.Language.GetText(53);
             }
@@ -190,7 +190,7 @@ namespace Finance_Website.Controllers
 
             if (transaction != null)
             {
-                ChangeRepository.Instance.ChangeTransaction(transaction, amount, description, _userUtility.Password, _userUtility.User.Salt);
+                ChangeRepository.Instance.ChangeTransaction(transaction, amount, description, _userUtility.Password);
 
                 Session["Message"] = _userUtility.Language.GetText(55);
             }

@@ -103,11 +103,11 @@ namespace Finance_Website.Controllers
                 {
                     if (payment is MonthlyBill)
                     {
-                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount - amount, _userUtility.Password, _userUtility.User.Salt);
+                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount - amount, _userUtility.Password);
                     }
                     else if (payment is MonthlyIncome)
                     {
-                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount + amount, _userUtility.Password, _userUtility.User.Salt);
+                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount + amount, _userUtility.Password);
                     }
                 }
 

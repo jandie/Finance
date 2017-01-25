@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Library.Enums;
 
 namespace Library.Classes
 {
-    public abstract class Payment
+    public abstract class Payment : ICloneable
     {
         protected List<Transaction> Transactions;
 
@@ -44,6 +45,11 @@ namespace Library.Classes
         public PaymentType PaymentType { get; }
 
         public List<Transaction> AllTransactions => new List<Transaction>(Transactions);
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
         public void AddTransaction(Transaction transaction)
         {
