@@ -303,7 +303,7 @@ namespace Database.SqlContexts
             }
 
             payments.ForEach(p => GetTransactionsOfPayment(p, password, salt, 
-                DateTime.Now.ToString("MM-yyyy")).ForEach(p.AddTransaction));
+                DateTime.Now.ToString("yyyy-MM")).ForEach(p.AddTransaction));
 
             return payments;
         }
@@ -316,7 +316,7 @@ namespace Database.SqlContexts
         /// <param name="salt">The salt used for decrypting data.</param>
         /// <param name="monthYear">Year and month of the transactions to load. 
         /// Leave empty to load all transactions.
-        /// Example: 01-2015</param>
+        /// Example: 2015-01</param>
         /// <returns>List of transactions of the payment.</returns>
         public List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string salt, string monthYear = null)
         {
@@ -331,10 +331,10 @@ namespace Database.SqlContexts
                     connecion)
                 {CommandType = CommandType.Text};
 
-            if (string.IsNullOrWhiteSpace(monthYear)) monthYear = "%";
+            if (string.IsNullOrWhiteSpace(monthYear)) monthYear = "";
 
             command.Parameters.Add(new MySqlParameter("@paymentId", payment.Id));
-            command.Parameters.Add(new MySqlParameter("@month", $"%-{monthYear}"));
+            command.Parameters.Add(new MySqlParameter("@month", $"%{monthYear}%"));
 
             using (MySqlDataReader reader = command.ExecuteReader())
             {
