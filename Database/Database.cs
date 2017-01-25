@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Database.Properties;
 using MySql.Data.MySqlClient;
 
@@ -8,12 +9,15 @@ namespace Database
     {
         private Database()
         {
+            string password = Environment.GetEnvironmentVariable("FINANCEDBPWD", 
+                EnvironmentVariableTarget.Machine);
+
             string connectionString =
                 $"SERVER={Settings.Default.DatabaseHost};" +
                 $"PORT={Settings.Default.DatabasePort};" +
                 $"DATABASE={Settings.Default.DatabaseName};" +
                 $"UID={Settings.Default.DatabaseUsername};" +
-                $"PASSWORD={Settings.Default.DatabasePassword};";
+                $"PASSWORD={password};";
 
             Connection = new MySqlConnection {ConnectionString = connectionString};
 

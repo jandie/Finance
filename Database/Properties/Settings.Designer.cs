@@ -34,15 +34,6 @@ namespace Database.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("wDwtd^V^Uk1!")]
-        public string DatabasePassword {
-            get {
-                return ((string)(this["DatabasePassword"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Finance")]
         public string DatabaseName {
             get {
