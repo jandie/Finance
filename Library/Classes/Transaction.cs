@@ -24,7 +24,7 @@ namespace Library.Classes
             DescriptionSalt = descriptionSalt;
         }
 
-        public int Id { get; }
+        public int Id { get; set; }
 
         public decimal Amount { get; set; }
 

@@ -18,15 +18,17 @@ namespace Repository
 
         public static InsertRepository Instance => new InsertRepository();
 
-        public void AddBankAccount(User user, string name, decimal balance, string password, string salt)
+        public void AddBankAccount(User user, string name, decimal balance, string password)
         {
             try
             {
-                int id = _context.AddBankAccount(user.Id, name, balance, password, salt);
+                Balance dummyBalance = new Balance(-1, name, balance);
 
-                Balance b = new Balance(id, name, balance);
+                int id = _context.AddBankAccount(user.Id, dummyBalance, password);
 
-                user.AddBalance(b);
+                dummyBalance.Id = id;
+
+                user.AddBalance(dummyBalance);
             }
             catch (Exception ex)
             {
@@ -34,29 +36,31 @@ namespace Repository
             }
         }
 
-        public void AddPayment(User user, string name, decimal amount, PaymentType type, string password, string salt)
+        public void AddPayment(User user, string name, decimal amount, PaymentType type, string password)
         {
             try
             {
-                int id = _context.AddPayment(user.Id, name, amount, type, password, salt);
-
-                IPayment payment;
+                Payment dummyPayment;
 
                 switch (type)
                 {
                     case PaymentType.MonthlyBill:
-                        payment = new MonthlyBill(id, name, amount, type);
+                        dummyPayment = new MonthlyBill(-1, name, amount, type);
 
                         break;
                     case PaymentType.MonthlyIncome:
-                        payment = new MonthlyIncome(id, name, amount, type);
+                        dummyPayment = new MonthlyIncome(-1, name, amount, type);
 
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
 
-                user.AddPayment(payment);
+                int id = _context.AddPayment(user.Id, dummyPayment, password);
+
+                dummyPayment.Id = id;
+
+                user.AddPayment((IPayment) dummyPayment);
             }
             catch (Exception ex)
             {
@@ -64,25 +68,31 @@ namespace Repository
             }
         }
 
-        public void AddTransaction(IPayment payment, decimal amount, string description, string password, string salt)
+        public void AddTransaction(IPayment payment, decimal amount, string description, string password)
         {
             try
             {
-                int id = _context.AddTransaction(payment.Id, amount, description, password, salt);
+                Transaction dummyTransaction;
 
                 switch (payment.PaymentType)
                 {
                     case PaymentType.MonthlyBill:
-                        payment.AddTransaction(new Transaction(id, amount, description, false));
+                        dummyTransaction = new Transaction(-1, amount, description, false);
 
                         break;
                     case PaymentType.MonthlyIncome:
-                        payment.AddTransaction(new Transaction(id, amount, description, true));
+                        dummyTransaction = new Transaction(-1, amount, description, true);
 
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                int id = _context.AddTransaction(payment.Id, dummyTransaction, password);
+
+                dummyTransaction.Id = id;
+
+                payment.AddTransaction(dummyTransaction);
             }
             catch (Exception ex)
             {
