@@ -35,6 +35,19 @@ namespace Database
             return Pbkdf2Iterations + ":" + Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
         }
 
+        public static string GenerateSalt()
+        {
+            byte[] salt = new byte[SaltByteSize];
+
+            // Generate a random salt
+            using (RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider())
+            {
+                csprng.GetBytes(salt);
+            }
+
+            return Convert.ToBase64String(salt);
+        }
+
         /// <summary>
         /// Validates a password given a hash of the correct one.
         /// </summary>

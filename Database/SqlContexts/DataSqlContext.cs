@@ -68,7 +68,7 @@ namespace Database.SqlContexts
             MySqlConnection connection = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD FROM USER U " +
+                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD, U.NAMESALT, U.LASTNAMESALT FROM USER U " +
                     "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
                     connection) {CommandType = CommandType.Text};
 
@@ -86,20 +86,41 @@ namespace Database.SqlContexts
                 string hash = reader.GetString(8);
                 string salt = Hashing.ExtractSalt(hash);
                 int id = reader.GetInt32(0);
-                string name = Encryption.Instance.DecryptText(reader.GetString(1), password, salt);
-                string lastName = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
+                
                 int languageId = reader.GetInt32(3);
                 int currencyId = reader.GetInt32(4);
                 string currencyAbbrevation = reader.GetString(5);
                 string currencyName = reader.GetString(6);
                 string currencyHtml = reader.GetString(7);
 
-                reader.Close();
+                string name;
+                string lastName;
+
+                Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
 
                 if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
 
-                Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
-                user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt);
+                //Ensure backwards compability with old encryption protocol
+                if (reader.IsDBNull(9) || reader.IsDBNull(10))
+                {
+                    name = Encryption.Instance.DecryptText(reader.GetString(1), password, salt);
+                    lastName = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
+
+                    reader.Close();
+
+                    user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt);
+
+                    new ChangeSqlContext().ChangeUser(user, password);
+                }
+                else
+                {
+                    name = Encryption.Instance.DecryptText(reader.GetString(1), password, reader.GetString(9));
+                    lastName = Encryption.Instance.DecryptText(reader.GetString(2), password, reader.GetString(10));
+
+                    reader.Close();
+
+                    user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt);
+                }
 
                 GetBalancesOfUser(id, password, salt).ForEach(b => user.AddBalance(b));
                 GetPaymentsOfUser(id, password, salt).ForEach(p => user.AddPayment(p));
@@ -170,7 +191,7 @@ namespace Database.SqlContexts
         /// <param name="password">The password used of decrypting data.</param>
         /// <param name="salt">The salt used for decrypting data.</param>
         /// <returns>List of balances of the user.</returns>
-        private List<Balance> GetBalancesOfUser(int userId, string password, string salt)
+        public List<Balance> GetBalancesOfUser(int userId, string password, string salt)
         {
             List<Balance> bankAccounts = new List<Balance>();
 
@@ -225,7 +246,7 @@ namespace Database.SqlContexts
         /// <param name="password">The password used of decrypting data.</param>
         /// <param name="salt">The salt used for decrypting data.</param>
         /// <returns>List of payments of the user.</returns>
-        private List<IPayment> GetPaymentsOfUser(int userId, string password, string salt)
+        public List<IPayment> GetPaymentsOfUser(int userId, string password, string salt)
         {
             List<IPayment> payments = new List<IPayment>();
 
@@ -281,7 +302,8 @@ namespace Database.SqlContexts
                 }
             }
 
-            payments.ForEach(p => GetTransactionsOfPayment(p, password, salt).ForEach(p.AddTransaction));
+            payments.ForEach(p => GetTransactionsOfPayment(p, password, salt, 
+                DateTime.Now.ToString("MM-yyyy")).ForEach(p.AddTransaction));
 
             return payments;
         }
@@ -292,8 +314,11 @@ namespace Database.SqlContexts
         /// <param name="payment">The payment itself.</param>
         /// <param name="password">The password used of decrypting data.</param>
         /// <param name="salt">The salt used for decrypting data.</param>
+        /// <param name="monthYear">Year and month of the transactions to load. 
+        /// Leave empty to load all transactions.
+        /// Example: 01-2015</param>
         /// <returns>List of transactions of the payment.</returns>
-        private List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string salt)
+        public List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string salt, string monthYear = null)
         {
             List<Transaction> transactions = new List<Transaction>();
 
@@ -306,8 +331,10 @@ namespace Database.SqlContexts
                     connecion)
                 {CommandType = CommandType.Text};
 
+            if (string.IsNullOrWhiteSpace(monthYear)) monthYear = "%";
+
             command.Parameters.Add(new MySqlParameter("@paymentId", payment.Id));
-            command.Parameters.Add(new MySqlParameter("@month", $"%-{DateTime.Now.ToString("MM")}-%"));
+            command.Parameters.Add(new MySqlParameter("@month", $"%-{monthYear}"));
 
             using (MySqlDataReader reader = command.ExecuteReader())
             {
