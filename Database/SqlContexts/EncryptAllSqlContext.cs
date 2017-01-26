@@ -32,9 +32,7 @@ namespace Database.SqlContexts
 
         private void EncryptBankAccountData(int userId, string oldPassword, string newPassword, string salt)
         {
-            List<Balance> bankAccounts = new List<Balance>();
-
-            _dataContext.GetBalancesOfUser(userId, oldPassword, salt).ForEach(b => bankAccounts.Add(b));
+            List<Balance> bankAccounts = _dataContext.GetBalancesOfUser(userId, oldPassword, salt);
 
             foreach (Balance balance in bankAccounts)
             {
@@ -44,9 +42,7 @@ namespace Database.SqlContexts
 
         private void EncryptPaymentData(int userId, string oldPassword, string newPassword, string salt)
         {
-            List<IPayment> payments = new List<IPayment>();
-
-            _dataContext.GetPaymentsOfUser(userId, oldPassword, salt).ForEach(p => payments.Add(p));
+            List<IPayment> payments = _dataContext.GetPaymentsOfUser(userId, oldPassword, salt);
 
             foreach (IPayment payment in payments)
             {
@@ -58,9 +54,7 @@ namespace Database.SqlContexts
 
         private void EncryptTransactions(IPayment payment, string oldPassword, string newPassword, string salt)
         {
-            List<Transaction> transactions = new List<Transaction>();
-
-            _dataContext.GetTransactionsOfPayment(payment, oldPassword, salt).ForEach(t => transactions.Add(t));
+            List<Transaction> transactions = _dataContext.GetTransactionsOfPayment(payment, oldPassword, salt);
 
             foreach (Transaction transaction in transactions)
             {
