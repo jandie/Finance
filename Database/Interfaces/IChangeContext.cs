@@ -28,12 +28,9 @@ namespace Database.Interfaces
         /// <summary>
         /// Changes everything but the password of a user in the database.
         /// </summary>
-        /// <param name="name">The name of the user.</param>
-        /// <param name="lastName">The lastname of the user.</param>
-        /// <param name="email">The email of the user (to identify).</param>
-        /// <param name="currencyId">The id of the prefferred currency of the user.</param>
-        /// <param name="languageId">The id of the prefferred language of the user.</param>
-        void ChangeUser(string name, string lastName, string email, int currencyId, int languageId, string password, string salt);
+        /// <param name="user">The changed user to save.</param>
+        /// <param name="password">Password used for encryption.</param>
+        void ChangeUser(User user, string password);
 
         /// <summary>
         /// Changes a password of a user in the database.

@@ -66,14 +66,7 @@ namespace Finance_Website.Controllers
                 ChangeRepository.Instance.ChangeUser(_userUtility.User, name, lastName, _userUtility.User.Email, currencyId,
                     languageId, currentPassword, password, password2, _userUtility.Language, _userUtility.User.Salt);
 
-                if (DataRepository.Instance.Login(_userUtility.User.Email, password) != null)
-                {
-                    _userUtility.Password = password;
-
-                    Session["UserUtility"] = _userUtility;
-                }
-
-                InitializeAction();
+                Session["UserUtility"] = null;
 
                 Session["Message"] = _userUtility.Language.GetText(76);
             }
@@ -82,7 +75,7 @@ namespace Finance_Website.Controllers
                 Session["Exception"] = ex.Message;
             }
 
-            return View();
+            return RedirectToAction("Index", "Account");
         }
 
         public ActionResult Login()

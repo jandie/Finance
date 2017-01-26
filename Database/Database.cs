@@ -28,7 +28,7 @@ namespace Database
 
         public MySqlConnection Connection { get; }
 
-        public static Database Instance => new Database();
+        public static Database NewInstance => new Database();
 
         ~Database()
         {

@@ -10,11 +10,11 @@ namespace Database.SqlContexts
 {
     public class ChangeSqlContext : IChangeContext
     {
-        private Database _db;
+        private readonly Database _db;
 
         public ChangeSqlContext()
         {
-            _db = Database.Instance;
+            _db = Database.NewInstance;
         }
 
         /// <summary>
@@ -128,30 +128,31 @@ namespace Database.SqlContexts
         /// <summary>
         /// Changes everything but the password of a user in the database.
         /// </summary>
-        /// <param name="name">The name of the user.</param>
-        /// <param name="lastName">The lastname of the user.</param>
-        /// <param name="email">The email of the user (to identify).</param>
-        /// <param name="currencyId">The id of the prefferred currency of the user.</param>
-        /// <param name="languageId">The id of the prefferred language of the user.</param>
+        /// <param name="user">The changed user to save.</param>
         /// <param name="password">Password used for encryption.</param>
-        /// <param name="salt">Salt used for encryption.</param>
-        public void ChangeUser(string name, string lastName, string email, int currencyId, int languageId, string password, string salt)
+        public void ChangeUser(User user, string password)
         {
             try
             {
                 MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand(
-                        "UPDATE USER SET NAME = @name, LASTNAME = @lastName, CURRENCY = @currencyId, LANGUAGE = @languageId " +
+                        "UPDATE USER " +
+                        "SET NAME = @name, LASTNAME = @lastName, CURRENCY = @currencyId, LANGUAGE = @languageId, NAMESALT = @nameSalt, LASTNAMESALT = @lastNameSalt " +
                         "WHERE EMAIL = @email",
                         connection)
                     { CommandType = CommandType.Text };
 
-                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(name, password, salt)));
-                command.Parameters.Add(new MySqlParameter("@lastName", Encryption.Instance.EncryptText(lastName, password, salt)));
-                command.Parameters.Add(new MySqlParameter("@currencyId", currencyId));
-                command.Parameters.Add(new MySqlParameter("@languageId", languageId));
-                command.Parameters.Add(new MySqlParameter("@email", email));
+                string nameSalt = Hashing.GenerateSalt();
+                string lastNameSalt = Hashing.GenerateSalt();
+
+                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(user.Name, password, nameSalt)));
+                command.Parameters.Add(new MySqlParameter("@lastName", Encryption.Instance.EncryptText(user.LastName, password, lastNameSalt)));
+                command.Parameters.Add(new MySqlParameter("@currencyId", user.Currency.Id));
+                command.Parameters.Add(new MySqlParameter("@languageId", user.LanguageId));
+                command.Parameters.Add(new MySqlParameter("@email", user.Email));
+                command.Parameters.Add(new MySqlParameter("@nameSalt", nameSalt));
+                command.Parameters.Add(new MySqlParameter("@lastNameSalt", lastNameSalt));
 
                 command.ExecuteNonQuery();
             }
@@ -170,8 +171,6 @@ namespace Database.SqlContexts
         /// <param name="newPassword">The new password of the user.</param>
         public void ChangePassword(string email, string newPassword)
         {
-            throw new NotImplementedException();
-
             try
             {
                 MySqlConnection connection = _db.Connection;

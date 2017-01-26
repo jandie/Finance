@@ -100,16 +100,16 @@ namespace Repository
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword != repeatedPassword)
                     throw new ChangeUserException(language.GetText(41));
 
-                _context.ChangeUser(name, lastName, email, currencyId, languageId, currentPassword, salt);
-
                 user.Name = name;
                 user.LastName = lastName;
                 user.Currency.Id = currencyId;
                 user.LanguageId = languageId;
 
+                _context.ChangeUser(user, currentPassword);
+
                 if (string.IsNullOrWhiteSpace(newPassword)) return;
 
-                _context.ChangePassword(email, newPassword);
+                new EncryptAllSqlContext().EncryptUserData(user, currentPassword, newPassword);
             }
             catch (Exception ex)
             {
