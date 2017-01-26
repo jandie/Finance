@@ -23,7 +23,7 @@ namespace Database.SqlContexts
         /// <param name="language">The language to add.</param>
         public void AddLaguage(Language language)
         {
-            MySqlConnection connection = Database.Instance.Connection;
+            MySqlConnection connection = Database.NewInstance.Connection;
             MySqlCommand command =
                 new MySqlCommand("INSERT INTO LANGUAGE (ID, ABBREVATION, NAME) VALUES (@Id, @Abbrevation, @Name)",
                     connection)
@@ -47,7 +47,7 @@ namespace Database.SqlContexts
         {
             Language language = null;
 
-            MySqlConnection conneciton = Database.Instance.Connection;
+            MySqlConnection conneciton = Database.NewInstance.Connection;
             MySqlCommand command = new MySqlCommand(
                 "SELECT ID, ABBREVATION, NAME FROM LANGUAGE WHERE ID = @languageId", conneciton)
             {CommandType = CommandType.Text};
@@ -76,7 +76,7 @@ namespace Database.SqlContexts
         /// </summary>
         private void CleanTranslations()
         {
-            MySqlConnection connection = Database.Instance.Connection;
+            MySqlConnection connection = Database.NewInstance.Connection;
             MySqlCommand command =
                 new MySqlCommand("DELETE FROM TRANSLATION",
                     connection)
@@ -90,7 +90,7 @@ namespace Database.SqlContexts
         /// </summary>
         private void CleanLanguages()
         {
-            MySqlConnection connection = Database.Instance.Connection;
+            MySqlConnection connection = Database.NewInstance.Connection;
             MySqlCommand command =
                 new MySqlCommand("DELETE FROM LANGUAGE",
                     connection)
@@ -106,7 +106,7 @@ namespace Database.SqlContexts
         /// <param name="languageId">The id of the language the translation belongs to.</param>
         private void AddTranslation(Translation translation, int languageId)
         {
-            MySqlConnection connection = Database.Instance.Connection;
+            MySqlConnection connection = Database.NewInstance.Connection;
             MySqlCommand command =
                 new MySqlCommand(
                     "INSERT INTO TRANSLATION (ID, LANGUAGE_ID, TRANSLATION) VALUES (@Id, @languageId, @TranslationText)",
@@ -129,7 +129,7 @@ namespace Database.SqlContexts
         {
             List<Translation> translations = new List<Translation>();
 
-            MySqlConnection conneciton = Database.Instance.Connection;
+            MySqlConnection conneciton = Database.NewInstance.Connection;
             MySqlCommand command =
                 new MySqlCommand("SELECT ID, TRANSLATION FROM TRANSLATION WHERE LANGUAGE_ID = @languageId", conneciton)
                 {CommandType = CommandType.Text};

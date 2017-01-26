@@ -14,7 +14,7 @@ namespace Database.SqlContexts
 
         public ChangeSqlContext()
         {
-            _db = Database.Instance;
+            _db = Database.NewInstance;
         }
 
         /// <summary>

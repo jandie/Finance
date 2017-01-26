@@ -18,7 +18,7 @@ namespace Database.SqlContexts
 
         public DataSqlContext()
         {
-            _db = Database.Instance;
+            _db = Database.NewInstance;
         }
 
         #region User
