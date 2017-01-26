@@ -8,20 +8,26 @@ namespace Database.SqlContexts
     {
         private readonly DataSqlContext _dataContext;
         private readonly ChangeSqlContext _changeContext;
+        private readonly DeleteSqlContext _deleteSqlContext;
 
         public EncryptAllSqlContext()
         {
             _dataContext = new DataSqlContext();
             _changeContext =  new ChangeSqlContext();
+            _deleteSqlContext = new DeleteSqlContext();
         }
 
         public void EncryptUserData(User user, string oldPassword, string newPassword)
         {
+            _deleteSqlContext.DeactivateUser(user.Id);
+
             EncryptBankAccountData(user.Id, oldPassword, newPassword, user.Salt);
             EncryptPaymentData(user.Id, oldPassword, newPassword, user.Salt);
             
             _changeContext.ChangeUser(user, newPassword);
             _changeContext.ChangePassword(user.Email, newPassword);
+
+            _deleteSqlContext.ActivateUser(user.Id);
         }
 
         private void EncryptBankAccountData(int userId, string oldPassword, string newPassword, string salt)

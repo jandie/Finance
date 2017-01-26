@@ -14,7 +14,7 @@ namespace Database.SqlContexts
 {
     public class DataSqlContext : IDataContext
     {
-        private Database _db;
+        private readonly Database _db;
 
         public DataSqlContext()
         {

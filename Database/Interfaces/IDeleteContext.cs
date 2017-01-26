@@ -3,6 +3,18 @@
     public interface IDeleteContext
     {
         /// <summary>
+        /// Deactivates user in the database.
+        /// </summary>
+        /// <param name="id">The id of the user.</param>
+        void DeactivateUser(int id);
+
+        /// <summary>
+        /// Activates user in the database.
+        /// </summary>
+        /// <param name="id">The id of the user.</param>
+        void ActivateUser(int id);
+
+        /// <summary>
         /// Deactivates a balance in the database.
         /// </summary>
         /// <param name="id">The id of the balance.</param>
