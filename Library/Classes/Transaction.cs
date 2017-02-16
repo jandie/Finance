@@ -14,16 +14,6 @@ namespace Library.Classes
             DescriptionSalt = null;
         }
 
-        public Transaction(int id, decimal amount, string description, bool positive, string amountSalt, string descriptionSalt)
-        {
-            Id = id;
-            Amount = amount;
-            Description = description;
-            Positive = positive;
-            AmountSalt = amountSalt;
-            DescriptionSalt = descriptionSalt;
-        }
-
         public int Id { get; set; }
 
         public decimal Amount { get; set; }

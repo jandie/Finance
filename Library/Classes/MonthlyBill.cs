@@ -10,11 +10,6 @@ namespace Library.Classes
         {
         }
 
-        public MonthlyBill(int id, string name, decimal amount, PaymentType paymentType, string nameSalt, string amountSalt)
-            : base(id, name, amount, paymentType, nameSalt, amountSalt)
-        {
-        }
-
         public decimal GetSum()
         {
             decimal toPay = 0;

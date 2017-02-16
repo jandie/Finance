@@ -7,9 +7,9 @@ namespace Library.Classes
 {
     public class User
     {
-        private List<Balance> _balances;
+        private readonly List<Balance> _balances;
 
-        private List<IPayment> _payments;
+        private readonly List<IPayment> _payments;
 
         public User(int id, string name, string lastName, string email, int languageId, Currency currency, string token, string salt)
         {

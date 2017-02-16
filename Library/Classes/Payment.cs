@@ -6,7 +6,7 @@ namespace Library.Classes
 {
     public abstract class Payment : ICloneable
     {
-        protected List<Transaction> Transactions;
+        protected readonly List<Transaction> Transactions;
 
         protected Payment(int id, string name, decimal amount, PaymentType paymentType)
         {
@@ -16,18 +16,6 @@ namespace Library.Classes
             Name = name;
             NameSalt = null;
             AmountSalt = null;
-
-            Transactions = new List<Transaction>();
-        }
-
-        protected Payment(int id, string name, decimal amount, PaymentType paymentType, string nameSalt, string amountSalt)
-        {
-            Id = id;
-            Amount = amount;
-            PaymentType = paymentType;
-            Name = name;
-            NameSalt = nameSalt;
-            AmountSalt = amountSalt;
 
             Transactions = new List<Transaction>();
         }
@@ -48,7 +36,7 @@ namespace Library.Classes
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
 
         public void AddTransaction(Transaction transaction)

@@ -2,7 +2,6 @@
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
-using Library.Interfaces;
 
 namespace Repository
 {

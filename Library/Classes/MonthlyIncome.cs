@@ -11,11 +11,6 @@ namespace Library.Classes
         {
         }
 
-        public MonthlyIncome(int id, string name, decimal amount, PaymentType paymentType, string nameSalt, string amountSalt)
-            : base(id, name, amount, paymentType, nameSalt, amountSalt)
-        {
-        }
-
         public decimal GetSum()
         {
             decimal gotten = 0;

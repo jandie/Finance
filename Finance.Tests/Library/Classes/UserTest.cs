@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Library.Classes;
 using Library.Enums;
 using Library.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
 
 namespace Finance.Tests.Library.Classes
 {
