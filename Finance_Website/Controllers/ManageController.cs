@@ -9,7 +9,6 @@ namespace Finance_Website.Controllers
 {
     public class ManageController : Controller
     {
-        private IPayment _payment;
         private SessionUtility _userUtility;
 
         public void InitializeAction(string lastTab = null)
@@ -35,7 +34,7 @@ namespace Finance_Website.Controllers
                 return RedirectToAction("Login", "Account");
 
             ViewBag.User = _userUtility.User;
-            ViewBag.Balance = _userUtility.User.Balances.Find(b => b.Id == id);
+            ViewBag.Balance = _userUtility.User.GetBalance(id);
 
             return View();
         }
@@ -47,12 +46,9 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            Balance balance = _userUtility.User.Balances.Find(b => b.Id == id);
-
-            if (balance != null)
+            if (new ChangeRepository().ChangeBalance(_userUtility.User, id, name,
+                    balanceAmount, _userUtility.Password))
             {
-                new ChangeRepository().ChangeBalance(balance, name, balanceAmount, _userUtility.Password);
-
                 Session["Message"] = _userUtility.Language.GetText(51);
             }
             else
@@ -71,12 +67,8 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            Balance balance = _userUtility.User.Balances.Find(b => b.Id == id);
-
-            if (balance != null)
+            if (new DeleteRepository().DeleteBalance(_userUtility.User, id))
             {
-                new DeleteRepository().DeleteBalance(_userUtility.User, id);
-
                 Session["Message"] = _userUtility.Language.GetText(52);
             }
             else
@@ -99,9 +91,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            _payment = _userUtility.User.Payments.Find(p => p.Id == id);
-
-            ViewBag.Payment = _payment;
+            ViewBag.Payment = _userUtility.User.GetPayment(id);
 
             return View();
         }
@@ -113,12 +103,9 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            IPayment payment = _userUtility.User.Payments.Find(p => p.Id == id);
-
-            if (payment != null)
+            if (new ChangeRepository().ChangePayment(_userUtility.User, id, name, amount, 
+                _userUtility.Password))
             {
-                new ChangeRepository().ChangePayment(payment, name, amount, _userUtility.Password);
-
                 Session["Message"] = _userUtility.Language.GetText(53);
             }
             else
@@ -137,12 +124,8 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            _payment = _userUtility.User.Payments.Find(p => p.Id == id);
-
-            if (_payment != null)
+            if (new DeleteRepository().DeletePayment(_userUtility.User, id))
             {
-                new DeleteRepository().DeletePayment(_userUtility.User, _payment.Id);
-
                 Session["Message"] = _userUtility.Language.GetText(54);
             }
             else
@@ -165,13 +148,11 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            _payment = _userUtility.User.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
+            IPayment payment = _userUtility.User.GetPaymentByTransaction(id);
 
-            Transaction transaction = _payment?.AllTransactions.Find(t => t.Id == id);
-
-            ViewBag.Transaction = transaction;
-            ViewBag.PaymentId = _payment?.Id;
-            ViewBag.PaymentType = _payment?.PaymentType.ToString();
+            ViewBag.Transaction = _userUtility.User.GetTransaction(id);
+            ViewBag.PaymentId = payment?.Id;
+            ViewBag.PaymentType = payment?.PaymentType.ToString();
 
             return View();
         }
@@ -184,21 +165,18 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            _payment = _userUtility.User.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
-
-            Transaction transaction = _payment.AllTransactions.Find(t => t.Id == id);
-
-            if (transaction != null)
+            if (new ChangeRepository().ChangeTransaction(_userUtility.User, id, amount, description,
+                _userUtility.Password))
             {
-                new ChangeRepository().ChangeTransaction(transaction, amount, description, _userUtility.Password);
-
                 Session["Message"] = _userUtility.Language.GetText(55);
             }
             else
+            {
                 Session["Exception"] = _userUtility.Language.GetText(47);
+            }
 
             return RedirectToAction("Payment", "Manage",
-                new {id = _payment.Id, lastTab = Session["LastTab"]});
+                new {id = _userUtility.User.GetPaymentByTransaction(id)?.Id, lastTab = Session["LastTab"]});
         }
 
         [HttpGet]
@@ -209,24 +187,22 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            _payment = _userUtility.User.Payments.Find(p => p.AllTransactions.Any(t => t.Id == id));
-
-            Transaction transaction = _payment.AllTransactions.Find(t => t.Id == id);
-
-            if (transaction != null)
+            if (new DeleteRepository().DeleteTransaction(_userUtility.User, id))
             {
-                new DeleteRepository().DeleteTransaction(_payment as Payment, id);
-
                 Session["Message"] = _userUtility.Language.GetText(56);
             }
             else
+            {
                 Session["Exception"] = _userUtility.Language.GetText(47);
+            }
 
-            if (quick || _payment == null)
+            IPayment payment = _userUtility.User.GetPaymentByTransaction(id);
+
+            if (quick || payment == null)
                 return RedirectToAction("Index", "Account");
 
             return RedirectToAction("Payment", "Manage",
-                new {id = _payment.Id, lastTab = Session["LastTab"]});
+                new {id = payment.Id, lastTab = Session["LastTab"]});
         }
 
         #endregion Transaction
