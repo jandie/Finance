@@ -1,34 +1,109 @@
-DROP TABLE Transaction;
-DROP TABLE Payment;
-DROP TABLE BankAccount;
-DROP TABLE User;
-DROP TABLE Translation;
-DROP TABLE Language;
-DROP TABLE Currency;
+--
+-- Table structure for table `bankaccount`
+--
 
-CREATE TABLE Language (
-    Id INT NOT NULL,
-    Abbrevation VARCHAR(3) NOT NULL,
-    Name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (Id)
-);
+DROP TABLE IF EXISTS `bankaccount`;
 
-CREATE TABLE Translation (
-    Id INT NOT NULL,
-    Language_Id INT NOT NULL,
-    Translation VARCHAR(255) NOT NULL,
-    PRIMARY KEY (Id , Language_Id),
-    FOREIGN KEY (Language_Id)
-        REFERENCES Language (Id)
-);
+CREATE TABLE `bankaccount` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `User_Id` int(11) DEFAULT NULL,
+  `Name` varchar(255) DEFAULT NULL,
+  `Balance` varchar(50) DEFAULT '0.00',
+  `Active` int(11) DEFAULT '1',
+  `NameSalt` varchar(30) DEFAULT NULL,
+  `BalanceSalt` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `User_Id` (`User_Id`),
+  CONSTRAINT `bankaccount_ibfk_1` FOREIGN KEY (`User_Id`) REFERENCES `user` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
-CREATE TABLE Currency (
-    Id INT NOT NULL AUTO_INCREMENT,
-    Abbrevation VARCHAR(3) NOT NULL,
-    Name VARCHAR(255) NOT NULL,
-    Html VARCHAR(255) NOT NULL,
-    PRIMARY KEY (Id)
-);
+--
+-- Table structure for table `currency`
+--
+
+DROP TABLE IF EXISTS `currency`;
+
+CREATE TABLE `currency` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Abbrevation` varchar(3) NOT NULL,
+  `Name` varchar(255) NOT NULL,
+  `Html` varchar(255) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `language`
+--
+
+DROP TABLE IF EXISTS `language`;
+
+CREATE TABLE `language` (
+  `Id` int(11) NOT NULL,
+  `Abbrevation` varchar(3) NOT NULL,
+  `Name` varchar(255) NOT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `payment`
+--
+
+DROP TABLE IF EXISTS `payment`;
+
+CREATE TABLE `payment` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `User_Id` int(11) DEFAULT NULL,
+  `Name` varchar(255) DEFAULT NULL,
+  `Amount` varchar(50) DEFAULT NULL,
+  `Type` varchar(30) DEFAULT NULL,
+  `Active` int(11) DEFAULT '1',
+  `NameSalt` varchar(30) DEFAULT NULL,
+  `AmountSalt` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `User_Id` (`User_Id`),
+  CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`User_Id`) REFERENCES `user` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `transaction`
+--
+
+DROP TABLE IF EXISTS `transaction`;
+
+CREATE TABLE `transaction` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Payment_Id` int(11) DEFAULT NULL,
+  `Amount` varchar(50) NOT NULL,
+  `Description` varchar(1000) NOT NULL,
+  `DateAdded` varchar(11) NOT NULL,
+  `Active` int(11) DEFAULT '1',
+  `AmountSalt` varchar(30) DEFAULT NULL,
+  `DescriptionSalt` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Payment_Id` (`Payment_Id`),
+  CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`Payment_Id`) REFERENCES `payment` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `translation`
+--
+
+DROP TABLE IF EXISTS `translation`;
+
+CREATE TABLE `translation` (
+  `Id` int(11) NOT NULL,
+  `Language_Id` int(11) NOT NULL,
+  `Translation` varchar(255) NOT NULL,
+  PRIMARY KEY (`Id`,`Language_Id`),
+  KEY `Language_Id` (`Language_Id`),
+  CONSTRAINT `translation_ibfk_1` FOREIGN KEY (`Language_Id`) REFERENCES `language` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
@@ -40,51 +115,10 @@ CREATE TABLE `user` (
   `Currency` int(11) DEFAULT '1',
   `Language` int(11) DEFAULT '0',
   `Token` varchar(10) DEFAULT NULL,
+  `NameSalt` varchar(30) DEFAULT NULL,
+  `LastNameSalt` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Email` (`Email`),
   KEY `Currency` (`Currency`),
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`Currency`) REFERENCES `currency` (`Id`)
-);
-
-
-CREATE TABLE BankAccount (
-    Id INT NOT NULL AUTO_INCREMENT,
-    User_Id INT,
-    Name VARCHAR(255),
-    Balance VARCHAR(255),
-    Active INT DEFAULT 1,
-    PRIMARY KEY (Id),
-    FOREIGN KEY (User_Id)
-        REFERENCES User (Id)
-);
-
-CREATE TABLE Payment (
-    Id INT NOT NULL AUTO_INCREMENT,
-    User_Id INT,
-    Name VARCHAR(255),
-    Amount VARCHAR(255),
-    Type VARCHAR(255),
-    Active INT DEFAULT 1,
-    PRIMARY KEY (Id),
-    FOREIGN KEY (User_Id)
-        REFERENCES User (Id)
-);
-
-CREATE TABLE Transaction (
-    Id INT NOT NULL AUTO_INCREMENT,
-    Payment_Id INT,
-    Amount VARCHAR(255) NOT NULL,
-    Description VARCHAR(255) NOT NULL,
-    DateAdded VARCHAR(255) NOT NULL,
-    Active INT DEFAULT 1,
-    PRIMARY KEY (Id),
-    FOREIGN KEY (Payment_Id)
-        REFERENCES Payment (Id)
-);
-
-INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD) VALUES ('Jandie', 'Hendriks', 'jandie@live.nl', 'test');
-
-INSERT INTO `finance`.`currency` (`Abbrevation`, `Name`, `Html`) VALUES ('EUR', 'Euro', 'EUR');
-INSERT INTO `finance`.`currency` (`Abbrevation`, `Name`, `Html`) VALUES ('USD', 'US Dollar', 'USD');
-
-COMMIT;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
