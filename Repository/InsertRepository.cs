@@ -74,12 +74,14 @@ namespace Repository
             }
         }
 
-        public bool AddTransaction(IPayment payment, Balance balance, decimal amount, 
+        public bool AddTransaction(User user, int paymentId, int balanceId, decimal amount, 
             string description, string password)
         {
             try
             {
                 Transaction dummyTransaction;
+                IPayment payment = user.GetPayment(paymentId);
+                Balance balance = user.GetBalance(balanceId);
 
                 if (payment == null) return false;
 
@@ -105,12 +107,12 @@ namespace Repository
 
                 if (payment is MonthlyBill)
                 {
-                    new ChangeRepository().ChangeBalance(balance, balance.Name, 
+                    new ChangeRepository().ChangeBalance(user, balance.Id, balance.Name, 
                         balance.BalanceAmount - amount, password);
                 }
                 else if (payment is MonthlyIncome)
                 {
-                    new ChangeRepository().ChangeBalance(balance, balance.Name, 
+                    new ChangeRepository().ChangeBalance(user, balance.Id, balance.Name, 
                         balance.BalanceAmount + amount, password);
                 }
             }

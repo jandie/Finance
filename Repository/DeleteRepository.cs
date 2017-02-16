@@ -2,6 +2,7 @@
 using Database.Interfaces;
 using Database.SqlContexts;
 using Library.Classes;
+using Library.Interfaces;
 
 namespace Repository
 {
@@ -14,10 +15,12 @@ namespace Repository
             _context = new DeleteSqlContext();
         }
 
-        public void DeleteBalance(User user, int id)
+        public bool DeleteBalance(User user, int id)
         {
             try
             {
+                if (user.GetBalance(id) == null) return false;
+
                 _context.DeleteBalance(id);
 
                 user.DeleteBalance(id);
@@ -25,17 +28,23 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
             finally
             {
                 _context.CloseDb();
             }
+
+            return true;
         }
 
-        public void DeletePayment(User user, int id)
+        public bool DeletePayment(User user, int id)
         {
             try
             {
+                if (user.GetPayment(id) == null) return false;
+
                 _context.DeletePayment(id);
 
                 user.DeletePayment(id);
@@ -43,17 +52,27 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
             finally
             {
                 _context.CloseDb();
             }
+
+            return true;
         }
 
-        public void DeleteTransaction(Payment payment, int id)
+        public bool DeleteTransaction(User user, int id)
         {
             try
             {
+                if (user.GetTransaction(id) == null) return false;
+
+                Payment payment = user.GetPaymentByTransaction(id) as Payment;
+
+                if (payment == null) return false;
+
                 _context.DeleteTransaction(id);
 
                 payment.DeleteTransaction(id);
@@ -61,11 +80,15 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
             finally
             {
                 _context.CloseDb();
             }
+
+            return true;
         }
     }
 }

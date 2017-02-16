@@ -109,7 +109,9 @@ namespace Library.Classes
                 _payments.ForEach(
                     p =>
                         p.AllTransactions.ForEach(
-                            t => transactions.Add(new Transaction(t.Id, t.Amount, t.Description, t.Positive))));
+                            t => transactions
+                            .Add(new Transaction(t.Id, t.Amount, t.Description, 
+                                t.Positive))));
 
                 transactions.Sort();
 
@@ -117,9 +119,21 @@ namespace Library.Classes
             }
         }
 
+        public Transaction GetTransaction(int transactionId)
+        {
+            return Payments
+                .Find(p => p.AllTransactions.Any(t => t.Id == transactionId))
+                .AllTransactions.Find(t => t.Id == transactionId);
+        }
+
         public void AddBalance(Balance bankAccount)
         {
             _balances.Add(bankAccount);
+        }
+
+        public Balance GetBalance(int balanceId)
+        {
+            return Balances.Find(b => b.Id == balanceId);
         }
 
         public void DeleteBalance(int id)
@@ -130,6 +144,17 @@ namespace Library.Classes
         public void AddPayment(IPayment payment)
         {
             _payments.Add(payment);
+        }
+
+        public IPayment GetPayment(int paymentId)
+        {
+            return Payments.Find(p => p.Id == paymentId);
+        }
+
+        public IPayment GetPaymentByTransaction(int transactionId)
+        {
+            return Payments
+                .Find(p => p.AllTransactions.Any(t => t.Id == transactionId));
         }
 
         public void DeletePayment(int id)

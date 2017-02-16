@@ -17,11 +17,16 @@ namespace Repository
             _context = new ChangeSqlContext();
         }
 
-        public void ChangeBalance(Balance balance, string name, decimal balanceAmount, string password)
+        public bool ChangeBalance(User user, int balanceId, string name, 
+            decimal balanceAmount, string password)
         {
             try
             {
-                Balance dummyBalance = new Balance(balance.Id, name, balanceAmount);
+                Balance balance = user.GetBalance(balanceId);
+
+                if (balance == null) return false;
+
+                Balance dummyBalance = new Balance(balanceId, name, balanceAmount);
 
                 _context.ChangeBalance(dummyBalance, password);
 
@@ -31,20 +36,25 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
             finally
             {
                 _context.CloseDb();
             }
+
+            return true;
         }
 
-        public void ChangePayment(IPayment payment, string name, decimal amount, string password)
+        public bool ChangePayment(User user, int paymentId, string name, decimal amount, string password)
         {
             try
             {
+                IPayment payment = user.GetPayment(paymentId);
                 Payment dummyPayment = payment as Payment;
 
-                if (dummyPayment == null) throw new NullReferenceException();
+                if (dummyPayment == null) return false;
 
                 dummyPayment = (Payment)dummyPayment.Clone();
 
@@ -59,17 +69,25 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
             finally
             {
                 _context.CloseDb();
             }
+
+            return true;
         }
 
-        public void ChangeTransaction(Transaction transaction, decimal amount, string description, string password)
+        public bool ChangeTransaction(User user, int transactionId, decimal amount, string description, string password)
         {
             try
             {
+                Transaction transaction = user.GetTransaction(transactionId);
+
+                if (transaction == null) return false;
+
                 Transaction dummyTransaction = new Transaction(transaction.Id, amount, description, transaction.Positive);
 
                 _context.ChangeTransaction(dummyTransaction, password);
@@ -80,11 +98,15 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
             finally
             {
                 _context.CloseDb();
             }
+
+            return true;
         }
 
         public void ChangeUser(User user, string name, string lastName, string email, int currencyId, int languageId,
