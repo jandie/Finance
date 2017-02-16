@@ -23,8 +23,8 @@ namespace Finance_Website.Models.Utilities
                 LastTab = lastTab;
 
             User = User == null
-                ? new DataRepository().Login(Email, Password)
-                : new DataRepository().CheckUser(User);
+                ? new DataLogic().Login(Email, Password)
+                : new DataLogic().CheckUser(User);
 
             if (User == null)
             {
@@ -47,7 +47,7 @@ namespace Finance_Website.Models.Utilities
 
         private Language LoadAndAssignLanguage(int languageId)
         {
-            Language = new LanguageRepository().LoadLanguage(languageId);
+            Language = new LanguageLogic().LoadLanguage(languageId);
 
             return Language;
         }

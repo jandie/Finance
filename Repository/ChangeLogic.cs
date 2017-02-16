@@ -8,11 +8,11 @@ using Library.Interfaces;
 
 namespace Repository
 {
-    public class ChangeRepository
+    public class ChangeLogic
     {
         private readonly IChangeContext _context;
 
-        public ChangeRepository()
+        public ChangeLogic()
         {
             _context = new ChangeSqlContext();
         }
@@ -126,7 +126,7 @@ namespace Repository
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword.Contains(" "))
                     throw new ChangeUserException(language.GetText(40));
 
-                if (new DataRepository().Login(email, currentPassword) == null)
+                if (new DataLogic().Login(email, currentPassword) == null)
                     throw new ChangeUserException(language.GetText(33));
 
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword != repeatedPassword)

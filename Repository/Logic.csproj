@@ -40,19 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangeRepository.cs" />
-    <Compile Include="DataRepository.cs" />
-    <Compile Include="DeleteRepository.cs" />
+    <Compile Include="ChangeLogic.cs" />
+    <Compile Include="DataLogic.cs" />
+    <Compile Include="DeleteLogic.cs" />
     <Compile Include="Exceptions\DatabaseException.cs" />
-    <Compile Include="InsertRepository.cs" />
-    <Compile Include="LanguageRepository.cs" />
+    <Compile Include="InsertLogic.cs" />
+    <Compile Include="LanguageLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\RegexUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Database\Database.csproj">
+    <ProjectReference Include="..\Database\DatabaseRepository.csproj">
       <Project>{94314c9c-79d0-4fd6-baff-4b3861c2277b}</Project>
-      <Name>Database</Name>
+      <Name>DatabaseRepository</Name>
     </ProjectReference>
     <ProjectReference Include="..\Library\Library.csproj">
       <Project>{7f7643bf-0b04-484c-bc81-84d3b765fd6d}</Project>

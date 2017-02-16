@@ -7,11 +7,11 @@ using Library.Interfaces;
 
 namespace Repository
 {
-    public class InsertRepository
+    public class InsertLogic
     {
         private readonly IInsertContext _context;
 
-        public InsertRepository()
+        public InsertLogic()
         {
             _context = new InsertSqlContext();
         }
@@ -107,12 +107,12 @@ namespace Repository
 
                 if (payment is MonthlyBill)
                 {
-                    new ChangeRepository().ChangeBalance(user, balance.Id, balance.Name, 
+                    new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
                         balance.BalanceAmount - amount, password);
                 }
                 else if (payment is MonthlyIncome)
                 {
-                    new ChangeRepository().ChangeBalance(user, balance.Id, balance.Name, 
+                    new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
                         balance.BalanceAmount + amount, password);
                 }
             }

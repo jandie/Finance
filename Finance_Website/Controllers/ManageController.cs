@@ -46,7 +46,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new ChangeRepository().ChangeBalance(_userUtility.User, id, name,
+            if (new ChangeLogic().ChangeBalance(_userUtility.User, id, name,
                     balanceAmount, _userUtility.Password))
             {
                 Session["Message"] = _userUtility.Language.GetText(51);
@@ -67,7 +67,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new DeleteRepository().DeleteBalance(_userUtility.User, id))
+            if (new DeleteLogic().DeleteBalance(_userUtility.User, id))
             {
                 Session["Message"] = _userUtility.Language.GetText(52);
             }
@@ -103,7 +103,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new ChangeRepository().ChangePayment(_userUtility.User, id, name, amount, 
+            if (new ChangeLogic().ChangePayment(_userUtility.User, id, name, amount, 
                 _userUtility.Password))
             {
                 Session["Message"] = _userUtility.Language.GetText(53);
@@ -124,7 +124,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new DeleteRepository().DeletePayment(_userUtility.User, id))
+            if (new DeleteLogic().DeletePayment(_userUtility.User, id))
             {
                 Session["Message"] = _userUtility.Language.GetText(54);
             }
@@ -165,7 +165,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new ChangeRepository().ChangeTransaction(_userUtility.User, id, amount, description,
+            if (new ChangeLogic().ChangeTransaction(_userUtility.User, id, amount, description,
                 _userUtility.Password))
             {
                 Session["Message"] = _userUtility.Language.GetText(55);
@@ -187,7 +187,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new DeleteRepository().DeleteTransaction(_userUtility.User, id))
+            if (new DeleteLogic().DeleteTransaction(_userUtility.User, id))
             {
                 Session["Message"] = _userUtility.Language.GetText(56);
             }

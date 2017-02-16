@@ -6,11 +6,11 @@ using Library.Classes.Language;
 
 namespace Repository
 {
-    public class LanguageRepository
+    public class LanguageLogic
     {
         private readonly ILanguageContext _context;
 
-        public LanguageRepository()
+        public LanguageLogic()
         {
             _context = new LanguageSqlContext();
         }
