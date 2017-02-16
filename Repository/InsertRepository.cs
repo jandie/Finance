@@ -11,12 +11,10 @@ namespace Repository
     {
         private readonly IInsertContext _context;
 
-        private InsertRepository()
+        public InsertRepository()
         {
             _context = new InsertSqlContext();
         }
-
-        public static InsertRepository Instance => new InsertRepository();
 
         public void AddBankAccount(User user, string name, decimal balance, string password)
         {
@@ -33,6 +31,10 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
 
@@ -65,6 +67,10 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
 
@@ -99,12 +105,12 @@ namespace Repository
 
                 if (payment is MonthlyBill)
                 {
-                    ChangeRepository.Instance.ChangeBalance(balance, balance.Name, 
+                    new ChangeRepository().ChangeBalance(balance, balance.Name, 
                         balance.BalanceAmount - amount, password);
                 }
                 else if (payment is MonthlyIncome)
                 {
-                    ChangeRepository.Instance.ChangeBalance(balance, balance.Name, 
+                    new ChangeRepository().ChangeBalance(balance, balance.Name, 
                         balance.BalanceAmount + amount, password);
                 }
             }
@@ -113,6 +119,10 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 return false;
+            }
+            finally
+            {
+                _context.CloseDb();
             }
 
             return true;

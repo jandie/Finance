@@ -16,6 +16,11 @@ namespace Database.SqlContexts
             _db = Database.NewInstance;
         }
 
+        public void CloseDb()
+        {
+            _db.Close();
+        }
+
         /// <summary>
         /// Deactivates user in the database.
         /// </summary>

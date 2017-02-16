@@ -45,5 +45,10 @@ namespace Database.Interfaces
         /// </summary>
         /// <returns>A list of all exsisting languages in the database.</returns>
         List<Language> LoadLanguages();
+
+        /// <summary>
+        /// Closes database.
+        /// </summary>
+        void CloseDb();
     }
 }

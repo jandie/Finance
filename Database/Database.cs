@@ -30,6 +30,11 @@ namespace Database
 
         public static Database NewInstance => new Database();
 
+        public void Close()
+        {
+            Connection.Close();
+        }
+
         ~Database()
         {
             Connection.Close();

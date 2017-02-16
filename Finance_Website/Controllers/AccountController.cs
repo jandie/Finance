@@ -43,8 +43,8 @@ namespace Finance_Website.Controllers
                 return RedirectToAction("Login", "Account");
 
             ViewBag.User = _userUtility.User;
-            ViewBag.Languages = DataRepository.Instance.LoadLanguages();
-            ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
+            ViewBag.Languages = new DataRepository().LoadLanguages();
+            ViewBag.Currencies = new DataRepository().LoadCurrencies();
 
             return View();
         }
@@ -58,12 +58,12 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            ViewBag.Languages = DataRepository.Instance.LoadLanguages();
-            ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
+            ViewBag.Languages = new DataRepository().LoadLanguages();
+            ViewBag.Currencies = new DataRepository().LoadCurrencies();
 
             try
             {
-                ChangeRepository.Instance.ChangeUser(_userUtility.User, name, lastName, _userUtility.User.Email, currencyId,
+                new ChangeRepository().ChangeUser(_userUtility.User, name, lastName, _userUtility.User.Email, currencyId,
                     languageId, currentPassword, password, password2, _userUtility.Language, _userUtility.User.Salt);
 
                 Session["UserUtility"] = null;
@@ -114,8 +114,8 @@ namespace Finance_Website.Controllers
             InitializeAction();
 
             ViewBag.AlphaKey = alphaKey;
-            ViewBag.Languages = DataRepository.Instance.LoadLanguages();
-            ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
+            ViewBag.Languages = new DataRepository().LoadLanguages();
+            ViewBag.Currencies = new DataRepository().LoadCurrencies();
 
             return View();
         }
@@ -130,12 +130,12 @@ namespace Finance_Website.Controllers
             ViewBag.LastName = lastName;
             ViewBag.Email = email;
             ViewBag.AlphaKey = alphaKey;
-            ViewBag.Languages = DataRepository.Instance.LoadLanguages();
-            ViewBag.Currencies = DataRepository.Instance.LoadCurrencies();
+            ViewBag.Languages = new DataRepository().LoadLanguages();
+            ViewBag.Currencies = new DataRepository().LoadCurrencies();
 
             try
             {
-                _userUtility.User = DataRepository.Instance.CreateUser(name, lastName, email, password, password2,
+                _userUtility.User = new DataRepository().CreateUser(name, lastName, email, password, password2,
                     currencyId, languageId, _userUtility.Language, alphaKey);
 
                 LoginAction(password, email);

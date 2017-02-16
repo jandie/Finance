@@ -51,7 +51,7 @@ namespace Finance_Website.Controllers
 
             if (balance != null)
             {
-                ChangeRepository.Instance.ChangeBalance(balance, name, balanceAmount, _userUtility.Password);
+                new ChangeRepository().ChangeBalance(balance, name, balanceAmount, _userUtility.Password);
 
                 Session["Message"] = _userUtility.Language.GetText(51);
             }
@@ -75,7 +75,7 @@ namespace Finance_Website.Controllers
 
             if (balance != null)
             {
-                DeleteRepository.Instance.DeleteBalance(_userUtility.User, id);
+                new DeleteRepository().DeleteBalance(_userUtility.User, id);
 
                 Session["Message"] = _userUtility.Language.GetText(52);
             }
@@ -117,7 +117,7 @@ namespace Finance_Website.Controllers
 
             if (payment != null)
             {
-                ChangeRepository.Instance.ChangePayment(payment, name, amount, _userUtility.Password);
+                new ChangeRepository().ChangePayment(payment, name, amount, _userUtility.Password);
 
                 Session["Message"] = _userUtility.Language.GetText(53);
             }
@@ -141,7 +141,7 @@ namespace Finance_Website.Controllers
 
             if (_payment != null)
             {
-                DeleteRepository.Instance.DeletePayment(_userUtility.User, _payment.Id);
+                new DeleteRepository().DeletePayment(_userUtility.User, _payment.Id);
 
                 Session["Message"] = _userUtility.Language.GetText(54);
             }
@@ -190,7 +190,7 @@ namespace Finance_Website.Controllers
 
             if (transaction != null)
             {
-                ChangeRepository.Instance.ChangeTransaction(transaction, amount, description, _userUtility.Password);
+                new ChangeRepository().ChangeTransaction(transaction, amount, description, _userUtility.Password);
 
                 Session["Message"] = _userUtility.Language.GetText(55);
             }
@@ -215,7 +215,7 @@ namespace Finance_Website.Controllers
 
             if (transaction != null)
             {
-                DeleteRepository.Instance.DeleteTransaction(_payment as Payment, id);
+                new DeleteRepository().DeleteTransaction(_payment as Payment, id);
 
                 Session["Message"] = _userUtility.Language.GetText(56);
             }

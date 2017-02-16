@@ -17,6 +17,13 @@ namespace Database.SqlContexts
             _deleteSqlContext = new DeleteSqlContext();
         }
 
+        private void CloseDb()
+        {
+            _dataContext.CloseDb();
+            _changeContext.CloseDb();
+            _deleteSqlContext.CloseDb();
+        }
+
         public void EncryptUserData(User user, string oldPassword, string newPassword)
         {
             _deleteSqlContext.DeactivateUser(user.Id);
@@ -28,6 +35,8 @@ namespace Database.SqlContexts
             _changeContext.ChangePassword(user.Email, newPassword);
 
             _deleteSqlContext.ActivateUser(user.Id);
+
+            CloseDb();
         }
 
         private void EncryptBankAccountData(int userId, string oldPassword, string newPassword, string salt)

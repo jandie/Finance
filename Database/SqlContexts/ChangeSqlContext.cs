@@ -17,6 +17,11 @@ namespace Database.SqlContexts
             _db = Database.NewInstance;
         }
 
+        public void CloseDb()
+        {
+            _db.Close();
+        }
+
         /// <summary>
         /// Changes a balance in the database.
         /// </summary>

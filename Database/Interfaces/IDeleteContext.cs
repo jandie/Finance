@@ -31,5 +31,10 @@
         /// </summary>
         /// <param name="id">The id of the transaction.</param>
         void DeleteTransaction(int id);
+
+        /// <summary>
+        /// Closes database.
+        /// </summary>
+        void CloseDb();
     }
 }

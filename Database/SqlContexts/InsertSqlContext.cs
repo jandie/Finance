@@ -10,6 +10,18 @@ namespace Database.SqlContexts
 {
     public class InsertSqlContext : IInsertContext
     {
+        private readonly Database _db;
+
+        public InsertSqlContext()
+        {
+            _db = Database.NewInstance;
+        }
+
+        public void CloseDb()
+        {
+            _db.Close();
+        }
+
         /// <summary>
         /// Adds a balance to the databse.
         /// </summary>
@@ -20,7 +32,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.NewInstance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand("INSERT INTO BANKACCOUNT (USER_ID, NAME, BALANCE, NAMESALT, BALANCESALT) " +
                                      "VALUES (@userId, @name, @balance, @nameSalt, @balanceSalt)",
@@ -54,7 +66,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.NewInstance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand("SELECT MAX(Id) FROM BANKACCOUNT WHERE USER_ID = @userId",
                         connection)
@@ -89,7 +101,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.NewInstance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand(
                         "INSERT INTO PAYMENT (USER_ID, NAME, AMOUNT, TYPE, NAMESALT, AMOUNTSALT) " +
@@ -124,7 +136,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.NewInstance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand("SELECT MAX(Id) FROM PAYMENT WHERE USER_ID = @userId",
                         connection)
@@ -159,7 +171,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.NewInstance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand(
                         "INSERT INTO TRANSACTION (PAYMENT_ID, AMOUNT, DESCRIPTION, DateAdded, AMOUNTSALT, DESCRIPTIONSALT) " +
@@ -194,7 +206,7 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = Database.NewInstance.Connection;
+                MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
                     new MySqlCommand("SELECT MAX(Id) FROM TRANSACTION WHERE PAYMENT_ID = @paymentId",
                         connection)

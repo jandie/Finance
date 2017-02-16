@@ -10,12 +10,10 @@ namespace Repository
     {
         private readonly ILanguageContext _context;
 
-        private LanguageRepository()
+        public LanguageRepository()
         {
             _context = new LanguageSqlContext();
         }
-
-        public static LanguageRepository Instance => new LanguageRepository();
 
         public void AddLanguages(List<Language> language)
         {
@@ -31,6 +29,10 @@ namespace Repository
 
                 throw;
             }
+            finally
+            {
+                _context.CloseDb();
+            }
         }
 
         public Language LoadLanguage(int id)
@@ -44,6 +46,10 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 throw;
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
     }

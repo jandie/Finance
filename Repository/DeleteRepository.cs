@@ -9,12 +9,10 @@ namespace Repository
     {
         private readonly IDeleteContext _context;
 
-        private DeleteRepository()
+        public DeleteRepository()
         {
             _context = new DeleteSqlContext();
         }
-
-        public static DeleteRepository Instance => new DeleteRepository();
 
         public void DeleteBalance(User user, int id)
         {
@@ -27,6 +25,10 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
 
@@ -42,6 +44,10 @@ namespace Repository
             {
                 Console.WriteLine(ex.ToString());
             }
+            finally
+            {
+                _context.CloseDb();
+            }
         }
 
         public void DeleteTransaction(Payment payment, int id)
@@ -55,6 +61,10 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
     }

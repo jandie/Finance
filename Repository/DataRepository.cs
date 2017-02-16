@@ -13,12 +13,10 @@ namespace Repository
     {
         private readonly IDataContext _context;
 
-        private DataRepository()
+        public DataRepository()
         {
             _context = new DataSqlContext();
         }
-
-        public static DataRepository Instance => new DataRepository();
 
         public User Login(string email, string password)
         {
@@ -31,6 +29,10 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 return null;
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
 
@@ -45,6 +47,10 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 return null;
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
 
@@ -94,6 +100,10 @@ namespace Repository
 
                 throw;
             }
+            finally
+            {
+                _context.CloseDb();
+            }
         }
 
         public List<Language> LoadLanguages()
@@ -108,6 +118,10 @@ namespace Repository
 
                 throw;
             }
+            finally
+            {
+                _context.CloseDb();
+            }
         }
 
         public List<Currency> LoadCurrencies()
@@ -121,6 +135,10 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 throw;
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
     }

@@ -38,5 +38,10 @@ namespace Database.Interfaces
         /// <param name="email">The email of the user (to identify).</param>
         /// <param name="newPassword">The new password of the user.</param>
         void ChangePassword(string email, string newPassword);
+
+        /// <summary>
+        /// Closes database.
+        /// </summary>
+        void CloseDb();
     }
 }

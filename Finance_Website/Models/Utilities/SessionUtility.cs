@@ -13,9 +13,9 @@ namespace Finance_Website.Models.Utilities
 
         public string LastTab { get; set; }
 
-        public string Email { private get; set; }
+        private string Email { get; set; }
 
-        public string Password { get; set; }
+        public string Password { get; private set; }
 
         private void Refresh(string lastTab = null)
         {
@@ -23,8 +23,8 @@ namespace Finance_Website.Models.Utilities
                 LastTab = lastTab;
 
             User = User == null
-                ? DataRepository.Instance.Login(Email, Password)
-                : DataRepository.Instance.CheckUser(User);
+                ? new DataRepository().Login(Email, Password)
+                : new DataRepository().CheckUser(User);
 
             if (User == null)
             {
@@ -47,7 +47,7 @@ namespace Finance_Website.Models.Utilities
 
         private Language LoadAndAssignLanguage(int languageId)
         {
-            Language = LanguageRepository.Instance.LoadLanguage(languageId);
+            Language = new LanguageRepository().LoadLanguage(languageId);
 
             return Language;
         }

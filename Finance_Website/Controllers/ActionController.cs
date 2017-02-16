@@ -30,7 +30,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            InsertRepository.Instance.AddBankAccount(_userUtility.User, name.Trim(), balance, _userUtility.Password);
+            new InsertRepository().AddBankAccount(_userUtility.User, name.Trim(), balance, _userUtility.Password);
 
             SaveAction();
 
@@ -46,7 +46,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            InsertRepository.Instance.AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyBill, _userUtility.Password);
+            new InsertRepository().AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyBill, _userUtility.Password);
 
             SaveAction();
 
@@ -62,7 +62,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            InsertRepository.Instance.AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyIncome, _userUtility.Password);
+            new InsertRepository().AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyIncome, _userUtility.Password);
 
             SaveAction();
 
@@ -95,7 +95,7 @@ namespace Finance_Website.Controllers
             IPayment payment = _userUtility.User.Payments.Find(p => p.Id == paymentId);
             Balance balance = _userUtility.User.Balances.Find(b => b.Id == balanceId);
 
-            if (InsertRepository.Instance.AddTransaction(payment, balance, amount, 
+            if (new InsertRepository().AddTransaction(payment, balance, amount, 
                 description.Trim(), _userUtility.Password))
             {
                 SaveAction();

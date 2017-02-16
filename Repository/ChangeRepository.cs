@@ -12,12 +12,10 @@ namespace Repository
     {
         private readonly IChangeContext _context;
 
-        private ChangeRepository()
+        public ChangeRepository()
         {
             _context = new ChangeSqlContext();
         }
-
-        public static ChangeRepository Instance => new ChangeRepository();
 
         public void ChangeBalance(Balance balance, string name, decimal balanceAmount, string password)
         {
@@ -33,6 +31,10 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
 
@@ -58,6 +60,10 @@ namespace Repository
             {
                 Console.WriteLine(ex.ToString());
             }
+            finally
+            {
+                _context.CloseDb();
+            }
         }
 
         public void ChangeTransaction(Transaction transaction, decimal amount, string description, string password)
@@ -74,6 +80,10 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
 
@@ -94,7 +104,7 @@ namespace Repository
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword.Contains(" "))
                     throw new ChangeUserException(language.GetText(40));
 
-                if (DataRepository.Instance.Login(email, currentPassword) == null)
+                if (new DataRepository().Login(email, currentPassword) == null)
                     throw new ChangeUserException(language.GetText(33));
 
                 if (!string.IsNullOrWhiteSpace(newPassword) && newPassword != repeatedPassword)
@@ -116,6 +126,10 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 throw;
+            }
+            finally
+            {
+                _context.CloseDb();
             }
         }
     }
