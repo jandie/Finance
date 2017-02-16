@@ -95,22 +95,9 @@ namespace Finance_Website.Controllers
             IPayment payment = _userUtility.User.Payments.Find(p => p.Id == paymentId);
             Balance balance = _userUtility.User.Balances.Find(b => b.Id == balanceId);
 
-            if (payment != null)
+            if (InsertRepository.Instance.AddTransaction(payment, balance, amount, 
+                description.Trim(), _userUtility.Password))
             {
-                InsertRepository.Instance.AddTransaction(payment, amount, description.Trim(), _userUtility.Password);
-
-                if (balance != null)
-                {
-                    if (payment is MonthlyBill)
-                    {
-                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount - amount, _userUtility.Password);
-                    }
-                    else if (payment is MonthlyIncome)
-                    {
-                        ChangeRepository.Instance.ChangeBalance(balance, balance.Name, balance.BalanceAmount + amount, _userUtility.Password);
-                    }
-                }
-
                 SaveAction();
 
                 Session["Message"] = _userUtility.Language.GetText(50);

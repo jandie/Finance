@@ -68,11 +68,14 @@ namespace Repository
             }
         }
 
-        public void AddTransaction(IPayment payment, decimal amount, string description, string password)
+        public bool AddTransaction(IPayment payment, Balance balance, decimal amount, 
+            string description, string password)
         {
             try
             {
                 Transaction dummyTransaction;
+
+                if (payment == null) return false;
 
                 switch (payment.PaymentType)
                 {
@@ -88,16 +91,31 @@ namespace Repository
                         throw new ArgumentOutOfRangeException();
                 }
 
-                int id = _context.AddTransaction(payment.Id, dummyTransaction, password);
-
-                dummyTransaction.Id = id;
+                dummyTransaction.Id = _context.AddTransaction(payment.Id, dummyTransaction, password);
 
                 payment.AddTransaction(dummyTransaction);
+
+                if (balance == null) return true;
+
+                if (payment is MonthlyBill)
+                {
+                    ChangeRepository.Instance.ChangeBalance(balance, balance.Name, 
+                        balance.BalanceAmount - amount, password);
+                }
+                else if (payment is MonthlyIncome)
+                {
+                    ChangeRepository.Instance.ChangeBalance(balance, balance.Name, 
+                        balance.BalanceAmount + amount, password);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
+
+            return true;
         }
     }
 }
