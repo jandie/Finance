@@ -6,11 +6,11 @@ using Library.Interfaces;
 
 namespace Repository
 {
-    public class DeleteRepository
+    public class DeleteLogic
     {
         private readonly IDeleteContext _context;
 
-        public DeleteRepository()
+        public DeleteLogic()
         {
             _context = new DeleteSqlContext();
         }

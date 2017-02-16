@@ -57,17 +57,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Database\Database.csproj">
+    <ProjectReference Include="..\Database\DatabaseRepository.csproj">
       <Project>{94314c9c-79d0-4fd6-baff-4b3861c2277b}</Project>
-      <Name>Database</Name>
+      <Name>DatabaseRepository</Name>
     </ProjectReference>
     <ProjectReference Include="..\Library\Library.csproj">
       <Project>{7f7643bf-0b04-484c-bc81-84d3b765fd6d}</Project>
       <Name>Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Repository\Repository.csproj">
+    <ProjectReference Include="..\Repository\Logic.csproj">
       <Project>{a4c95d3a-5d0b-4bd0-a379-8ed91220af7a}</Project>
-      <Name>Repository</Name>
+      <Name>Logic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

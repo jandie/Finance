@@ -131,7 +131,7 @@ namespace Language_import
 
             try
             {
-                new LanguageRepository().AddLanguages(languages);
+                new LanguageLogic().AddLanguages(languages);
 
                 Console.WriteLine($"Languages saved to database! ({stopwatch.ElapsedMilliseconds}ms)");
             }

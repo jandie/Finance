@@ -9,11 +9,11 @@ using Repository.Utilities;
 
 namespace Repository
 {
-    public class DataRepository
+    public class DataLogic
     {
         private readonly IDataContext _context;
 
-        public DataRepository()
+        public DataLogic()
         {
             _context = new DataSqlContext();
         }

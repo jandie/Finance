@@ -7,13 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance.Tests", "Finance.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{7F7643BF-0B04-484C-BC81-84D3B765FD6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{94314C9C-79D0-4FD6-BAFF-4B3861C2277B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseRepository", "Database\DatabaseRepository.csproj", "{94314C9C-79D0-4FD6-BAFF-4B3861C2277B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{A4C95D3A-5D0B-4BD0-A379-8ED91220AF7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Repository\Logic.csproj", "{A4C95D3A-5D0B-4BD0-A379-8ED91220AF7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance_Website", "Finance_Website\Finance_Website.csproj", "{8A5962DF-FC02-4AE0-8D4F-EA282C2711D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUi", "Finance_Website\WebUi.csproj", "{8A5962DF-FC02-4AE0-8D4F-EA282C2711D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Language_import", "Language_import\Language_import.csproj", "{483DB1A5-8AD2-4A7E-8D41-3AEF7237357D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LanguageImport", "Language_import\LanguageImport.csproj", "{483DB1A5-8AD2-4A7E-8D41-3AEF7237357D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

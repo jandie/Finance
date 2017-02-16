@@ -28,7 +28,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            new InsertRepository().AddBankAccount(_userUtility.User, name.Trim(), balance, _userUtility.Password);
+            new InsertLogic().AddBankAccount(_userUtility.User, name.Trim(), balance, _userUtility.Password);
 
             SaveAction();
 
@@ -44,7 +44,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            new InsertRepository().AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyBill, _userUtility.Password);
+            new InsertLogic().AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyBill, _userUtility.Password);
 
             SaveAction();
 
@@ -60,7 +60,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            new InsertRepository().AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyIncome, _userUtility.Password);
+            new InsertLogic().AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyIncome, _userUtility.Password);
 
             SaveAction();
 
@@ -90,7 +90,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new InsertRepository().AddTransaction(_userUtility.User, paymentId, balanceId, amount, 
+            if (new InsertLogic().AddTransaction(_userUtility.User, paymentId, balanceId, amount, 
                 description.Trim(), _userUtility.Password))
             {
                 SaveAction();
