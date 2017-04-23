@@ -7,7 +7,10 @@ namespace Database
 {
     public class Database
     {
-        private Database()
+        /// <summary>
+        /// Creates a new instance of the database connection.
+        /// </summary>
+        public Database()
         {
             string password = Environment.GetEnvironmentVariable("FINANCEDBPWD", 
                 EnvironmentVariableTarget.Machine);
@@ -24,17 +27,22 @@ namespace Database
             Connection.Open();
         }
 
-        private bool IsConnected => Connection.State == ConnectionState.Open;
-
+        /// <summary>
+        /// The database connection.
+        /// </summary>
         public MySqlConnection Connection { get; }
 
-        public static Database NewInstance => new Database();
-
+        /// <summary>
+        /// Closes the conneciton with the database.
+        /// </summary>
         public void Close()
         {
             Connection.Close();
         }
 
+        /// <summary>
+        /// Destructor that closes the connection with the database.
+        /// </summary>
         ~Database()
         {
             Connection.Close();
