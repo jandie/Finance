@@ -14,7 +14,7 @@ namespace Database.SqlContexts
 
         public ChangeSqlContext()
         {
-            _db = Database.NewInstance;
+            _db = new Database();
         }
 
         public void CloseDb()

@@ -13,7 +13,7 @@ namespace Database.SqlContexts
 
         public DeleteSqlContext()
         {
-            _db = Database.NewInstance;
+            _db = new Database();
         }
 
         public void CloseDb()
