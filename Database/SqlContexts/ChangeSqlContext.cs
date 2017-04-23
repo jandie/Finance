@@ -11,10 +11,12 @@ namespace Database.SqlContexts
     public class ChangeSqlContext : IChangeContext, IDatabaseClosable
     {
         private readonly Database _db;
+        private Encryption _encryption;
 
         public ChangeSqlContext()
         {
             _db = new Database();
+            _encryption = new Encryption();
         }
 
         public void CloseDb()
@@ -42,9 +44,9 @@ namespace Database.SqlContexts
                 balance.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(balance.Name));
                 balance.BalanceAmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(balance.BalanceAmount)));
 
-                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(balance.Name, password, balance.NameSalt)));
-                command.Parameters.Add(new MySqlParameter("@balanceAmount", 
-                    Encryption.Instance.EncryptText(Convert.ToString(balance.BalanceAmount), password, balance.BalanceAmountSalt)));
+                command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(balance.Name, password, balance.NameSalt)));
+                command.Parameters.Add(new MySqlParameter("@balanceAmount",
+                    _encryption.EncryptText(Convert.ToString(balance.BalanceAmount), password, balance.BalanceAmountSalt)));
                 command.Parameters.Add(new MySqlParameter("@nameSalt", balance.NameSalt));
                 command.Parameters.Add(new MySqlParameter("@balanceSalt", balance.BalanceAmountSalt));
                 command.Parameters.Add(new MySqlParameter("@id", balance.Id));
@@ -78,8 +80,8 @@ namespace Database.SqlContexts
                 payment.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(payment.Name));
                 payment.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(payment.Amount)));
 
-                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(payment.Name, password, payment.NameSalt)));
-                command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(payment.Amount.ToString(), password, payment.AmountSalt)));
+                command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(payment.Name, password, payment.NameSalt)));
+                command.Parameters.Add(new MySqlParameter("@amount", _encryption.EncryptText(payment.Amount.ToString(), password, payment.AmountSalt)));
                 command.Parameters.Add(new MySqlParameter("@nameSalt", payment.NameSalt));
                 command.Parameters.Add(new MySqlParameter("@amountSalt", payment.AmountSalt));
                 command.Parameters.Add(new MySqlParameter("@id", payment.Id));
@@ -114,8 +116,8 @@ namespace Database.SqlContexts
                 transaction.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(transaction.Amount)));
                 transaction.DescriptionSalt = Hashing.ExtractSalt(Hashing.CreateHash(transaction.Description));
 
-                command.Parameters.Add(new MySqlParameter("@amount", Encryption.Instance.EncryptText(transaction.Amount.ToString(), password, transaction.AmountSalt)));
-                command.Parameters.Add(new MySqlParameter("@description", Encryption.Instance.EncryptText(transaction.Description, password, transaction.DescriptionSalt)));
+                command.Parameters.Add(new MySqlParameter("@amount", _encryption.EncryptText(transaction.Amount.ToString(), password, transaction.AmountSalt)));
+                command.Parameters.Add(new MySqlParameter("@description", _encryption.EncryptText(transaction.Description, password, transaction.DescriptionSalt)));
                 command.Parameters.Add(new MySqlParameter("@amountSalt", transaction.AmountSalt));
                 command.Parameters.Add(new MySqlParameter("@descriptionSalt", transaction.DescriptionSalt));
                 command.Parameters.Add(new MySqlParameter("@id", transaction.Id));
@@ -151,8 +153,8 @@ namespace Database.SqlContexts
                 string nameSalt = Hashing.GenerateSalt();
                 string lastNameSalt = Hashing.GenerateSalt();
 
-                command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(user.Name, password, nameSalt)));
-                command.Parameters.Add(new MySqlParameter("@lastName", Encryption.Instance.EncryptText(user.LastName, password, lastNameSalt)));
+                command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(user.Name, password, nameSalt)));
+                command.Parameters.Add(new MySqlParameter("@lastName", _encryption.EncryptText(user.LastName, password, lastNameSalt)));
                 command.Parameters.Add(new MySqlParameter("@currencyId", user.Currency.Id));
                 command.Parameters.Add(new MySqlParameter("@languageId", user.LanguageId));
                 command.Parameters.Add(new MySqlParameter("@email", user.Email));

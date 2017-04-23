@@ -15,10 +15,12 @@ namespace Database.SqlContexts
     public class DataSqlContext : IDataContext, IDatabaseClosable
     {
         private readonly Database _db;
+        private Encryption _encryption;
 
         public DataSqlContext()
         {
             _db = new Database();
+            _encryption = new Encryption();
         }
 
         public void CloseDb()
@@ -48,8 +50,8 @@ namespace Database.SqlContexts
                     connection) {CommandType = CommandType.Text};
             string hash = Hashing.CreateHash(password);
             string salt = Hashing.ExtractSalt(hash);
-            command.Parameters.Add(new MySqlParameter("@name", Encryption.Instance.EncryptText(name, password, salt)));
-            command.Parameters.Add(new MySqlParameter("@lastName", Encryption.Instance.EncryptText(lastName, password, salt)));
+            command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(name, password, salt)));
+            command.Parameters.Add(new MySqlParameter("@lastName", _encryption.EncryptText(lastName, password, salt)));
             command.Parameters.Add(new MySqlParameter("@email", email));
             command.Parameters.Add(new MySqlParameter("@password", Hashing.CreateHash(password)));
             command.Parameters.Add(new MySqlParameter("@currencyId", currencyId));
@@ -69,7 +71,7 @@ namespace Database.SqlContexts
         public User LoginUser(string email, string password)
         {
             User user;
-
+            
             MySqlConnection connection = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
@@ -108,8 +110,8 @@ namespace Database.SqlContexts
                 //Ensure backwards compability with old encryption protocol
                 if (reader.IsDBNull(9) || reader.IsDBNull(10))
                 {
-                    name = Encryption.Instance.DecryptText(reader.GetString(1), password, salt);
-                    lastName = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
+                    name = _encryption.DecryptText(reader.GetString(1), password, salt);
+                    lastName = _encryption.DecryptText(reader.GetString(2), password, salt);
 
                     reader.Close();
 
@@ -119,8 +121,8 @@ namespace Database.SqlContexts
                 }
                 else
                 {
-                    name = Encryption.Instance.DecryptText(reader.GetString(1), password, reader.GetString(9));
-                    lastName = Encryption.Instance.DecryptText(reader.GetString(2), password, reader.GetString(10));
+                    name = _encryption.DecryptText(reader.GetString(1), password, reader.GetString(9));
+                    lastName = _encryption.DecryptText(reader.GetString(2), password, reader.GetString(10));
 
                     reader.Close();
 
@@ -199,7 +201,7 @@ namespace Database.SqlContexts
         public List<Balance> GetBalancesOfUser(int userId, string password, string salt)
         {
             List<Balance> bankAccounts = new List<Balance>();
-
+            
             MySqlConnection conneciton = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand("SELECT ID, BALANCE, NAME, BALANCESALT, NAMESALT " +
@@ -221,8 +223,8 @@ namespace Database.SqlContexts
                     //Ensure backwards compability with old encryption protocol
                     if (reader.IsDBNull(3) || reader.IsDBNull(4)) 
                     {
-                        balance = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, salt));
-                        name = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
+                        balance = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(1), password, salt));
+                        name = _encryption.DecryptText(reader.GetString(2), password, salt);
 
                         Balance objBalance = new Balance(id, name, balance);
 
@@ -233,8 +235,8 @@ namespace Database.SqlContexts
                         string balanceSalt = reader.GetString(3);
                         string nameSalt = reader.GetString(4);
 
-                        balance = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, balanceSalt));
-                        name = Encryption.Instance.DecryptText(reader.GetString(2), password, nameSalt);
+                        balance = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(1), password, balanceSalt));
+                        name = _encryption.DecryptText(reader.GetString(2), password, nameSalt);
                     }
 
                     bankAccounts.Add(new Balance(id, name, balance));
@@ -254,7 +256,7 @@ namespace Database.SqlContexts
         public List<IPayment> GetPaymentsOfUser(int userId, string password, string salt)
         {
             List<IPayment> payments = new List<IPayment>();
-
+            
             MySqlConnection connection = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE, NAMESALT, AMOUNTSALT " +
@@ -277,8 +279,8 @@ namespace Database.SqlContexts
                     //Ensure backwards compability with old encryption protocol
                     if (reader.IsDBNull(4) || reader.IsDBNull(5))
                     {
-                        name = Encryption.Instance.DecryptText(reader.GetString(1), password, salt);
-                        amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(2), password, salt));
+                        name = _encryption.DecryptText(reader.GetString(1), password, salt);
+                        amount = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(2), password, salt));
 
                         Payment payment = new MonthlyBill(id, name, amount, type);
                         
@@ -289,8 +291,8 @@ namespace Database.SqlContexts
                         string nameSalt = reader.GetString(4);
                         string amountSalt = reader.GetString(5);
 
-                        name = Encryption.Instance.DecryptText(reader.GetString(1), password, nameSalt);
-                        amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(2), password, amountSalt));
+                        name = _encryption.DecryptText(reader.GetString(1), password, nameSalt);
+                        amount = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(2), password, amountSalt));
                     }
 
                     switch (type)
@@ -326,7 +328,7 @@ namespace Database.SqlContexts
         public List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string salt, string monthYear = null)
         {
             List<Transaction> transactions = new List<Transaction>();
-
+            
             MySqlConnection connecion = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
@@ -352,8 +354,8 @@ namespace Database.SqlContexts
                     //Ensure backwards compability with old encryption protocol
                     if (reader.IsDBNull(3) || reader.IsDBNull(4))
                     {
-                        amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, salt));
-                        description = Encryption.Instance.DecryptText(reader.GetString(2), password, salt);
+                        amount = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(1), password, salt));
+                        description = _encryption.DecryptText(reader.GetString(2), password, salt);
 
                         Transaction transaction = new Transaction(id, amount, description, false);
 
@@ -364,8 +366,8 @@ namespace Database.SqlContexts
                         string amountSalt = reader.GetString(3);
                         string descriptionSalt = reader.GetString(4);
 
-                        amount = Convert.ToDecimal(Encryption.Instance.DecryptText(reader.GetString(1), password, amountSalt));
-                        description = Encryption.Instance.DecryptText(reader.GetString(2), password, descriptionSalt);
+                        amount = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(1), password, amountSalt));
+                        description = _encryption.DecryptText(reader.GetString(2), password, descriptionSalt);
                     }
 
                     if (payment is MonthlyBill)
