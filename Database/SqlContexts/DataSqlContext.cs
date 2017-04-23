@@ -15,7 +15,7 @@ namespace Database.SqlContexts
     public class DataSqlContext : IDataContext, IDatabaseClosable
     {
         private readonly Database _db;
-        private Encryption _encryption;
+        private readonly Encryption _encryption;
 
         public DataSqlContext()
         {

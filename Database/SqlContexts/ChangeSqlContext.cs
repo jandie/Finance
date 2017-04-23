@@ -11,7 +11,7 @@ namespace Database.SqlContexts
     public class ChangeSqlContext : IChangeContext, IDatabaseClosable
     {
         private readonly Database _db;
-        private Encryption _encryption;
+        private readonly Encryption _encryption;
 
         public ChangeSqlContext()
         {
