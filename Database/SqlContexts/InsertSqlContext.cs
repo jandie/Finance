@@ -62,6 +62,11 @@ namespace Database.SqlContexts
             
         }
 
+        /// <summary>
+        /// Gets last bank account id of a user.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <returns></returns>
         private int GetLastBankAccountId(int userId)
         {
             try
@@ -132,6 +137,11 @@ namespace Database.SqlContexts
             }
         }
 
+        /// <summary>
+        /// Gets last payment id of a user.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <returns></returns>
         private int GetLastPaymentId(int userId)
         {
             try
@@ -202,6 +212,11 @@ namespace Database.SqlContexts
             }
         }
 
+        /// <summary>
+        /// Gets the last transaction id of a payment.
+        /// </summary>
+        /// <param name="paymentId">The id of the payment.</param>
+        /// <returns></returns>
         private int GetLastTransactiontId(int paymentId)
         {
             try
