@@ -12,7 +12,7 @@ using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    public class DataSqlContext : IDataContext
+    public class DataSqlContext : IDataContext, IDatabaseClosable
     {
         private readonly Database _db;
 

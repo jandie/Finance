@@ -27,10 +27,5 @@ namespace Database.Interfaces
         /// <param name="transaction">The new transaction.</param>
         /// <param name="password">The password used of decrypting data.</param>
         int AddTransaction(int paymentId, Transaction transaction, string password);
-
-        /// <summary>
-        /// Closes database.
-        /// </summary>
-        void CloseDb();
     }
 }

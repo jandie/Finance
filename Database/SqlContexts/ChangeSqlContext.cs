@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    public class ChangeSqlContext : IChangeContext
+    public class ChangeSqlContext : IChangeContext, IDatabaseClosable
     {
         private readonly Database _db;
 

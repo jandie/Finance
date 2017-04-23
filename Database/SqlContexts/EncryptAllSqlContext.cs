@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Database.Interfaces;
 using Library.Classes;
 using Library.Interfaces;
 
@@ -6,9 +7,9 @@ namespace Database.SqlContexts
 {
     public class EncryptAllSqlContext
     {
-        private readonly DataSqlContext _dataContext;
-        private readonly ChangeSqlContext _changeContext;
-        private readonly DeleteSqlContext _deleteSqlContext;
+        private readonly IDataContext _dataContext;
+        private readonly IChangeContext _changeContext;
+        private readonly IDeleteContext _deleteSqlContext;
 
         public EncryptAllSqlContext()
         {
@@ -19,9 +20,9 @@ namespace Database.SqlContexts
 
         private void CloseDb()
         {
-            _dataContext.CloseDb();
-            _changeContext.CloseDb();
-            _deleteSqlContext.CloseDb();
+            (_dataContext as IDatabaseClosable)?.CloseDb();
+            (_changeContext as IDatabaseClosable)?.CloseDb();
+            (_deleteSqlContext as IDatabaseClosable)?.CloseDb();
         }
 
         public void EncryptUserData(User user, string oldPassword, string newPassword)

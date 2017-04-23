@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Library.Classes;
 using Library.Classes.Language;
+using Library.Interfaces;
 
 namespace Database.Interfaces
 {
@@ -47,8 +48,34 @@ namespace Database.Interfaces
         List<Language> LoadLanguages();
 
         /// <summary>
-        /// Closes database.
+        /// Loads all balances of the user from the database.
         /// </summary>
-        void CloseDb();
+        /// <param name="userId">The id of the user.</param>
+        /// <param name="password">The password used of decrypting data.</param>
+        /// <param name="salt">The salt used for decrypting data.</param>
+        /// <returns>List of balances of the user.</returns>
+        List<Balance> GetBalancesOfUser(int userId, string password, string salt);
+
+        /// <summary>
+        /// Loads payments of a user from the database.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <param name="password">The password used of decrypting data.</param>
+        /// <param name="salt">The salt used for decrypting data.</param>
+        /// <returns>List of payments of the user.</returns>
+        List<IPayment> GetPaymentsOfUser(int userId, string password, string salt);
+
+        /// <summary>
+        /// Loads the transactions of a payment from the database.
+        /// </summary>
+        /// <param name="payment">The payment itself.</param>
+        /// <param name="password">The password used of decrypting data.</param>
+        /// <param name="salt">The salt used for decrypting data.</param>
+        /// <param name="monthYear">Year and month of the transactions to load. 
+        /// Leave empty to load all transactions.
+        /// Example: 2015-01</param>
+        /// <returns>List of transactions of the payment.</returns>
+        List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string salt,
+            string monthYear = null);
     }
 }

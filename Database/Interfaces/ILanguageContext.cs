@@ -21,10 +21,5 @@ namespace Database.Interfaces
         /// <param name="languageId">The id of the language to identify.</param>
         /// <returns>A language</returns>
         Language LoadLanguage(int languageId);
-
-        /// <summary>
-        /// Closes database.
-        /// </summary>
-        void CloseDb();
     }
 }

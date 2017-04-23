@@ -7,7 +7,7 @@ using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    public class DeleteSqlContext : IDeleteContext
+    public class DeleteSqlContext : IDeleteContext, IDatabaseClosable
     {
         private readonly Database _db;
 

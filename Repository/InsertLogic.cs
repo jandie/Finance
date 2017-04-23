@@ -34,7 +34,7 @@ namespace Repository
             }
             finally
             {
-                _context.CloseDb();
+                (_context as IDatabaseClosable)?.CloseDb();
             }
         }
 
@@ -70,7 +70,7 @@ namespace Repository
             }
             finally
             {
-                _context.CloseDb();
+                (_context as IDatabaseClosable)?.CloseDb();
             }
         }
 
@@ -124,7 +124,7 @@ namespace Repository
             }
             finally
             {
-                _context.CloseDb();
+                (_context as IDatabaseClosable)?.CloseDb();
             }
 
             return true;
