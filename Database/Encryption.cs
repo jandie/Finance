@@ -7,10 +7,13 @@ namespace Database
 {
     public class Encryption
     {
-        private static Encryption instance;
-
-        public static Encryption Instance => instance ?? (instance = new Encryption());
-
+        /// <summary>
+        /// Encrypts a text with a password and salt.
+        /// </summary>
+        /// <param name="input">The text to encrypt.</param>
+        /// <param name="password">The password to encrypt the text with.</param>
+        /// <param name="salt">The salt used for encryption.</param>
+        /// <returns></returns>
         public string EncryptText(string input, string password, string salt)
         {
             // Get the bytes of the string
@@ -28,6 +31,13 @@ namespace Database
             return result;
         }
 
+        /// <summary>
+        /// Decrypts a text with a password and salt.
+        /// </summary>
+        /// <param name="input">The text to decrypt.</param>
+        /// <param name="password">The password to decrypt the text with.</param>
+        /// <param name="salt">The salt used for the decryption.</param>
+        /// <returns></returns>
         public string DecryptText(string input, string password, string salt)
         {
             // Get the bytes of the string
@@ -44,6 +54,13 @@ namespace Database
             return result;
         }
 
+        /// <summary>
+        /// Decrypt bytes with AES-256 encryption using password and salt.
+        /// </summary>
+        /// <param name="bytesToBeDecrypted">Bytes to decrypt.</param>
+        /// <param name="passwordBytes">Password in bytes.</param>
+        /// <param name="saltBytes">Salt in bytes.</param>
+        /// <returns></returns>
         private byte[] AES_Decrypt(byte[] bytesToBeDecrypted, byte[] passwordBytes, byte[] saltBytes)
         {
             byte[] decryptedBytes = null;
@@ -77,6 +94,13 @@ namespace Database
             return decryptedBytes;
         }
 
+        /// <summary>
+        /// Encrypt bytes with AES-256 encryption using password and salt.
+        /// </summary>
+        /// <param name="bytesToBeEncrypted">Bytes to encrypt.</param>
+        /// <param name="passwordBytes">Password in bytes.</param>
+        /// <param name="saltBytes">Salt in bytes.</param>
+        /// <returns></returns>
         private byte[] AES_Encrypt(byte[] bytesToBeEncrypted, byte[] passwordBytes, byte[] saltBytes)
         {
             byte[] encryptedBytes = null;
