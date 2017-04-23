@@ -25,6 +25,12 @@ namespace Database.SqlContexts
             (_deleteSqlContext as IDatabaseClosable)?.CloseDb();
         }
 
+        /// <summary>
+        /// Encrypts all data of a user with the new password.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="oldPassword">The old password of the user.</param>
+        /// <param name="newPassword">The new password of the user.</param>
         public void EncryptUserData(User user, string oldPassword, string newPassword)
         {
             _deleteSqlContext.DeactivateUser(user.Id);
@@ -40,6 +46,13 @@ namespace Database.SqlContexts
             CloseDb();
         }
 
+        /// <summary>
+        /// Encrypts all bank account of a user with the new password.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="oldPassword">The old password of the user.</param>
+        /// <param name="newPassword">The new password of the user.</param>
+        /// <param name="salt">The salt used for encryption.</param>
         private void EncryptBankAccountData(int userId, string oldPassword, string newPassword, string salt)
         {
             List<Balance> bankAccounts = _dataContext.GetBalancesOfUser(userId, oldPassword, salt);
@@ -50,6 +63,13 @@ namespace Database.SqlContexts
             }
         }
 
+        /// <summary>
+        /// Encrypts all payment data of a user with the new password.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <param name="oldPassword">The old password of the user.</param>
+        /// <param name="newPassword">The new password of the user.</param>
+        /// <param name="salt">The salt used for encryption.</param>
         private void EncryptPaymentData(int userId, string oldPassword, string newPassword, string salt)
         {
             List<IPayment> payments = _dataContext.GetPaymentsOfUser(userId, oldPassword, salt);
@@ -62,6 +82,13 @@ namespace Database.SqlContexts
             }
         }
 
+        /// <summary>
+        /// Encrypts all transaction data of a payment with the new password.
+        /// </summary>
+        /// <param name="payment">The payment.</param>
+        /// <param name="oldPassword">The old password of the user.</param>
+        /// <param name="newPassword">The new password of the user.</param>
+        /// <param name="salt">The salt used for encryption.</param>
         private void EncryptTransactions(IPayment payment, string oldPassword, string newPassword, string salt)
         {
             List<Transaction> transactions = _dataContext.GetTransactionsOfPayment(payment, oldPassword, salt);
