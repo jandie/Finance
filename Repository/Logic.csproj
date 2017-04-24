@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BalanceHistoryLogic.cs" />
     <Compile Include="ChangeLogic.cs" />
     <Compile Include="DataLogic.cs" />
     <Compile Include="DeleteLogic.cs" />

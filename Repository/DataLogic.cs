@@ -11,17 +11,14 @@ namespace Repository
 {
     public class DataLogic
     {
-        private readonly IDataContext _context;
-
-        public DataLogic()
-        {
-            _context = new DataSqlContext();
-        }
+        private IDataContext _context;
 
         public User Login(string email, string password)
         {
             try
             {
+                _context = new DataSqlContext();
+
                 return _context.LoginUser(email, password);
             }
             catch (Exception ex)
@@ -40,6 +37,8 @@ namespace Repository
         {
             try
             {
+                _context = new DataSqlContext();
+
                 return _context.TokenChanged(user.Email, user.Token) ? null : user;
             }
             catch (Exception ex)
@@ -60,6 +59,8 @@ namespace Repository
         {
             try
             {
+                _context = new DataSqlContext();
+
                 if (string.IsNullOrWhiteSpace(name))
                     throw new RegistrationException(language.GetText(35));
 
@@ -110,6 +111,8 @@ namespace Repository
         {
             try
             {
+                _context = new DataSqlContext();
+
                 return _context.LoadLanguages();
             }
             catch (Exception ex)
@@ -128,6 +131,8 @@ namespace Repository
         {
             try
             {
+                _context = new DataSqlContext();
+
                 return _context.LoadCurrencies();
             }
             catch (Exception ex)
