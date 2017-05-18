@@ -46,16 +46,20 @@ namespace Database.SqlContexts
             MySqlConnection connection = _db.Connection;
             MySqlCommand command =
                 new MySqlCommand(
-                    "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD, CURRENCY, LANGUAGE) VALUES (@name, @lastName, @email, @password, @currencyId, @languageId)",
+                    "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD, CURRENCY, LANGUAGE, NAMESALT, LASTNAMESALT) VALUES (@name, @lastName, @email, @password, @currencyId, @languageId, @nameSalt, @lastNameSalt)",
                     connection) {CommandType = CommandType.Text};
-            string hash = Hashing.CreateHash(password);
-            string salt = Hashing.ExtractSalt(hash);
-            command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(name, password, salt)));
-            command.Parameters.Add(new MySqlParameter("@lastName", _encryption.EncryptText(lastName, password, salt)));
+
+            string nameSalt = Hashing.GenerateSalt();
+            string lastNameSalt = Hashing.GenerateSalt();
+
+            command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(name, password, nameSalt)));
+            command.Parameters.Add(new MySqlParameter("@lastName", _encryption.EncryptText(lastName, password, lastNameSalt)));
             command.Parameters.Add(new MySqlParameter("@email", email));
             command.Parameters.Add(new MySqlParameter("@password", Hashing.CreateHash(password)));
             command.Parameters.Add(new MySqlParameter("@currencyId", currencyId));
             command.Parameters.Add(new MySqlParameter("@languageId", languageId));
+            command.Parameters.Add(new MySqlParameter("@nameSalt", nameSalt));
+            command.Parameters.Add(new MySqlParameter("@lastNameSalt", lastNameSalt));
 
             command.ExecuteNonQuery();
 
