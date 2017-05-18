@@ -81,7 +81,7 @@ namespace Repository
                 if (password != password2)
                     throw new RegistrationException(language.GetText(41));
 
-                if (alphaKey != "E1j6kr!v4")
+                if (alphaKey != "hendriks")
                     throw new RegistrationException(
                         "Because this website is still in alpha, you need a key to be able to register.");
 
