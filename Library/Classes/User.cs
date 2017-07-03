@@ -172,7 +172,9 @@ namespace Library.Classes
 
         public void DeleteBalanceHistory(int id)
         {
-            _balanceHistories.Remove(_balanceHistories.Find(b => b.Id == id));
+            BalanceHistory balanceHistoryToRemove = _balanceHistories.Find(b => b.Id == id);
+
+            if (balanceHistoryToRemove != null) _balanceHistories.Remove(balanceHistoryToRemove);
         }
     }
 }
