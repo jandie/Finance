@@ -7,19 +7,25 @@ namespace Repository
 {
     public class BalanceHistoryLogic
     {
-        private IBalanceHistoryContext _context;
+        private readonly IBalanceHistoryContext _context;
 
-        public void UpdateBalance(User user)
+        public BalanceHistoryLogic()
+        {
+            _context = new BalanceHistorySqlContext();
+        }
+
+        public void UpdateBalance(User user, string password)
         {
             try
             {
-                _context = new BalanceHistorySqlContext();
+                BalanceHistory balanceHistory = _context.UpdateBalanceHistory(user, password);
 
-                throw new NotImplementedException();
+                user.DeleteBalanceHistory(balanceHistory.Id);
+                user.AddBalanceHistory(balanceHistory);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-
+                Console.WriteLine(exception);
                 throw;
             }
             finally
