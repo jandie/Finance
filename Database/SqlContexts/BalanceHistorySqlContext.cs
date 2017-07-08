@@ -12,9 +12,9 @@ namespace Database.SqlContexts
         private readonly Database _db;
         private readonly Encryption _encryption;
 
-        public BalanceHistorySqlContext(Database db = null)
+        public BalanceHistorySqlContext(Database db)
         {
-            _db = db ?? new Database();
+            _db = db;
             _encryption = new Encryption();
         }
 
@@ -66,7 +66,7 @@ namespace Database.SqlContexts
 
                 MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
-                    new MySqlCommand("SELECT ID FROM balancehistory WHERE UserId = @userId AND Date LIKE @month)",
+                    new MySqlCommand("SELECT ID FROM balancehistory WHERE UserId = @userId AND Date LIKE (@month)",
                             connection)
                         { CommandType = CommandType.Text };
 

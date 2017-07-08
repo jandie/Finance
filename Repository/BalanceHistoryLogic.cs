@@ -9,9 +9,9 @@ namespace Repository
     {
         private readonly IBalanceHistoryContext _context;
 
-        public BalanceHistoryLogic()
+        public BalanceHistoryLogic(Database.Database database)
         {
-            _context = new BalanceHistorySqlContext();
+            _context = new BalanceHistorySqlContext(database);
         }
 
         public void UpdateBalance(User user, string password)
@@ -27,10 +27,6 @@ namespace Repository
             {
                 Console.WriteLine(exception);
                 throw;
-            }
-            finally
-            {
-                (_context as IDatabaseClosable)?.CloseDb();
             }
         }
     }

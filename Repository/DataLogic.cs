@@ -11,14 +11,19 @@ namespace Repository
 {
     public class DataLogic
     {
-        private IDataContext _context;
+        private readonly IDataContext _context;
+        private readonly Database.Database _database;
+
+        public DataLogic()
+        {
+            _database = new Database.Database();
+            _context = new DataSqlContext(_database);
+        }
 
         public User Login(string email, string password)
         {
             try
             {
-                _context = new DataSqlContext();
-
                 return _context.LoginUser(email, password);
             }
             catch (Exception ex)
@@ -29,7 +34,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -37,8 +42,6 @@ namespace Repository
         {
             try
             {
-                _context = new DataSqlContext();
-
                 return _context.TokenChanged(user.Email, user.Token) ? null : user;
             }
             catch (Exception ex)
@@ -49,7 +52,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -59,8 +62,6 @@ namespace Repository
         {
             try
             {
-                _context = new DataSqlContext();
-
                 if (string.IsNullOrWhiteSpace(name))
                     throw new RegistrationException(language.GetText(35));
 
@@ -103,7 +104,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -111,8 +112,6 @@ namespace Repository
         {
             try
             {
-                _context = new DataSqlContext();
-
                 return _context.LoadLanguages();
             }
             catch (Exception ex)
@@ -123,7 +122,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -131,8 +130,6 @@ namespace Repository
         {
             try
             {
-                _context = new DataSqlContext();
-
                 return _context.LoadCurrencies();
             }
             catch (Exception ex)
@@ -143,7 +140,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
     }

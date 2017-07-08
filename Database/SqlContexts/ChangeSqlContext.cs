@@ -8,20 +8,15 @@ using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    public class ChangeSqlContext : IChangeContext, IDatabaseClosable
+    public class ChangeSqlContext : IChangeContext
     {
         private readonly Database _db;
         private readonly Encryption _encryption;
 
-        public ChangeSqlContext()
+        public ChangeSqlContext(Database database)
         {
-            _db = new Database();
+            _db = database;
             _encryption = new Encryption();
-        }
-
-        public void CloseDb()
-        {
-            _db.Close();
         }
 
         /// <summary>

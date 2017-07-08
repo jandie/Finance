@@ -10,10 +10,12 @@ namespace Repository
     public class InsertLogic
     {
         private readonly IInsertContext _context;
+        private readonly Database.Database _database;
 
         public InsertLogic()
         {
-            _context = new InsertSqlContext();
+            _database =  new Database.Database();
+            _context = new InsertSqlContext(_database);
         }
 
         public void AddBankAccount(User user, string name, decimal balance, string password)
@@ -27,6 +29,8 @@ namespace Repository
                 dummyBalance.Id = id;
 
                 user.AddBalance(dummyBalance);
+
+                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
             }
             catch (Exception ex)
             {
@@ -34,7 +38,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -63,6 +67,8 @@ namespace Repository
                 dummyPayment.Id = id;
 
                 user.AddPayment((IPayment) dummyPayment);
+
+                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
             }
             catch (Exception ex)
             {
@@ -70,7 +76,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -115,6 +121,8 @@ namespace Repository
                     new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
                         balance.BalanceAmount + amount, password);
                 }
+
+                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
             }
             catch (Exception ex)
             {
@@ -124,7 +132,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
 
             return true;

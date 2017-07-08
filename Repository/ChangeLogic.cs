@@ -11,10 +11,12 @@ namespace Repository
     public class ChangeLogic
     {
         private readonly IChangeContext _context;
+        private readonly Database.Database _database;
 
         public ChangeLogic()
         {
-            _context = new ChangeSqlContext();
+            _database = new Database.Database();
+            _context = new ChangeSqlContext(_database);
         }
 
         public bool ChangeBalance(User user, int balanceId, string name, 
@@ -32,6 +34,8 @@ namespace Repository
 
                 balance.Name = name;
                 balance.BalanceAmount = balanceAmount;
+
+                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
             }
             catch (Exception ex)
             {
@@ -41,7 +45,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
 
             return true;
@@ -65,6 +69,8 @@ namespace Repository
 
                 payment.Name = name;
                 payment.Amount = amount;
+
+                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
             }
             catch (Exception ex)
             {
@@ -74,7 +80,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
 
             return true;
@@ -94,6 +100,8 @@ namespace Repository
 
                 transaction.Amount = amount;
                 transaction.Description = description;
+
+                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
             }
             catch (Exception ex)
             {
@@ -103,7 +111,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
 
             return true;
@@ -141,7 +149,7 @@ namespace Repository
 
                 if (string.IsNullOrWhiteSpace(newPassword)) return;
 
-                new EncryptAllSqlContext().EncryptUserData(user, currentPassword, newPassword);
+                new EncryptAllSqlContext(_database).EncryptUserData(user, currentPassword, newPassword);
             }
             catch (Exception ex)
             {
@@ -151,7 +159,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
     }
