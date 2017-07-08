@@ -11,18 +11,11 @@ namespace Database.SqlContexts
         private readonly IChangeContext _changeContext;
         private readonly IDeleteContext _deleteSqlContext;
 
-        public EncryptAllSqlContext()
+        public EncryptAllSqlContext(Database database)
         {
-            _dataContext = new DataSqlContext();
-            _changeContext =  new ChangeSqlContext();
-            _deleteSqlContext = new DeleteSqlContext();
-        }
-
-        private void CloseDb()
-        {
-            (_dataContext as IDatabaseClosable)?.CloseDb();
-            (_changeContext as IDatabaseClosable)?.CloseDb();
-            (_deleteSqlContext as IDatabaseClosable)?.CloseDb();
+            _dataContext = new DataSqlContext(database);
+            _changeContext =  new ChangeSqlContext(database);
+            _deleteSqlContext = new DeleteSqlContext(database);
         }
 
         /// <summary>
@@ -42,8 +35,6 @@ namespace Database.SqlContexts
             _changeContext.ChangePassword(user.Email, newPassword);
 
             _deleteSqlContext.ActivateUser(user.Id);
-
-            CloseDb();
         }
 
         /// <summary>

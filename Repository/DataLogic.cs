@@ -12,10 +12,12 @@ namespace Repository
     public class DataLogic
     {
         private readonly IDataContext _context;
+        private readonly Database.Database _database;
 
         public DataLogic()
         {
-            _context = new DataSqlContext();
+            _database = new Database.Database();
+            _context = new DataSqlContext(_database);
         }
 
         public User Login(string email, string password)
@@ -32,7 +34,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -50,7 +52,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -102,7 +104,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -120,7 +122,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
 
@@ -138,7 +140,7 @@ namespace Repository
             }
             finally
             {
-                (_context as IDatabaseClosable)?.CloseDb();
+                _database.Close();
             }
         }
     }

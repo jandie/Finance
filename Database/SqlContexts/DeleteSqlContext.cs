@@ -7,18 +7,13 @@ using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    public class DeleteSqlContext : IDeleteContext, IDatabaseClosable
+    public class DeleteSqlContext : IDeleteContext
     {
         private readonly Database _db;
 
-        public DeleteSqlContext()
+        public DeleteSqlContext(Database database)
         {
-            _db = new Database();
-        }
-
-        public void CloseDb()
-        {
-            _db.Close();
+            _db = database;
         }
 
         /// <summary>

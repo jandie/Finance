@@ -65,7 +65,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new DeleteLogic().DeleteBalance(_userUtility.User, id))
+            if (new DeleteLogic().DeleteBalance(_userUtility.User, id, _userUtility.Password))
             {
                 Session["Message"] = _userUtility.Language.GetText(52);
             }
@@ -122,7 +122,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new DeleteLogic().DeletePayment(_userUtility.User, id))
+            if (new DeleteLogic().DeletePayment(_userUtility.User, id, _userUtility.Password))
             {
                 Session["Message"] = _userUtility.Language.GetText(54);
             }
@@ -185,7 +185,7 @@ namespace Finance_Website.Controllers
             if (_userUtility.User == null)
                 return RedirectToAction("Login", "Account");
 
-            if (new DeleteLogic().DeleteTransaction(_userUtility.User, id))
+            if (new DeleteLogic().DeleteTransaction(_userUtility.User, id, _userUtility.Password))
             {
                 Session["Message"] = _userUtility.Language.GetText(56);
             }

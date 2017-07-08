@@ -11,6 +11,8 @@ namespace Library.Classes
 
         private readonly List<IPayment> _payments;
 
+        private readonly List<BalanceHistory> _balanceHistories;
+
         public User(int id, string name, string lastName, string email, int languageId, Currency currency, string token, string salt)
         {
             Id = id;
@@ -24,6 +26,7 @@ namespace Library.Classes
 
             _balances = new List<Balance>();
             _payments = new List<IPayment>();
+            _balanceHistories =  new List<BalanceHistory>();
         }
 
         public List<Balance> Balances => new List<Balance>(_balances);
@@ -146,6 +149,11 @@ namespace Library.Classes
             _payments.Add(payment);
         }
 
+        public void DeletePayment(int id)
+        {
+            _payments.Remove(_payments.Find(p => p.Id == id));
+        }
+
         public IPayment GetPayment(int paymentId)
         {
             return Payments.Find(p => p.Id == paymentId);
@@ -157,9 +165,16 @@ namespace Library.Classes
                 .Find(p => p.AllTransactions.Any(t => t.Id == transactionId));
         }
 
-        public void DeletePayment(int id)
+        public void AddBalanceHistory(BalanceHistory balanceHistory)
         {
-            _payments.Remove(_payments.Find(p => p.Id == id));
+            _balanceHistories.Add(balanceHistory);
+        }
+
+        public void DeleteBalanceHistory(int id)
+        {
+            BalanceHistory balanceHistoryToRemove = _balanceHistories.Find(b => b.Id == id);
+
+            if (balanceHistoryToRemove != null) _balanceHistories.Remove(balanceHistoryToRemove);
         }
     }
 }

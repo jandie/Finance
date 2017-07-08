@@ -17,9 +17,9 @@ namespace Database.SqlContexts
         private readonly Database _db;
         private readonly Encryption _encryption;
 
-        public DataSqlContext()
+        public DataSqlContext(Database database)
         {
-            _db = new Database();
+            _db = database;
             _encryption = new Encryption();
         }
 
@@ -121,7 +121,7 @@ namespace Database.SqlContexts
 
                     user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt);
 
-                    new ChangeSqlContext().ChangeUser(user, password);
+                    new ChangeSqlContext(_db).ChangeUser(user, password);
                 }
                 else
                 {
@@ -232,7 +232,7 @@ namespace Database.SqlContexts
 
                         Balance objBalance = new Balance(id, name, balance);
 
-                        new ChangeSqlContext().ChangeBalance(objBalance, password);
+                        new ChangeSqlContext(_db).ChangeBalance(objBalance, password);
                     }
                     else
                     {
@@ -288,7 +288,7 @@ namespace Database.SqlContexts
 
                         Payment payment = new MonthlyBill(id, name, amount, type);
                         
-                        new ChangeSqlContext().ChangePayment(payment, password);
+                        new ChangeSqlContext(_db).ChangePayment(payment, password);
                     }
                     else
                     {
@@ -363,7 +363,7 @@ namespace Database.SqlContexts
 
                         Transaction transaction = new Transaction(id, amount, description, false);
 
-                        new ChangeSqlContext().ChangeTransaction(transaction, password);
+                        new ChangeSqlContext(_db).ChangeTransaction(transaction, password);
                     }
                     else
                     {
