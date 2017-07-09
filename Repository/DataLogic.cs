@@ -24,7 +24,11 @@ namespace Repository
         {
             try
             {
-                return _context.LoginUser(email, password);
+                User user = _context.LoginUser(email, password);
+
+                new BalanceHistoryLogic(_database).GetBalanceHistoryOfUser(user, password).ForEach(b => user.AddBalanceHistory(b));
+
+                return user;
             }
             catch (Exception ex)
             {
