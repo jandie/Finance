@@ -49,6 +49,8 @@ namespace Library.Classes
 
         public string Salt { get; }
 
+        public List<BalanceHistory> BalanceHistories => new List<BalanceHistory>(_balanceHistories);
+
         public decimal TotalBalance
         {
             get
@@ -170,9 +172,9 @@ namespace Library.Classes
             _balanceHistories.Add(balanceHistory);
         }
 
-        public void DeleteBalanceHistory(int id)
+        public void DeleteBalanceHistory(DateTime dateTime)
         {
-            BalanceHistory balanceHistoryToRemove = _balanceHistories.Find(b => b.Id == id);
+            BalanceHistory balanceHistoryToRemove = _balanceHistories.Find(b => b.DateTime.Date == dateTime.Date);
 
             if (balanceHistoryToRemove != null) _balanceHistories.Remove(balanceHistoryToRemove);
         }

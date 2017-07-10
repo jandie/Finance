@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using Database.Interfaces;
@@ -120,6 +121,50 @@ namespace Database.SqlContexts
                 balanceHistory.Id = Convert.ToInt32(id);
 
                 return balanceHistory;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, string monthYear, string password)
+        {
+            try
+            {
+                List<BalanceHistory> balanceHistories = new List<BalanceHistory>();
+
+                MySqlConnection connection = _db.Connection;
+                MySqlCommand command =
+                    new MySqlCommand("SELECT ID, BankAccountHistory, BankAccountHistorySalt, Date FROM balancehistory WHERE UserId = @userId AND Date LIKE (@month)",
+                            connection)
+                    { CommandType = CommandType.Text };
+
+                command.Parameters.Add(new MySqlParameter("@userId", user.Id));
+                command.Parameters.Add(new MySqlParameter("@month", $"%{monthYear}%"));
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        string encryptedBalance = reader.GetString(1);
+                        string balanceSalt = reader.GetString(2);
+                        DateTime dateTime = reader.GetDateTime(3);
+
+                        decimal decryptedBalance = Convert.ToDecimal(_encryption.DecryptText(encryptedBalance, password, balanceSalt));
+
+                        BalanceHistory balanceHistory = new BalanceHistory(id, decryptedBalance, balanceSalt)
+                        {
+                            DateTime = dateTime
+                        };
+
+                        balanceHistories.Add(balanceHistory);
+                    }
+                }
+
+                return balanceHistories;
             }
             catch (Exception e)
             {
