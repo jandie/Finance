@@ -277,7 +277,7 @@
                 {
                     decimal totalAmount = bill.GetTotalAmount();
                     decimal amount = bill.Amount;
-                    int percentage = Convert.ToInt32(totalAmount / (amount + (decimal)0.001) * 100);
+                    int percentage = amount == 0 ? 100 : Convert.ToInt32(totalAmount / (amount) * 100);
                     string percentageString = (percentage > 100 ? 100 : percentage) + "%";
 
                     <tr>
@@ -341,7 +341,7 @@
                 {
                     decimal totalAmount = income.GetTotalAmount();
                     decimal amount = income.Amount;
-                    int percentage = Convert.ToInt32(totalAmount / (amount + (decimal)0.001) * 100);
+                    int percentage = amount == 0 ? 100 : Convert.ToInt32(totalAmount / (amount) * 100);
                     string percentageString = (percentage > 100 ? 100 : percentage) + "%";
 
                     <tr>
