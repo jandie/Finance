@@ -49,6 +49,8 @@ namespace Library.Classes
 
         public string Salt { get; }
 
+        public List<BalanceHistory> BalanceHistories => new List<BalanceHistory>(_balanceHistories);
+
         public decimal TotalBalance
         {
             get

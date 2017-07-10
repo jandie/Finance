@@ -41,3 +41,39 @@ textarea {
     max-width: 280px;
 }
 
+/*
+    Here CSS for the graph ###################
+*/
+
+/* Resets */
+.graph-container,
+.graph-container div,
+.graph-container a,
+.graph-container span {
+	margin: 0;
+	padding: 0;
+}
+
+/*  Graph Container */
+.graph-container {
+	position: relative;
+	width: 250px;
+	height: 116px;
+	padding: 20px;
+}
+
+.graph-container > div {
+	position: absolute;
+	width: inherit;
+	height: inherit;
+	top: 10px;
+	left: 25px;
+}
+
+/* Text Styles */
+.tickLabel {
+	font-weight: bold;
+	font-size: 12px;
+	color: #666;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}

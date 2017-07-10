@@ -143,6 +143,7 @@
     <Content Include="scripts\jquery-3.1.1.min.js" />
     <Content Include="scripts\jquery-3.1.1.slim.js" />
     <Content Include="scripts\jquery-3.1.1.slim.min.js" />
+    <Content Include="scripts\jquery.flot.min.js" />
     <Content Include="scripts\modernizr-2.8.3.js" />
     <Content Include="scripts\Scripts.js" />
     <Content Include="Web.config" />
@@ -210,7 +211,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>31853</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
