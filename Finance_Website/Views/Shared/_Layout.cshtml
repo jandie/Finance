@@ -45,34 +45,45 @@
 <script src="~/Scripts/Scripts.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="~/Scripts/jquery.flot.min.js"></script>
-    <script>
-$(document).ready(function () {
+<script>
+    var drawGraph = function () {
+        // Lines Graph
+        $.plot($('#graph-lines'), graphData, {
+            series: {
+                points: {
+                    show: false
+                },
+                lines: {
+                    show: true
+                },
+                shadowSize: 5
+            },
+            grid: {
+                color: '#646464',
+                borderColor: 'transparent',
+                borderWidth: 20,
+                hoverable: true
+            },
+            xaxis: {
+                tickColor: 'transparent',
+                show: false
+            }
+        });
+    }
 
-	// Lines Graph
-	$.plot($('#graph-lines'), graphData, {
-		series: {
-			points: {
-				show: false
-			},
-			lines: {
-				show: true
-			},
-			shadowSize: 5
-		},
-		grid: {
-			color: '#646464',
-			borderColor: 'transparent',
-			borderWidth: 20,
-			hoverable: true
-		},
-		xaxis: {
-		    tickColor: 'transparent',
-            show: false
-		}
-	});
+    var onresize = function (e) {
+        drawGraph();
+    }
+    window.addEventListener("resize", onresize);
 
-});
-    </script>
+    $(document).ready(function () {
+
+        drawGraph();
+
+    });
+
+    
+</script>
 
 </body>
 </html>
