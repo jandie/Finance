@@ -147,6 +147,11 @@ namespace Repository
         {
             List<BalanceHistory> balanceHistories = new List<BalanceHistory> {begin};
 
+            if ((end.DateTime - balanceHistories[balanceHistories.Count - 1].DateTime).TotalDays < 1)
+            {
+                return new List<BalanceHistory>();
+            }
+
             while (!((end.DateTime - balanceHistories[balanceHistories.Count - 1].DateTime).TotalDays >= 1 && 
                 (end.DateTime - balanceHistories[balanceHistories.Count - 1].DateTime).TotalDays < 2))
             {
