@@ -34,7 +34,7 @@ namespace Library.Classes
             Id = id;
             Amount = amount;
             AmountSalt = amountSalt;
-            DateTime = DateTime.Now;
+            DateTime = DateTime.Now.Date;
         }
     }
 }

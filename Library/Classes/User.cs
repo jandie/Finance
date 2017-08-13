@@ -11,7 +11,7 @@ namespace Library.Classes
 
         private readonly List<IPayment> _payments;
 
-        private readonly List<BalanceHistory> _balanceHistories;
+        private List<BalanceHistory> _balanceHistories;
 
         public User(int id, string name, string lastName, string email, int languageId, Currency currency, string token, string salt)
         {
@@ -49,7 +49,14 @@ namespace Library.Classes
 
         public string Salt { get; }
 
-        public List<BalanceHistory> BalanceHistories => new List<BalanceHistory>(_balanceHistories);
+        public List<BalanceHistory> BalanceHistories {
+            get
+            {
+                return new List<BalanceHistory>(_balanceHistories);
+            }
+
+            set { _balanceHistories = new List<BalanceHistory>(value); }
+        }
 
         public decimal TotalBalance
         {
@@ -169,6 +176,8 @@ namespace Library.Classes
 
         public void AddBalanceHistory(BalanceHistory balanceHistory)
         {
+            DeleteBalanceHistory(balanceHistory.DateTime);
+
             _balanceHistories.Add(balanceHistory);
         }
 
