@@ -24,7 +24,7 @@ namespace Finance_Website.Models.Utilities
 
             User = User == null
                 ? new DataLogic().Login(Email, Password)
-                : new DataLogic().CheckUser(User);
+                : new DataLogic().CheckUser(User, Password);
 
             if (User == null)
             {

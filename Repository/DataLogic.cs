@@ -42,11 +42,11 @@ namespace Repository
             }
         }
 
-        public User CheckUser(User user)
+        public User CheckUser(User user, string password)
         {
             try
             {
-                return _context.TokenChanged(user.Email, user.Token) ? null : user;
+                return _context.TokenChanged(user.Email, user.Token) ? Login(user.Email, password) : user;
             }
             catch (Exception ex)
             {
