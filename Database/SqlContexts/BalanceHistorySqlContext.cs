@@ -129,7 +129,7 @@ namespace Database.SqlContexts
             }
         }
 
-        public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, string monthYear, string password)
+        public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, DateTime beginDate, string password)
         {
             try
             {
@@ -137,12 +137,12 @@ namespace Database.SqlContexts
 
                 MySqlConnection connection = _db.Connection;
                 MySqlCommand command =
-                    new MySqlCommand("SELECT ID, BankAccountHistory, BankAccountHistorySalt, Date FROM balancehistory WHERE UserId = @userId AND Date LIKE (@month)",
+                    new MySqlCommand("SELECT ID, BankAccountHistory, BankAccountHistorySalt, Date FROM balancehistory WHERE UserId = @userId AND Date > @month",
                             connection)
                     { CommandType = CommandType.Text };
 
                 command.Parameters.Add(new MySqlParameter("@userId", user.Id));
-                command.Parameters.Add(new MySqlParameter("@month", $"%{monthYear}%"));
+                command.Parameters.Add(new MySqlParameter("@month", beginDate));
 
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {

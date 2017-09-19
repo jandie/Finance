@@ -35,16 +35,10 @@ namespace Repository
         {
             User dummyUser = new User(-1, "", "", "", -1, null, "", "");
 
-            DateTime lastMonth = DateTime.Today.AddMonths(-1);
-            DateTime thisMonth = DateTime.Today;
+            List<BalanceHistory> balanceHistory = _context.GetBalanceHistoriesOfMonth(user,
+                DateTime.Now.AddDays(-62), password);
 
-            List<BalanceHistory> lastMonthBalanceHistory = _context.GetBalanceHistoriesOfMonth(user,
-                lastMonth.ToString("yyyy-MM"), password);
-            List<BalanceHistory> thisMonthBalanceHistory = _context.GetBalanceHistoriesOfMonth(user,
-                thisMonth.ToString("yyyy-MM"), password);
-
-            lastMonthBalanceHistory.ForEach(dummyUser.AddBalanceHistory);
-            thisMonthBalanceHistory.ForEach(dummyUser.AddBalanceHistory);
+            balanceHistory.ForEach(dummyUser.AddBalanceHistory);
 
             dummyUser.AddBalanceHistory(new BalanceHistory(-1, user.TotalBalance, ""));
 

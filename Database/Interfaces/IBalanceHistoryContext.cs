@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Library.Classes;
 
 namespace Database.Interfaces
@@ -7,6 +8,6 @@ namespace Database.Interfaces
     {
         BalanceHistory UpdateBalanceHistory(User user, string password);
 
-        List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, string monthYear, string password);
+        List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, DateTime beginDate, string password);
     }
 }
