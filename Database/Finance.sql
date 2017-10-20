@@ -89,22 +89,6 @@ CREATE TABLE `language` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `loginlog`
---
-
-DROP TABLE IF EXISTS `loginlog`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `loginlog` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `Time` varchar(45) DEFAULT NULL,
-  `Username` varchar(45) DEFAULT NULL,
-  `Succes` int(11) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `payment`
 --
 
@@ -208,4 +192,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-20 15:09:03
+-- Dump completed on 2017-10-20 15:15:29
