@@ -36,10 +36,6 @@ namespace Repository
 
                 return null;
             }
-            finally
-            {
-                _database.Close();
-            }
         }
 
         public User CheckUser(User user, string password)
@@ -53,10 +49,6 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 return null;
-            }
-            finally
-            {
-                _database.Close();
             }
         }
 
@@ -106,10 +98,6 @@ namespace Repository
 
                 throw;
             }
-            finally
-            {
-                _database.Close();
-            }
         }
 
         public List<Language> LoadLanguages()
@@ -124,10 +112,6 @@ namespace Repository
 
                 throw;
             }
-            finally
-            {
-                _database.Close();
-            }
         }
 
         public List<Currency> LoadCurrencies()
@@ -141,10 +125,6 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 throw;
-            }
-            finally
-            {
-                _database.Close();
             }
         }
     }

@@ -6,7 +6,7 @@ using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    public class LanguageSqlContext : ILanguageContext, IDatabaseClosable
+    public class LanguageSqlContext : ILanguageContext
     {
         /// <summary>
         /// Deletes all rows from the language tables.
@@ -15,11 +15,6 @@ namespace Database.SqlContexts
         {
             CleanTranslations();
             CleanLanguages();
-        }
-
-        public void CloseDb()
-        {
-            return;
         }
 
         /// <summary>

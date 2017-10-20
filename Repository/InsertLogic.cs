@@ -36,10 +36,6 @@ namespace Repository
             {
                 Console.WriteLine(ex.ToString());
             }
-            finally
-            {
-                _database.Close();
-            }
         }
 
         public void AddPayment(User user, string name, decimal amount, PaymentType type, string password)
@@ -73,10 +69,6 @@ namespace Repository
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-            }
-            finally
-            {
-                _database.Close();
             }
         }
 
@@ -129,10 +121,6 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 return false;
-            }
-            finally
-            {
-                _database.Close();
             }
 
             return true;

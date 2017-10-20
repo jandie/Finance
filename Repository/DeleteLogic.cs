@@ -34,10 +34,6 @@ namespace Repository
 
                 return false;
             }
-            finally
-            {
-                _database.Close();
-            }
 
             return true;
         }
@@ -59,10 +55,6 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 return false;
-            }
-            finally
-            {
-                _database.Close();
             }
 
             return true;
@@ -89,10 +81,6 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 return false;
-            }
-            finally
-            {
-                _database.Close();
             }
 
             return true;
