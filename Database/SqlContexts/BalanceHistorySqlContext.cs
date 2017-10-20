@@ -18,6 +18,12 @@ namespace Database.SqlContexts
             _encryption = new Encryption();
         }
 
+        /// <summary>
+        /// Updates the balance history of the user to the new balance sum.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>The new BalanceHistory with the updated value.</returns>
         public BalanceHistory UpdateBalanceHistory(User user, string password)
         {
             try
@@ -51,6 +57,11 @@ namespace Database.SqlContexts
             }
         }
 
+        /// <summary>
+        /// Checks if the user has balance history for the current day.
+        /// </summary>
+        /// <param name="user">The user to check.</param>
+        /// <returns>The id of the exsisting balancehistory or -1 if no record was found.</returns>
         private int CheckExistingBalanceHistory(User user)
         {
             try
@@ -78,6 +89,12 @@ namespace Database.SqlContexts
             }
         }
 
+        /// <summary>
+        /// Adds new balance history to the user.
+        /// </summary>
+        /// <param name="user">The user to add the balancehistory to.</param>
+        /// <param name="password">The password for encryption.</param>
+        /// <returns></returns>
         private BalanceHistory AddBalanceHistory(User user, string password)
         {
             try
@@ -113,7 +130,14 @@ namespace Database.SqlContexts
             }
         }
 
-        public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, DateTime beginDate, string password)
+        /// <summary>
+        /// Get all balancehistory objects of a specific month.
+        /// </summary>
+        /// <param name="user">The user to add the balancehistories to.</param>
+        /// <param name="month">The month to get the objects from.</param>
+        /// <param name="password">The password for encryption.</param>
+        /// <returns>List of balancehistory objects.</returns>
+        public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, DateTime month, string password)
         {
             try
             {
@@ -123,7 +147,7 @@ namespace Database.SqlContexts
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
                     {"userId", user.Id},
-                    {"month", beginDate}
+                    {"month", month}
                 };
 
                 using (DataTable table = _db.Execute(query, parameters, Database.QueryType.Return) as DataTable)
