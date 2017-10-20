@@ -63,6 +63,9 @@ namespace Database
         /// <returns>Returned data from the query.</returns>
         public virtual object Execute(string query, Dictionary<string, object> parameters, QueryType queryType)
         {
+            if (parameters == null)
+                parameters = new Dictionary<string, object>();
+
             try
             {
                 OpenConnection(Connection);
@@ -78,12 +81,19 @@ namespace Database
 
                     case QueryType.DataSet:
                         return ExecuteReturnDataset(query, parameters);
+
+                    case QueryType.Insert:
+                        return ExecuteInsert(query, parameters);
+
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(queryType), queryType, null);
                 }
             }
             finally
             {
                 CloseConnection(Connection);
             }
+
             return null;
         }
 
@@ -147,6 +157,24 @@ namespace Database
         }
 
         /// <summary>
+        /// Executes a insert query and returns the last inserted ID.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters for the query.</param>
+        /// <returns></returns>
+        private long ExecuteInsert(string query, Dictionary<string, object> parameters)
+        {
+            using (MySqlCommand cmd = new MySqlCommand(query, Connection))
+            {
+                ApplyParameters(cmd, parameters);
+
+                cmd.ExecuteNonQuery();
+
+                return cmd.LastInsertedId;
+            }
+        }
+
+        /// <summary>
         /// Applies the parameters to the MySqlCommand.
         /// </summary>
         /// <param name="cmd">The MySqlCommand object.</param>
@@ -166,7 +194,8 @@ namespace Database
         {
             NoReturn,
             Return,
-            DataSet
+            DataSet,
+            Insert
         }
     }
 }
