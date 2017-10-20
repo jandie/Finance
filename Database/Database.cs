@@ -28,7 +28,10 @@ namespace Database
             Connection.Open();
         }
 
-        private MySqlConnection Connection { get; set; }
+        /// <summary>
+        /// The connection to the database.
+        /// </summary>
+        private MySqlConnection Connection { get; }
 
         /// <summary>
         /// Opens a MySQL connection
@@ -61,7 +64,7 @@ namespace Database
         /// <param name="parameters">The parameters for the query.</param>
         /// <param name="queryType">The type of query.</param>
         /// <returns>Returned data from the query.</returns>
-        public virtual object Execute(string query, Dictionary<string, object> parameters, QueryType queryType)
+        public object Execute(string query, Dictionary<string, object> parameters, QueryType queryType)
         {
             if (parameters == null)
                 parameters = new Dictionary<string, object>();
