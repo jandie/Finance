@@ -72,7 +72,7 @@ namespace Database
 
                 switch (queryType)
                 {
-                    case QueryType.NoReturn:
+                    case QueryType.NonQuery:
                         ExecuteNoReturn(query, parameters);
                         break;
 
@@ -192,7 +192,7 @@ namespace Database
         /// </summary>
         public enum QueryType
         {
-            NoReturn,
+            NonQuery,
             Return,
             DataSet,
             Insert

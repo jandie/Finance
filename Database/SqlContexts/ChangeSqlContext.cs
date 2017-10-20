@@ -44,7 +44,7 @@ namespace Database.SqlContexts
                     {"id", balance.Id},
                 };
 
-                _db.Execute(query, parameters, Database.QueryType.NoReturn);
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {
@@ -79,7 +79,7 @@ namespace Database.SqlContexts
                     {"id", payment.Id}
                 };
 
-                _db.Execute(query, parameters, Database.QueryType.NoReturn);
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {
@@ -114,7 +114,7 @@ namespace Database.SqlContexts
                     {"id", transaction.Id}
                 };
 
-                _db.Execute(query, parameters, Database.QueryType.NoReturn);
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {
@@ -151,7 +151,7 @@ namespace Database.SqlContexts
                     {"lastNameSalt", lastNameSalt}
                 };
 
-                _db.Execute(query, parameters, Database.QueryType.NoReturn);
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {
@@ -179,7 +179,7 @@ namespace Database.SqlContexts
                     {"email", email}
                 };
 
-                _db.Execute(query, parameters, Database.QueryType.NoReturn);
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {

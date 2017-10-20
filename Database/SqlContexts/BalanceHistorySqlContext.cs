@@ -40,7 +40,7 @@ namespace Database.SqlContexts
                     {"id", exsistingId },
                 };
 
-                _db.Execute(query, parameters, Database.QueryType.NoReturn);
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
 
                 return balanceHistory;
             }
