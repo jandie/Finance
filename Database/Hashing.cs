@@ -6,7 +6,6 @@ namespace Database
 {
     public static class Hashing
     {
-        // The following constants may be changed without breaking existing hashes.
         private const int SaltByteSize = 16;
         private const int HashByteSize = 20;
         private const int Pbkdf2Iterations = 20000;
@@ -35,6 +34,10 @@ namespace Database
             return Pbkdf2Iterations + ":" + Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
         }
 
+        /// <summary>
+        /// Generates random salt.
+        /// </summary>
+        /// <returns>The randomly generated salt.</returns>
         public static string GenerateSalt()
         {
             byte[] salt = new byte[SaltByteSize];
