@@ -64,7 +64,7 @@ namespace Finance_Website.Controllers
             try
             {
                 new ChangeLogic().ChangeUser(_userUtility.User, name, lastName, _userUtility.User.Email, currencyId,
-                    languageId, currentPassword, password, password2, _userUtility.Language, _userUtility.User.Salt);
+                    languageId, currentPassword, password, password2, _userUtility.Language);
 
                 Session["UserUtility"] = null;
 
