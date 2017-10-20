@@ -39,7 +39,7 @@ namespace Database
         /// <param name="con">The MySQL connection.</param>
         private void OpenConnection(MySqlConnection con)
         {
-            if (con?.State != System.Data.ConnectionState.Open)
+            if (con?.State != ConnectionState.Open)
             {
                 con?.Open();
             }
@@ -51,7 +51,7 @@ namespace Database
         /// <param name="con">The MySQL connection.</param>
         private void CloseConnection(MySqlConnection con)
         {
-            if (con?.State == System.Data.ConnectionState.Open)
+            if (con?.State == ConnectionState.Open)
             {
                 con?.Close();
             }
