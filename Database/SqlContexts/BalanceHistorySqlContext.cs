@@ -4,11 +4,10 @@ using System.Data;
 using System.Globalization;
 using Database.Interfaces;
 using Library.Classes;
-using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    public class BalanceHistorySqlContext : IBalanceHistoryContext, IDatabaseClosable
+    public class BalanceHistorySqlContext : IBalanceHistoryContext
     {
         private readonly Database _db;
         private readonly Encryption _encryption;
@@ -19,6 +18,12 @@ namespace Database.SqlContexts
             _encryption = new Encryption();
         }
 
+        /// <summary>
+        /// Updates the balance history of the user to the new balance sum.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="password">The password.</param>
+        /// <returns>The new BalanceHistory with the updated value.</returns>
         public BalanceHistory UpdateBalanceHistory(User user, string password)
         {
             try
@@ -26,29 +31,22 @@ namespace Database.SqlContexts
                 int exsistingId = CheckExistingBalanceHistory(user);
 
                 if (exsistingId < 0)
-                {
                     return AddBalanceHistory(user, password);
-                }
 
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command =
-                    new MySqlCommand("UPDATE `balancehistory` SET `BankAccountHistory` = @totalBalance, " +
-                                     "`BankAccountHistorySalt` = @totalBalanceSalt WHERE `ID` = @id",
-                            connection)
-                        { CommandType = CommandType.Text };
-
+                const string query = "UPDATE `balancehistory` SET `BankAccountHistory` = @totalBalance, `BankAccountHistorySalt` = @totalBalanceSalt WHERE `ID` = @id";
                 string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(CultureInfo.InvariantCulture)));
                 string encryptedTotalBalance =
                     _encryption.EncryptText(user.TotalBalance.ToString(CultureInfo.InvariantCulture), password,
                         totalBalanceSalt);
-
                 BalanceHistory balanceHistory = new BalanceHistory(-1, user.TotalBalance, totalBalanceSalt);
+                Dictionary<string, object> parameters = new Dictionary<string, object>()
+                {
+                    {"totalBalance", encryptedTotalBalance },
+                    {"totalBalanceSalt", totalBalanceSalt },
+                    {"id", exsistingId },
+                };
 
-                command.Parameters.Add(new MySqlParameter("@totalBalance", encryptedTotalBalance));
-                command.Parameters.Add(new MySqlParameter("@totalBalanceSalt", totalBalanceSalt));
-                command.Parameters.Add(new MySqlParameter("@id", exsistingId));
-
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
 
                 return balanceHistory;
             }
@@ -59,27 +57,27 @@ namespace Database.SqlContexts
             }
         }
 
+        /// <summary>
+        /// Checks if the user has balance history for the current day.
+        /// </summary>
+        /// <param name="user">The user to check.</param>
+        /// <returns>The id of the exsisting balancehistory or -1 if no record was found.</returns>
         private int CheckExistingBalanceHistory(User user)
         {
             try
             {
                 int id = -1;
+                const string query = "SELECT ID FROM balancehistory WHERE UserId = @userId AND Date LIKE (@month)";
 
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command =
-                    new MySqlCommand("SELECT ID FROM balancehistory WHERE UserId = @userId AND Date LIKE (@month)",
-                            connection)
-                        { CommandType = CommandType.Text };
-
-                command.Parameters.Add(new MySqlParameter("@userId", user.Id));
-                command.Parameters.Add(new MySqlParameter("@month", $"%{DateTime.Now:yyyy-MM-dd}%"));
-
-                using (MySqlDataReader reader = command.ExecuteReader())
+                Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
-                    if (reader.Read())
-                    {
-                        id = reader.GetInt32(0);
-                    }
+                    {"userId",  user.Id},
+                    {"month",  $"%{DateTime.Now:yyyy-MM-dd}%"},
+                };
+
+                using (DataTable table = _db.Execute(query, parameters, Database.QueryType.Return) as DataTable)
+                {
+                    if (table != null) id = Convert.ToInt32(table.Rows[0][0]);
                 }
 
                 return id;
@@ -91,16 +89,19 @@ namespace Database.SqlContexts
             }
         }
 
+        /// <summary>
+        /// Adds new balance history to the user.
+        /// </summary>
+        /// <param name="user">The user to add the balancehistory to.</param>
+        /// <param name="password">The password for encryption.</param>
+        /// <returns></returns>
         private BalanceHistory AddBalanceHistory(User user, string password)
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command =
-                    new MySqlCommand("INSERT INTO `balancehistory` (`UserId`, `BankAccountHistory`, `BankAccountHistorySalt`, `Date`) " +
-                                     "VALUES (@userId, @totalBalance, @totalBalanceSalt, @date)",
-                            connection)
-                        { CommandType = CommandType.Text };
+                const string query = 
+                    "INSERT INTO `balancehistory` (`UserId`, `BankAccountHistory`, `BankAccountHistorySalt`, `Date`) " +
+                                     "VALUES (@userId, @totalBalance, @totalBalanceSalt, @date)";
 
                 string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(CultureInfo.InvariantCulture)));
                 string encryptedTotalBalance =
@@ -108,15 +109,15 @@ namespace Database.SqlContexts
                         totalBalanceSalt);
 
                 BalanceHistory balanceHistory = new BalanceHistory(-1, user.TotalBalance, totalBalanceSalt);
+                Dictionary<string, object> parameters = new Dictionary<string, object>()
+                {
+                    {"userId" , user.Id},
+                    {"totalBalance",  encryptedTotalBalance},
+                    {"totalBalanceSalt",  totalBalanceSalt},
+                    {"date",  balanceHistory.DateTime.ToString("yyyy-MM-dd")},
+                };
 
-                command.Parameters.Add(new MySqlParameter("@userId", user.Id));
-                command.Parameters.Add(new MySqlParameter("@totalBalance", encryptedTotalBalance));
-                command.Parameters.Add(new MySqlParameter("@totalBalanceSalt", totalBalanceSalt));
-                command.Parameters.Add(new MySqlParameter("@date", balanceHistory.DateTime.ToString("yyyy-MM-dd")));
-
-                command.ExecuteNonQuery();
-
-                long id = command.LastInsertedId;
+                long id = (long) _db.Execute(query, parameters, Database.QueryType.Insert);
 
                 balanceHistory.Id = Convert.ToInt32(id);
 
@@ -129,31 +130,38 @@ namespace Database.SqlContexts
             }
         }
 
-        public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, DateTime beginDate, string password)
+        /// <summary>
+        /// Get all balancehistory objects of a specific month.
+        /// </summary>
+        /// <param name="user">The user to add the balancehistories to.</param>
+        /// <param name="month">The month to get the objects from.</param>
+        /// <param name="password">The password for encryption.</param>
+        /// <returns>List of balancehistory objects.</returns>
+        public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, DateTime month, string password)
         {
             try
             {
+                const string query = "SELECT ID, BankAccountHistory, BankAccountHistorySalt, Date FROM balancehistory WHERE UserId = @userId AND Date > @month";
                 List<BalanceHistory> balanceHistories = new List<BalanceHistory>();
 
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command =
-                    new MySqlCommand("SELECT ID, BankAccountHistory, BankAccountHistorySalt, Date FROM balancehistory WHERE UserId = @userId AND Date > @month",
-                            connection)
-                    { CommandType = CommandType.Text };
-
-                command.Parameters.Add(new MySqlParameter("@userId", user.Id));
-                command.Parameters.Add(new MySqlParameter("@month", beginDate));
-
-                using (MySqlDataReader reader = command.ExecuteReader())
+                Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
-                    while (reader.Read())
-                    {
-                        int id = reader.GetInt32(0);
-                        string encryptedBalance = reader.GetString(1);
-                        string balanceSalt = reader.GetString(2);
-                        DateTime dateTime = reader.GetDateTime(3);
+                    {"userId", user.Id},
+                    {"month", month}
+                };
 
-                        decimal decryptedBalance = Convert.ToDecimal(_encryption.DecryptText(encryptedBalance, password, balanceSalt));
+                using (DataTable table = _db.Execute(query, parameters, Database.QueryType.Return) as DataTable)
+                {
+                    if (table == null) return balanceHistories;
+                    foreach (DataRow row in table.Rows)
+                    {
+                        int id = Convert.ToInt32(row[0]);
+                        string encryptedBalance = Convert.ToString(row[1]);
+                        string balanceSalt = Convert.ToString(row[2]);
+                        DateTime dateTime = Convert.ToDateTime(row[3]);
+
+                        decimal decryptedBalance =
+                            Convert.ToDecimal(_encryption.DecryptText(encryptedBalance, password, balanceSalt));
 
                         BalanceHistory balanceHistory = new BalanceHistory(id, decryptedBalance, balanceSalt)
                         {
@@ -171,11 +179,6 @@ namespace Database.SqlContexts
                 Console.WriteLine(e);
                 throw;
             }
-        }
-
-        public void CloseDb()
-        {
-            _db.Close();
         }
     }
 }

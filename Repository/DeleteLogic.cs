@@ -16,6 +16,13 @@ namespace Repository
             _context = new DeleteSqlContext(_database);
         }
 
+        /// <summary>
+        /// Deletes a balance from the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="id">The id of the balance to delete.</param>
+        /// <param name="password">The password for encryption.</param>
+        /// <returns>Whether or not the action was a success.</returns>
         public bool DeleteBalance(User user, int id, string password)
         {
             try
@@ -34,14 +41,17 @@ namespace Repository
 
                 return false;
             }
-            finally
-            {
-                _database.Close();
-            }
 
             return true;
         }
 
+        /// <summary>
+        /// Deletes a payment from the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="id">The id of the payment.</param>
+        /// <param name="password">The password for encryption.</param>
+        /// <returns>Whether or not the action was a success.</returns>
         public bool DeletePayment(User user, int id, string password)
         {
             try
@@ -60,23 +70,24 @@ namespace Repository
 
                 return false;
             }
-            finally
-            {
-                _database.Close();
-            }
 
             return true;
         }
 
+        /// <summary>
+        /// Deletes transaction from the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="id">The id of the transaction.</param>
+        /// <param name="password">The password for encryption.</param>
+        /// <returns></returns>
         public bool DeleteTransaction(User user, int id, string password)
         {
             try
             {
                 if (user.GetTransaction(id) == null) return false;
 
-                Payment payment = user.GetPaymentByTransaction(id) as Payment;
-
-                if (payment == null) return false;
+                if (!(user.GetPaymentByTransaction(id) is Payment payment)) return false;
 
                 _context.DeleteTransaction(id);
 
@@ -89,10 +100,6 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 return false;
-            }
-            finally
-            {
-                _database.Close();
             }
 
             return true;

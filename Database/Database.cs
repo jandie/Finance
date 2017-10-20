@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Database.Properties;
 using MySql.Data.MySqlClient;
@@ -28,24 +29,176 @@ namespace Database
         }
 
         /// <summary>
-        /// The database connection.
+        /// The connection to the database.
         /// </summary>
-        public MySqlConnection Connection { get; }
+        private MySqlConnection Connection { get; }
 
         /// <summary>
-        /// Closes the conneciton with the database.
+        /// Opens a MySQL connection
         /// </summary>
-        public void Close()
+        /// <param name="con">The MySQL connection.</param>
+        private void OpenConnection(MySqlConnection con)
         {
-            Connection.Close();
+            if (con?.State != ConnectionState.Open)
+            {
+                con?.Open();
+            }
         }
 
         /// <summary>
-        /// Destructor that closes the connection with the database.
+        /// Closes a MySQL connection.
         /// </summary>
-        ~Database()
+        /// <param name="con">The MySQL connection.</param>
+        private void CloseConnection(MySqlConnection con)
         {
-            Connection.Close();
+            if (con?.State == ConnectionState.Open)
+            {
+                con?.Close();
+            }
+        }
+
+        /// <summary>
+        /// Executes a query with the MySQL connection string and returns data based on the querytype.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters for the query.</param>
+        /// <param name="queryType">The type of query.</param>
+        /// <returns>Returned data from the query.</returns>
+        public object Execute(string query, Dictionary<string, object> parameters, QueryType queryType)
+        {
+            if (parameters == null)
+                parameters = new Dictionary<string, object>();
+
+            try
+            {
+                OpenConnection(Connection);
+
+                switch (queryType)
+                {
+                    case QueryType.NonQuery:
+                        ExecuteNoReturn(query, parameters);
+                        break;
+
+                    case QueryType.Return:
+                        return ExecuteReturn(query, parameters);
+
+                    case QueryType.DataSet:
+                        return ExecuteReturnDataset(query, parameters);
+
+                    case QueryType.Insert:
+                        return ExecuteInsert(query, parameters);
+
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(queryType), queryType, null);
+                }
+            }
+            finally
+            {
+                CloseConnection(Connection);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Executes a query with the MySQL connection string and returns a DataSet.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters for the query.</param>
+        /// <returns>Returned data from the query.</returns>
+        private DataSet ExecuteReturnDataset(string query, Dictionary<string, object> parameters)
+        {
+            DataSet ds = new DataSet();
+
+            using (MySqlCommand cmd = new MySqlCommand(query, Connection))
+            {
+                ApplyParameters(cmd, parameters);
+
+                using (MySqlDataAdapter adapter = new MySqlDataAdapter(cmd))
+                {
+                    adapter.Fill(ds);
+
+                    return ds;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Executes a query with the MySQL connection string and returns a DataTable.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters for the query.</param>
+        /// <returns>Returned data from the query.</returns>
+        private DataTable ExecuteReturn(string query, Dictionary<string, object> parameters)
+        {
+            DataTable results = new DataTable("Results");
+
+            using (MySqlCommand cmd = new MySqlCommand(query, Connection))
+            {
+                ApplyParameters(cmd, parameters);
+
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                    results.Load(reader);
+
+                return results;
+            }
+        }
+
+        /// <summary>
+        /// Executes a query with the MySQL connection string.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters for the query.</param>
+        private void ExecuteNoReturn(string query, Dictionary<string, object> parameters)
+        {
+            using (MySqlCommand cmd = new MySqlCommand(query, Connection))
+            {
+                ApplyParameters(cmd, parameters);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// Executes a insert query and returns the last inserted ID.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters for the query.</param>
+        /// <returns></returns>
+        private long ExecuteInsert(string query, Dictionary<string, object> parameters)
+        {
+            using (MySqlCommand cmd = new MySqlCommand(query, Connection))
+            {
+                ApplyParameters(cmd, parameters);
+
+                cmd.ExecuteNonQuery();
+
+                return cmd.LastInsertedId;
+            }
+        }
+
+        /// <summary>
+        /// Applies the parameters to the MySqlCommand.
+        /// </summary>
+        /// <param name="cmd">The MySqlCommand object.</param>
+        /// <param name="parameters">The parameters to apply.</param>
+        private void ApplyParameters(MySqlCommand cmd, Dictionary<string, object> parameters)
+        {
+            foreach (KeyValuePair<string, object> parameter in parameters)
+            {
+                cmd.Parameters.Add(new MySqlParameter(parameter.Key, parameter.Value));
+            }
+        }
+
+        /// <summary>
+        /// The different type of queries.
+        /// </summary>
+        public enum QueryType
+        {
+            NonQuery,
+            Return,
+            DataSet,
+            Insert
         }
     }
 }

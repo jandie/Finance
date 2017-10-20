@@ -47,7 +47,6 @@
     <Compile Include="Encryption.cs" />
     <Compile Include="Hashing.cs" />
     <Compile Include="Interfaces\IBalanceHistoryContext.cs" />
-    <Compile Include="Interfaces\IDatabaseClosable.cs" />
     <Compile Include="Interfaces\ILanguageContext.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

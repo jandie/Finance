@@ -8,11 +8,10 @@ using Library.Enums;
 using Library.Exceptions;
 using Library.Interfaces;
 using Library.Utils;
-using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
-    public class DataSqlContext : IDataContext, IDatabaseClosable
+    public class DataSqlContext : IDataContext
     {
         private readonly Database _db;
         private readonly Encryption _encryption;
@@ -21,11 +20,6 @@ namespace Database.SqlContexts
         {
             _db = database;
             _encryption = new Encryption();
-        }
-
-        public void CloseDb()
-        {
-            _db.Close();
         }
 
         #region User
@@ -43,25 +37,26 @@ namespace Database.SqlContexts
         public User CreateUser(string name, string lastName, string email, string password, int currencyId,
             int languageId)
         {
-            MySqlConnection connection = _db.Connection;
-            MySqlCommand command =
-                new MySqlCommand(
-                    "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD, CURRENCY, LANGUAGE, NAMESALT, LASTNAMESALT) VALUES (@name, @lastName, @email, @password, @currencyId, @languageId, @nameSalt, @lastNameSalt)",
-                    connection) {CommandType = CommandType.Text};
+            const string query =
+                "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD, CURRENCY, LANGUAGE, NAMESALT, LASTNAMESALT) " +
+                "VALUES (@name, @lastName, @email, @password, @currencyId, @languageId, @nameSalt, @lastNameSalt)";
 
             string nameSalt = Hashing.GenerateSalt();
             string lastNameSalt = Hashing.GenerateSalt();
 
-            command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(name, password, nameSalt)));
-            command.Parameters.Add(new MySqlParameter("@lastName", _encryption.EncryptText(lastName, password, lastNameSalt)));
-            command.Parameters.Add(new MySqlParameter("@email", email));
-            command.Parameters.Add(new MySqlParameter("@password", Hashing.CreateHash(password)));
-            command.Parameters.Add(new MySqlParameter("@currencyId", currencyId));
-            command.Parameters.Add(new MySqlParameter("@languageId", languageId));
-            command.Parameters.Add(new MySqlParameter("@nameSalt", nameSalt));
-            command.Parameters.Add(new MySqlParameter("@lastNameSalt", lastNameSalt));
+            Dictionary<string, object> parameters = new Dictionary<string, object>()
+            {
+                {"name", _encryption.EncryptText(name, password, nameSalt)},
+                {"lastName", _encryption.EncryptText(lastName, password, lastNameSalt)},
+                {"email", email},
+                {"password", Hashing.CreateHash(password)},
+                {"currencyId", currencyId},
+                {"languageId", languageId},
+                {"nameSalt", nameSalt},
+                {"lastNameSalt", lastNameSalt}
+            };
 
-            command.ExecuteNonQuery();
+            _db.Execute(query, parameters, Database.QueryType.NonQuery);
 
             return LoginUser(email, password);
         }
@@ -75,63 +70,38 @@ namespace Database.SqlContexts
         public User LoginUser(string email, string password)
         {
             User user;
-            
-            MySqlConnection connection = _db.Connection;
-            MySqlCommand command =
-                new MySqlCommand(
-                    "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD, U.NAMESALT, U.LASTNAMESALT FROM USER U " +
-                    "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;",
-                    connection) {CommandType = CommandType.Text};
+            const string query =
+                "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD, U.NAMESALT, U.LASTNAMESALT FROM USER U " +
+                "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;";
 
-            command.Parameters.Add(new MySqlParameter("@email", email));
-
-            using (MySqlDataReader reader = command.ExecuteReader())
+            Dictionary<string, object> parameters = new Dictionary<string, object>()
             {
-                if (!reader.Read())
-                {
-                    reader.Close();
+                {"email", email}
+            };
 
-                    throw new WrongUsernameOrPasswordException();
-                }
+            using (DataTable table = _db.Execute(query, parameters, Database.QueryType.Return) as DataTable)
+            {
+                if (table == null || table.Rows.Count < 1) throw new WrongUsernameOrPasswordException();
+                DataRow row = table.Rows[0];
 
-                string hash = reader.GetString(8);
+                string hash = row[8] as string;
                 string salt = Hashing.ExtractSalt(hash);
-                int id = reader.GetInt32(0);
-                
-                int languageId = reader.GetInt32(3);
-                int currencyId = reader.GetInt32(4);
-                string currencyAbbrevation = reader.GetString(5);
-                string currencyName = reader.GetString(6);
-                string currencyHtml = reader.GetString(7);
+                int id = Convert.ToInt32(row[0]);
 
-                string name;
-                string lastName;
+                int languageId = Convert.ToInt32(row[3]);
+                int currencyId = Convert.ToInt32(row[4]);
+                string currencyAbbrevation = row[5] as string;
+                string currencyName = row[6] as string;
+                string currencyHtml = row[7] as string;
 
                 Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
 
                 if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
 
-                //Ensure backwards compability with old encryption protocol
-                if (reader.IsDBNull(9) || reader.IsDBNull(10))
-                {
-                    name = _encryption.DecryptText(reader.GetString(1), password, salt);
-                    lastName = _encryption.DecryptText(reader.GetString(2), password, salt);
+                string name = _encryption.DecryptText(row[1] as string, password, row[9] as string);
+                string lastName = _encryption.DecryptText(row[2] as string, password, row[10] as string);
 
-                    reader.Close();
-
-                    user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt);
-
-                    new ChangeSqlContext(_db).ChangeUser(user, password);
-                }
-                else
-                {
-                    name = _encryption.DecryptText(reader.GetString(1), password, reader.GetString(9));
-                    lastName = _encryption.DecryptText(reader.GetString(2), password, reader.GetString(10));
-
-                    reader.Close();
-
-                    user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt);
-                }
+                user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt);
 
                 GetBalancesOfUser(id, password, salt).ForEach(b => user.AddBalance(b));
                 GetPaymentsOfUser(id, password, salt).ForEach(p => user.AddPayment(p));
@@ -149,18 +119,15 @@ namespace Database.SqlContexts
         private string UpdateToken(string email)
         {
             string ranString = RanUtil.RandomString(10);
+            const string query = "UPDATE user SET Token = @ranString WHERE email = @email";
 
-            MySqlConnection connection = _db.Connection;
-            MySqlCommand command =
-                new MySqlCommand(
-                    "UPDATE user SET Token = @ranString WHERE email = @email",
-                    connection)
-                { CommandType = CommandType.Text };
+            Dictionary<string, object> parameters = new Dictionary<string, object>()
+            {
+                {"ranString",  ranString},
+                {"email", email}
+            };
 
-            command.Parameters.Add(new MySqlParameter("@ranString", ranString));
-            command.Parameters.Add(new MySqlParameter("@email", email));
-
-            command.ExecuteNonQuery();
+            _db.Execute(query, parameters, Database.QueryType.NonQuery);
 
             return ranString;
         }
@@ -174,21 +141,15 @@ namespace Database.SqlContexts
         public bool TokenChanged(string email, string token)
         {
             string tokenFromDb = null;
+            const string query = "SELECT TOKEN FROM USER WHERE EMAIL = @email";
 
-            MySqlConnection connection = _db.Connection;
-            MySqlCommand command =
-                new MySqlCommand(
-                    "SELECT TOKEN FROM USER WHERE EMAIL = @email",
-                    connection)
-                { CommandType = CommandType.Text };
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
 
-            command.Parameters.Add(new MySqlParameter("@email", email));
-
-            using (MySqlDataReader reader = command.ExecuteReader())
+            using (DataTable table = _db.Execute(query, parameters, Database.QueryType.Return) as DataTable)
             {
-                if (reader.Read())
+                if (table != null && table.Rows.Count > 0)
                 {
-                    tokenFromDb = reader.GetString(0);
+                    tokenFromDb = table.Rows[0][0] as string;
                 }
             }
 
@@ -205,43 +166,26 @@ namespace Database.SqlContexts
         public List<Balance> GetBalancesOfUser(int userId, string password, string salt)
         {
             List<Balance> bankAccounts = new List<Balance>();
-            
-            MySqlConnection conneciton = _db.Connection;
-            MySqlCommand command =
-                new MySqlCommand("SELECT ID, BALANCE, NAME, BALANCESALT, NAMESALT " +
+            const string query = "SELECT ID, BALANCE, NAME, BALANCESALT, NAMESALT " +
                                  "FROM BANKACCOUNT " +
-                                 "WHERE USER_ID = @userId AND Active = 1",
-                    conneciton)
-                {CommandType = CommandType.Text};
+                                 "WHERE USER_ID = @userId AND Active = 1";
 
-            command.Parameters.Add(new MySqlParameter("@userId", userId));
-
-            using (MySqlDataReader reader = command.ExecuteReader())
+            Dictionary<string, object> parameters = new Dictionary<string, object>
             {
-                while (reader.Read())
+                {"userId", userId}
+            };
+
+            using (DataTable table = _db.Execute(query, parameters, Database.QueryType.Return) as DataTable)
+            {
+                if (table == null || table.Rows.Count < 1) return bankAccounts;
+
+                foreach (DataRow row in table.Rows)
                 {
-                    int id = reader.GetInt32(0);
-                    decimal balance;
-                    string name;
-
-                    //Ensure backwards compability with old encryption protocol
-                    if (reader.IsDBNull(3) || reader.IsDBNull(4)) 
-                    {
-                        balance = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(1), password, salt));
-                        name = _encryption.DecryptText(reader.GetString(2), password, salt);
-
-                        Balance objBalance = new Balance(id, name, balance);
-
-                        new ChangeSqlContext(_db).ChangeBalance(objBalance, password);
-                    }
-                    else
-                    {
-                        string balanceSalt = reader.GetString(3);
-                        string nameSalt = reader.GetString(4);
-
-                        balance = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(1), password, balanceSalt));
-                        name = _encryption.DecryptText(reader.GetString(2), password, nameSalt);
-                    }
+                    int id = Convert.ToInt32(row[0]);
+                    string balanceSalt = row[3] as string;
+                    string nameSalt = row[4] as string;
+                    decimal balance = Convert.ToDecimal(_encryption.DecryptText(row[1] as string, password, balanceSalt));
+                    string name = _encryption.DecryptText(row[2] as string, password, nameSalt);
 
                     bankAccounts.Add(new Balance(id, name, balance));
                 }
@@ -260,44 +204,28 @@ namespace Database.SqlContexts
         public List<IPayment> GetPaymentsOfUser(int userId, string password, string salt)
         {
             List<IPayment> payments = new List<IPayment>();
-            
-            MySqlConnection connection = _db.Connection;
-            MySqlCommand command =
-                new MySqlCommand("SELECT ID, NAME, AMOUNT, TYPE, NAMESALT, AMOUNTSALT " +
+            const string query = "SELECT ID, NAME, AMOUNT, TYPE, NAMESALT, AMOUNTSALT " +
                                  "FROM PAYMENT " +
-                                 "WHERE USER_ID = @userId AND Active = 1",
-                    connection)
-                {CommandType = CommandType.Text};
+                                 "WHERE USER_ID = @userId AND Active = 1";
 
-            command.Parameters.Add(new MySqlParameter("@userId", userId));
-
-            using (MySqlDataReader reader = command.ExecuteReader())
+            Dictionary<string, object> parameters = new Dictionary<string, object>
             {
-                while (reader.Read())
+                {"userId",  userId}
+            };
+
+            using (DataTable table = _db.Execute(query, parameters, Database.QueryType.Return) as DataTable)
+            {
+                if (table == null || table.Rows.Count < 1) return payments;
+                foreach (DataRow row in table.Rows)
                 {
-                    int id = reader.GetInt32(0);
-                    string name;
-                    decimal amount;
-                    PaymentType type = (PaymentType)Enum.Parse(typeof(PaymentType), reader.GetString(3));
+                    int id = Convert.ToInt32(row[0]);
+                    PaymentType type = (PaymentType)Enum.Parse(typeof(PaymentType), (string)row[3]);
 
-                    //Ensure backwards compability with old encryption protocol
-                    if (reader.IsDBNull(4) || reader.IsDBNull(5))
-                    {
-                        name = _encryption.DecryptText(reader.GetString(1), password, salt);
-                        amount = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(2), password, salt));
+                    string nameSalt = row[4] as string;
+                    string amountSalt = row[5] as string;
 
-                        Payment payment = new MonthlyBill(id, name, amount, type);
-                        
-                        new ChangeSqlContext(_db).ChangePayment(payment, password);
-                    }
-                    else
-                    {
-                        string nameSalt = reader.GetString(4);
-                        string amountSalt = reader.GetString(5);
-
-                        name = _encryption.DecryptText(reader.GetString(1), password, nameSalt);
-                        amount = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(2), password, amountSalt));
-                    }
+                    string name = _encryption.DecryptText(row[1] as string, password, nameSalt);
+                    decimal amount = Convert.ToDecimal(_encryption.DecryptText(row[2] as string, password, amountSalt));
 
                     switch (type)
                     {
@@ -313,7 +241,7 @@ namespace Database.SqlContexts
                 }
             }
 
-            payments.ForEach(p => GetTransactionsOfPayment(p, password, salt, 
+            payments.ForEach(p => GetTransactionsOfPayment(p, password, salt,
                 DateTime.Now.ToString("yyyy-MM")).ForEach(p.AddTransaction));
 
             return payments;
@@ -332,52 +260,38 @@ namespace Database.SqlContexts
         public List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string salt, string monthYear = null)
         {
             List<Transaction> transactions = new List<Transaction>();
-            
-            MySqlConnection connecion = _db.Connection;
-            MySqlCommand command =
-                new MySqlCommand(
-                    "SELECT ID, AMOUNT, DESCRIPTION, AMOUNTSALT, DESCRIPTIONSALT " +
-                    "FROM TRANSACTION " +
-                    "WHERE PAYMENT_ID = @paymentId AND DateAdded LIKE @month AND Active = 1",
-                    connecion)
-                {CommandType = CommandType.Text};
+            const string query = "SELECT ID, AMOUNT, DESCRIPTION, AMOUNTSALT, DESCRIPTIONSALT " +
+                                 "FROM TRANSACTION " +
+                                 "WHERE PAYMENT_ID = @paymentId AND DateAdded LIKE @month AND Active = 1";
 
             if (string.IsNullOrWhiteSpace(monthYear)) monthYear = "";
 
-            command.Parameters.Add(new MySqlParameter("@paymentId", payment.Id));
-            command.Parameters.Add(new MySqlParameter("@month", $"%{monthYear}%"));
-
-            using (MySqlDataReader reader = command.ExecuteReader())
+            Dictionary<string, object> parameters = new Dictionary<string, object>
             {
-                while (reader.Read())
+                {"paymentId", payment.Id},
+                {"month", $"%{monthYear}%"}
+            };
+
+            using (DataTable table = _db.Execute(query, parameters, Database.QueryType.Return) as DataTable)
+            {
+                if (table == null || table.Rows.Count < 1) return transactions;
+                foreach (DataRow row in table.Rows)
                 {
-                    int id = reader.GetInt32(0);
-                    decimal amount;
-                    string description;
+                    int id = Convert.ToInt32(row[0]);
+                    string amountSalt = row[3] as string;
+                    string descriptionSalt = row[4] as string;
+                    decimal amount = Convert.ToDecimal(_encryption.DecryptText(row[1] as string, password, amountSalt));
+                    string description = _encryption.DecryptText(row[2] as string, password, descriptionSalt);
 
-                    //Ensure backwards compability with old encryption protocol
-                    if (reader.IsDBNull(3) || reader.IsDBNull(4))
+                    switch (payment)
                     {
-                        amount = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(1), password, salt));
-                        description = _encryption.DecryptText(reader.GetString(2), password, salt);
-
-                        Transaction transaction = new Transaction(id, amount, description, false);
-
-                        new ChangeSqlContext(_db).ChangeTransaction(transaction, password);
+                        case MonthlyBill _:
+                            transactions.Add(new Transaction(id, amount, description, false));
+                            break;
+                        case MonthlyIncome _:
+                            transactions.Add(new Transaction(id, amount, description, true));
+                            break;
                     }
-                    else
-                    {
-                        string amountSalt = reader.GetString(3);
-                        string descriptionSalt = reader.GetString(4);
-
-                        amount = Convert.ToDecimal(_encryption.DecryptText(reader.GetString(1), password, amountSalt));
-                        description = _encryption.DecryptText(reader.GetString(2), password, descriptionSalt);
-                    }
-
-                    if (payment is MonthlyBill)
-                        transactions.Add(new Transaction(id, amount, description, false));
-                    else if (payment is MonthlyIncome)
-                        transactions.Add(new Transaction(id, amount, description, true));
                 }
             }
 
@@ -393,19 +307,17 @@ namespace Database.SqlContexts
         public List<Currency> LoadCurrencies()
         {
             List<Currency> currencies = new List<Currency>();
+            const string query = "SELECT ID, ABBREVATION, NAME, HTML FROM CURRENCY";
 
-            MySqlConnection connecion = _db.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME, HTML FROM CURRENCY", connecion)
-            { CommandType = CommandType.Text };
-
-            using (MySqlDataReader reader = command.ExecuteReader())
+            using (DataTable table = _db.Execute(query, null, Database.QueryType.Return) as DataTable)
             {
-                while (reader.Read())
+                if (table == null || table.Rows.Count < 1) return currencies;
+                foreach (DataRow row in table.Rows)
                 {
-                    int id = reader.GetInt32(0);
-                    string abbrevation = reader.GetString(1);
-                    string name = reader.GetString(2);
-                    string html = reader.GetString(3);
+                    int id = Convert.ToInt32(row[0]);
+                    string abbrevation = row[1] as string;
+                    string name = row[2] as string;
+                    string html = row[3] as string;
 
                     currencies.Add(new Currency(id, abbrevation, name, html));
                 }
@@ -421,18 +333,16 @@ namespace Database.SqlContexts
         public List<Language> LoadLanguages()
         {
             List<Language> languages = new List<Language>();
+            const string query = "SELECT ID, ABBREVATION, NAME FROM LANGUAGE";
 
-            MySqlConnection connecion = _db.Connection;
-            MySqlCommand command = new MySqlCommand("SELECT ID, ABBREVATION, NAME FROM LANGUAGE", connecion)
-            { CommandType = CommandType.Text };
-
-            using (MySqlDataReader reader = command.ExecuteReader())
+            using (DataTable table = _db.Execute(query, null, Database.QueryType.Return) as DataTable)
             {
-                while (reader.Read())
+                if (table == null || table.Rows.Count < 1) return languages;
+                foreach (DataRow row in table.Rows)
                 {
-                    int id = reader.GetInt32(0);
-                    string abbrevation = reader.GetString(1);
-                    string name = reader.GetString(2);
+                    int id = Convert.ToInt32(row[0]);
+                    string abbrevation = row[1] as string;
+                    string name = row[2] as string;
 
                     languages.Add(new Language(id, abbrevation, name));
                 }

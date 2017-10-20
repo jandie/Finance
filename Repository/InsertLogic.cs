@@ -18,6 +18,13 @@ namespace Repository
             _context = new InsertSqlContext(_database);
         }
 
+        /// <summary>
+        /// Adds balance to a user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="name">The name of the balance.</param>
+        /// <param name="balance">The balance amount of the balance.</param>
+        /// <param name="password">The password for encryption.</param>
         public void AddBankAccount(User user, string name, decimal balance, string password)
         {
             try
@@ -36,12 +43,16 @@ namespace Repository
             {
                 Console.WriteLine(ex.ToString());
             }
-            finally
-            {
-                _database.Close();
-            }
         }
 
+        /// <summary>
+        /// Adds a payment to a user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="name">The name of the payment.</param>
+        /// <param name="amount">The amount of the payment.</param>
+        /// <param name="type">The type of payment.</param>
+        /// <param name="password">The password for encryption.</param>
         public void AddPayment(User user, string name, decimal amount, PaymentType type, string password)
         {
             try
@@ -74,12 +85,18 @@ namespace Repository
             {
                 Console.WriteLine(ex.ToString());
             }
-            finally
-            {
-                _database.Close();
-            }
         }
 
+        /// <summary>
+        /// Adds a transaction to a balance of a user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="paymentId">The id of the transaction.</param>
+        /// <param name="balanceId">The id of the balance the transaction belongs to.</param>
+        /// <param name="amount">The amount of the transaction.</param>
+        /// <param name="description">The description of the transaction.</param>
+        /// <param name="password">The password for encryption.</param>
+        /// <returns>Whether or not the action was a success.</returns>
         public bool AddTransaction(User user, int paymentId, int balanceId, decimal amount, 
             string description, string password)
         {
@@ -111,15 +128,16 @@ namespace Repository
 
                 if (balance == null) return true;
 
-                if (payment is MonthlyBill)
+                switch (payment)
                 {
-                    new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
-                        balance.BalanceAmount - amount, password);
-                }
-                else if (payment is MonthlyIncome)
-                {
-                    new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
-                        balance.BalanceAmount + amount, password);
+                    case MonthlyBill _:
+                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
+                            balance.BalanceAmount - amount, password);
+                        break;
+                    case MonthlyIncome _:
+                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
+                            balance.BalanceAmount + amount, password);
+                        break;
                 }
 
                 new BalanceHistoryLogic(_database).UpdateBalance(user, password);
@@ -129,10 +147,6 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 return false;
-            }
-            finally
-            {
-                _database.Close();
             }
 
             return true;

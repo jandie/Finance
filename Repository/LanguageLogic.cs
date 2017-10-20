@@ -14,14 +14,18 @@ namespace Repository
         {
             _context = new LanguageSqlContext();
         }
-
-        public void AddLanguages(List<Language> language)
+        
+        /// <summary>
+        /// Cleans all languages and adds a list of new ones.
+        /// </summary>
+        /// <param name="languages">List of new languages.</param>
+        public void AddLanguages(List<Language> languages)
         {
             try
             {
                 _context.Clean();
 
-                language.ForEach(l => _context.AddLaguage(l));
+                languages.ForEach(l => _context.AddLaguage(l));
             }
             catch (Exception ex)
             {
@@ -29,12 +33,13 @@ namespace Repository
 
                 throw;
             }
-            finally
-            {
-                (_context as IDatabaseClosable)?.CloseDb();
-            }
         }
 
+        /// <summary>
+        /// Loads a loanguage based on the id.
+        /// </summary>
+        /// <param name="id">The id of the language.</param>
+        /// <returns>The language that was found.</returns>
         public Language LoadLanguage(int id)
         {
             try
@@ -46,10 +51,6 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 throw;
-            }
-            finally
-            {
-                (_context as IDatabaseClosable)?.CloseDb();
             }
         }
     }

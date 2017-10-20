@@ -19,6 +19,15 @@ namespace Repository
             _context = new ChangeSqlContext(_database);
         }
 
+        /// <summary>
+        /// Changes a Balance of the User.
+        /// </summary>
+        /// <param name="user">The User.</param>
+        /// <param name="balanceId">The ID of the Balance of the User.</param>
+        /// <param name="name">The name of the Balance.</param>
+        /// <param name="balanceAmount">The amount of the balance.</param>
+        /// <param name="password">The password used for encyption.</param>
+        /// <returns>Whether or not the action was completed successfully.</returns>
         public bool ChangeBalance(User user, int balanceId, string name, 
             decimal balanceAmount, string password)
         {
@@ -43,22 +52,26 @@ namespace Repository
 
                 return false;
             }
-            finally
-            {
-                _database.Close();
-            }
 
             return true;
         }
 
+        /// <summary>
+        /// Changes a payment of the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="paymentId">The id of the payment of the user.</param>
+        /// <param name="name">The name of the payment.</param>
+        /// <param name="amount">The amount of the payment.</param>
+        /// <param name="password">The password used for encryption.</param>
+        /// <returns>Whether or not the action was completed successfully.</returns>
         public bool ChangePayment(User user, int paymentId, string name, decimal amount, string password)
         {
             try
             {
                 IPayment payment = user.GetPayment(paymentId);
-                Payment dummyPayment = payment as Payment;
 
-                if (dummyPayment == null) return false;
+                if (!(payment is Payment dummyPayment)) return false;
 
                 dummyPayment = (Payment)dummyPayment.Clone();
 
@@ -78,14 +91,19 @@ namespace Repository
 
                 return false;
             }
-            finally
-            {
-                _database.Close();
-            }
 
             return true;
         }
 
+        /// <summary>
+        /// Changes a transaction of the user.
+        /// </summary>
+        /// <param name="user">The user itself./</param>
+        /// <param name="transactionId">The id of the transaction.</param>
+        /// <param name="amount">The amount of the transaction.</param>
+        /// <param name="description">The description of the transaction.</param>
+        /// <param name="password">The password used for encryption.</param>
+        /// <returns>Whether or not the action was completed with success.</returns>
         public bool ChangeTransaction(User user, int transactionId, decimal amount, string description, string password)
         {
             try
@@ -109,16 +127,25 @@ namespace Repository
 
                 return false;
             }
-            finally
-            {
-                _database.Close();
-            }
 
             return true;
         }
 
+        /// <summary>
+        /// Changes the user itself.
+        /// </summary>
+        /// <param name="user">The user itself.</param>
+        /// <param name="name">The name of the user.</param>
+        /// <param name="lastName">The lastname of the user.</param>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="currencyId">The currency id of the user.</param>
+        /// <param name="languageId">The language id of the user.</param>
+        /// <param name="currentPassword">The users current password.</param>
+        /// <param name="newPassword">The users new password.</param>
+        /// <param name="repeatedPassword">The users current password again.</param>
+        /// <param name="language">The users language.</param>
         public void ChangeUser(User user, string name, string lastName, string email, int currencyId, int languageId,
-            string currentPassword, string newPassword, string repeatedPassword, Language language, string salt)
+            string currentPassword, string newPassword, string repeatedPassword, Language language)
         {
             try
             {
@@ -156,10 +183,6 @@ namespace Repository
                 Console.WriteLine(ex.ToString());
 
                 throw;
-            }
-            finally
-            {
-                _database.Close();
             }
         }
     }
