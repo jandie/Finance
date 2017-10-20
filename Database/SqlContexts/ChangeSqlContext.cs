@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Data;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using Database.Interfaces;
 using Library.Classes;
 using Library.Exceptions;
-using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
@@ -28,25 +28,23 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command =
-                    new MySqlCommand("UPDATE BANKACCOUNT " +
+                const string query = "UPDATE BANKACCOUNT " +
                                      "SET NAME = @name, BALANCE = @balanceAmount, NAMESALT = @nameSalt, BALANCESALT = @balanceSalt " +
-                                     "WHERE ID = @id",
-                        connection)
-                    { CommandType = CommandType.Text };
+                                     "WHERE ID = @id";
 
                 balance.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(balance.Name));
-                balance.BalanceAmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(balance.BalanceAmount)));
+                balance.BalanceAmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(balance.BalanceAmount, CultureInfo.InvariantCulture)));
 
-                command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(balance.Name, password, balance.NameSalt)));
-                command.Parameters.Add(new MySqlParameter("@balanceAmount",
-                    _encryption.EncryptText(Convert.ToString(balance.BalanceAmount), password, balance.BalanceAmountSalt)));
-                command.Parameters.Add(new MySqlParameter("@nameSalt", balance.NameSalt));
-                command.Parameters.Add(new MySqlParameter("@balanceSalt", balance.BalanceAmountSalt));
-                command.Parameters.Add(new MySqlParameter("@id", balance.Id));
+                Dictionary<string, object> parameters = new Dictionary<string, object>()
+                {
+                    {"name",  _encryption.EncryptText(balance.Name, password, balance.NameSalt)},
+                    {"balanceAmount",  _encryption.EncryptText(Convert.ToString(balance.BalanceAmount, CultureInfo.InvariantCulture), password, balance.BalanceAmountSalt)},
+                    {"nameSalt",  balance.NameSalt},
+                    {"balanceSalt",  balance.BalanceAmountSalt},
+                    {"id", balance.Id},
+                };
 
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NoReturn);
             }
             catch (Exception ex)
             {
@@ -65,23 +63,23 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command = new MySqlCommand("UPDATE PAYMENT " +
-                                                        "SET NAME = @name, AMOUNT = @amount, NAMESALT = @nameSalt, AMOUNTSALT = @amountSalt " +
-                                                        "WHERE ID = @id",
-                    connection)
-                { CommandType = CommandType.Text };
+                const string query = "UPDATE PAYMENT " +
+                                     "SET NAME = @name, AMOUNT = @amount, NAMESALT = @nameSalt, AMOUNTSALT = @amountSalt " +
+                                     "WHERE ID = @id";
 
                 payment.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(payment.Name));
-                payment.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(payment.Amount)));
+                payment.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(payment.Amount, CultureInfo.InvariantCulture)));
 
-                command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(payment.Name, password, payment.NameSalt)));
-                command.Parameters.Add(new MySqlParameter("@amount", _encryption.EncryptText(payment.Amount.ToString(), password, payment.AmountSalt)));
-                command.Parameters.Add(new MySqlParameter("@nameSalt", payment.NameSalt));
-                command.Parameters.Add(new MySqlParameter("@amountSalt", payment.AmountSalt));
-                command.Parameters.Add(new MySqlParameter("@id", payment.Id));
+                Dictionary<string, object> parameters = new Dictionary<string, object>()
+                {
+                    {"name", _encryption.EncryptText(payment.Name, password, payment.NameSalt)},
+                    {"amount", _encryption.EncryptText(payment.Amount.ToString(CultureInfo.InvariantCulture), password, payment.AmountSalt)},
+                    {"nameSalt", payment.NameSalt},
+                    {"amountSalt", payment.AmountSalt},
+                    {"id", payment.Id}
+                };
 
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NoReturn);
             }
             catch (Exception ex)
             {
@@ -100,24 +98,23 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command =
-                    new MySqlCommand("UPDATE TRANSACTION " +
+                const string query = "UPDATE TRANSACTION " +
                                      "SET AMOUNT = @amount, DESCRIPTION = @description, AMOUNTSALT = @amountSalt, DESCRIPTIONSALT = @descriptionSalt " +
-                                     "WHERE ID = @id",
-                        connection)
-                    { CommandType = CommandType.Text };
+                                     "WHERE ID = @id";
 
-                transaction.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(transaction.Amount)));
+                transaction.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(transaction.Amount, CultureInfo.InvariantCulture)));
                 transaction.DescriptionSalt = Hashing.ExtractSalt(Hashing.CreateHash(transaction.Description));
 
-                command.Parameters.Add(new MySqlParameter("@amount", _encryption.EncryptText(transaction.Amount.ToString(), password, transaction.AmountSalt)));
-                command.Parameters.Add(new MySqlParameter("@description", _encryption.EncryptText(transaction.Description, password, transaction.DescriptionSalt)));
-                command.Parameters.Add(new MySqlParameter("@amountSalt", transaction.AmountSalt));
-                command.Parameters.Add(new MySqlParameter("@descriptionSalt", transaction.DescriptionSalt));
-                command.Parameters.Add(new MySqlParameter("@id", transaction.Id));
+                Dictionary<string, object> parameters = new Dictionary<string, object>()
+                {
+                    {"amount", _encryption.EncryptText(transaction.Amount.ToString(CultureInfo.InvariantCulture), password, transaction.AmountSalt)},
+                    {"description", _encryption.EncryptText(transaction.Description, password, transaction.DescriptionSalt)},
+                    {"amountSalt", transaction.AmountSalt},
+                    {"descriptionSalt", transaction.DescriptionSalt},
+                    {"id", transaction.Id}
+                };
 
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NoReturn);
             }
             catch (Exception ex)
             {
@@ -136,27 +133,25 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command =
-                    new MySqlCommand(
-                        "UPDATE USER " +
-                        "SET NAME = @name, LASTNAME = @lastName, CURRENCY = @currencyId, LANGUAGE = @languageId, NAMESALT = @nameSalt, LASTNAMESALT = @lastNameSalt " +
-                        "WHERE EMAIL = @email",
-                        connection)
-                    { CommandType = CommandType.Text };
+                const string query = "UPDATE USER " +
+                                     "SET NAME = @name, LASTNAME = @lastName, CURRENCY = @currencyId, LANGUAGE = @languageId, NAMESALT = @nameSalt, LASTNAMESALT = @lastNameSalt " +
+                                     "WHERE EMAIL = @email";
 
                 string nameSalt = Hashing.GenerateSalt();
                 string lastNameSalt = Hashing.GenerateSalt();
 
-                command.Parameters.Add(new MySqlParameter("@name", _encryption.EncryptText(user.Name, password, nameSalt)));
-                command.Parameters.Add(new MySqlParameter("@lastName", _encryption.EncryptText(user.LastName, password, lastNameSalt)));
-                command.Parameters.Add(new MySqlParameter("@currencyId", user.Currency.Id));
-                command.Parameters.Add(new MySqlParameter("@languageId", user.LanguageId));
-                command.Parameters.Add(new MySqlParameter("@email", user.Email));
-                command.Parameters.Add(new MySqlParameter("@nameSalt", nameSalt));
-                command.Parameters.Add(new MySqlParameter("@lastNameSalt", lastNameSalt));
+                Dictionary<string, object> parameters = new Dictionary<string, object>()
+                {
+                    {"name", _encryption.EncryptText(user.Name, password, nameSalt)},
+                    {"lastName", _encryption.EncryptText(user.LastName, password, lastNameSalt)},
+                    {"currencyId", user.Currency.Id},
+                    {"languageId", user.LanguageId},
+                    {"email", user.Email},
+                    {"nameSalt", nameSalt},
+                    {"lastNameSalt", lastNameSalt}
+                };
 
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NoReturn);
             }
             catch (Exception ex)
             {
@@ -175,17 +170,16 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command =
-                    new MySqlCommand("UPDATE USER SET PASSWORD = @newPassword " +
-                                     "WHERE EMAIL = @email",
-                        connection)
-                    { CommandType = CommandType.Text };
+                const string query = "UPDATE USER SET PASSWORD = @newPassword " +
+                                     "WHERE EMAIL = @email";
 
-                command.Parameters.Add(new MySqlParameter("@newPassword", Hashing.CreateHash(newPassword)));
-                command.Parameters.Add(new MySqlParameter("@email", email));
+                Dictionary<string, object> parameters = new Dictionary<string, object>()
+                {
+                    {"newPassword", Hashing.CreateHash(newPassword)},
+                    {"email", email}
+                };
 
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NoReturn);
             }
             catch (Exception ex)
             {
