@@ -15,6 +15,11 @@ namespace Repository
             _context = new BalanceHistorySqlContext(database);
         }
 
+        /// <summary>
+        /// Updates the Balance of an User.
+        /// </summary>
+        /// <param name="user">The User to update the Balance from.</param>
+        /// <param name="password">The password used for encryption.</param>
         public void UpdateBalance(User user, string password)
         {
             try
@@ -31,6 +36,12 @@ namespace Repository
             }
         }
 
+        /// <summary>
+        /// Gets recent balancehistory of the User.
+        /// </summary>
+        /// <param name="user">The User to get the history from.</param>
+        /// <param name="password">The password used for encryption.</param>
+        /// <returns>Recent balancehistory.</returns>
         public List<BalanceHistory> GetBalanceHistoryOfUser(User user, string password)
         {
             User dummyUser = new User(-1, "", "", "", -1, null, "", "");
@@ -50,6 +61,11 @@ namespace Repository
             return dummyUser.BalanceHistories;
         }
 
+        /// <summary>
+        /// Fills the gaps in the List of balancehistories.
+        /// </summary>
+        /// <param name="balanceHistoryList">The list of balancyhistories.</param>
+        /// <returns>A new list of balancehistories with the gaps filed.</returns>
         private List<BalanceHistory> FillHistory(IReadOnlyList<BalanceHistory> balanceHistoryList)
         {
             List<BalanceHistory> balanceHistories = new List<BalanceHistory>();
@@ -68,6 +84,12 @@ namespace Repository
             return balanceHistories;
         }
 
+        /// <summary>
+        /// Fills hsitory between 2 balancehistories.
+        /// </summary>
+        /// <param name="begin">The first balancehistory.</param>
+        /// <param name="end">The last balancehistory.</param>
+        /// <returns>History between the 2 histories including the begin and end history.</returns>
         private List<BalanceHistory> FillBetweenHistories(BalanceHistory begin, BalanceHistory end)
         {
             List<BalanceHistory> balanceHistories = new List<BalanceHistory> {begin};
@@ -89,7 +111,6 @@ namespace Repository
             }
 
             balanceHistories.Add(end);
-
             balanceHistories.Remove(begin);
 
             return balanceHistories;
