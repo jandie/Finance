@@ -77,7 +77,8 @@ namespace Database.SqlContexts
 
                 using (DataTable table = _db.Execute(query, parameters, Database.QueryType.Return) as DataTable)
                 {
-                    if (table != null) id = Convert.ToInt32(table.Rows[0][0]);
+                    if (table != null && table.Rows.Count > 1)
+                        id = Convert.ToInt32(table.Rows[0][0]);
                 }
 
                 return id;
