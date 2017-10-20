@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Data;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Database.Interfaces;
 using Library.Exceptions;
-using MySql.Data.MySqlClient;
 
 namespace Database.SqlContexts
 {
@@ -43,16 +42,15 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command = new MySqlCommand("UPDATE USER SET ACTIVE = @status WHERE ID = @id", connection)
+                const string query = "UPDATE USER SET ACTIVE = @status WHERE ID = @id";
+                
+                Dictionary<string, object> parameters = new Dictionary<string, object>
                 {
-                    CommandType = CommandType.Text
+                    {"status", status},
+                    {"id", id}
                 };
 
-                command.Parameters.Add(new MySqlParameter("@status", status));
-                command.Parameters.Add(new MySqlParameter("@id", id));
-
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {
@@ -70,15 +68,10 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command = new MySqlCommand("UPDATE BANKACCOUNT SET ACTIVE = 0 WHERE ID = @id", connection)
-                {
-                    CommandType = CommandType.Text
-                };
+                const string query = "UPDATE BANKACCOUNT SET ACTIVE = 0 WHERE ID = @id";
+                Dictionary<string, object> parameters = new Dictionary<string, object>{{"id", id}};
 
-                command.Parameters.Add(new MySqlParameter("@id", id));
-
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {
@@ -96,15 +89,10 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command = new MySqlCommand("UPDATE PAYMENT SET ACTIVE = 0 WHERE ID = @id", connection)
-                {
-                    CommandType = CommandType.Text
-                };
+                const string query = "UPDATE PAYMENT SET ACTIVE = 0 WHERE ID = @id";
+                Dictionary<string, object> parameters = new Dictionary<string, object>{{"id", id}};
 
-                command.Parameters.Add(new MySqlParameter("@id", id));
-
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {
@@ -122,15 +110,10 @@ namespace Database.SqlContexts
         {
             try
             {
-                MySqlConnection connection = _db.Connection;
-                MySqlCommand command = new MySqlCommand("UPDATE TRANSACTION SET ACTIVE = 0 WHERE ID = @id", connection)
-                {
-                    CommandType = CommandType.Text
-                };
+                const string query = "UPDATE TRANSACTION SET ACTIVE = 0 WHERE ID = @id";
+                Dictionary<string, object> parameters = new Dictionary<string, object>{{"id", id}};
 
-                command.Parameters.Add(new MySqlParameter("@id", id));
-
-                command.ExecuteNonQuery();
+                _db.Execute(query, parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {
