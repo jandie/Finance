@@ -20,6 +20,12 @@ namespace Repository
             _context = new DataSqlContext(_database);
         }
 
+        /// <summary>
+        /// Retrieves the user based on email and password.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <returns>The mached user.</returns>
         public User Login(string email, string password)
         {
             try
@@ -38,6 +44,12 @@ namespace Repository
             }
         }
 
+        /// <summary>
+        /// Checks id the users token has'nt changed. If it was changed the user is refreshed.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="password">The password used for encryption.</param>
+        /// <returns></returns>
         public User CheckUser(User user, string password)
         {
             try
@@ -52,6 +64,19 @@ namespace Repository
             }
         }
 
+        /// <summary>
+        /// Creates a new user.
+        /// </summary>
+        /// <param name="name">The name of the user.</param>
+        /// <param name="lastName">The lastname of the user.</param>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="password">The password of the user.</param>
+        /// <param name="password2">The repeated password of the user.</param>
+        /// <param name="currencyId">The currency id preference.</param>
+        /// <param name="languageId">The language id preference.</param>
+        /// <param name="language">The language for error messages.</param>
+        /// <param name="alphaKey">The alpha key for alpha users.</param>
+        /// <returns></returns>
         public User CreateUser(string name, string lastName, string email, string password, string password2,
             int currencyId, int languageId,
             Language language, string alphaKey)
@@ -100,6 +125,10 @@ namespace Repository
             }
         }
 
+        /// <summary>
+        /// Gets all available languages.
+        /// </summary>
+        /// <returns></returns>
         public List<Language> LoadLanguages()
         {
             try
@@ -114,6 +143,10 @@ namespace Repository
             }
         }
 
+        /// <summary>
+        /// Gets all available currencies.
+        /// </summary>
+        /// <returns></returns>
         public List<Currency> LoadCurrencies()
         {
             try
