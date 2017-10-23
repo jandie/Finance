@@ -40,7 +40,11 @@ namespace Language_import
 
         private static void ExecuteRemove(string command)
         {
-            if (command.Split(' ').Length < 3) return;
+            if (command.Split(' ').Length < 3)
+            {
+                Console.WriteLine("No valid remove option found");
+                return;
+            }
 
             switch (command.Split(' ')[1])
             {
@@ -48,7 +52,7 @@ namespace Language_import
                     RemoveUser(command.Split(' ')[2]);
                     break;
                 default:
-                    Console.WriteLine("Invalid command");
+                    Console.WriteLine("No valid remove option found");
                     break;
             }
         }
