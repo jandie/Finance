@@ -135,7 +135,6 @@ namespace FinanceLibrary.Repository.SqlContexts
         /// </summary>
         /// <param name="user">The user to add the balancehistories to.</param>
         /// <param name="month">The month to get the objects from.</param>
-        /// <param name="password">The password for encryption.</param>
         /// <returns>List of balancehistory objects.</returns>
         public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, DateTime month)
         {
