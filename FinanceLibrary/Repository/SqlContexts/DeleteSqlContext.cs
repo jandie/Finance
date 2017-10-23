@@ -125,6 +125,10 @@ namespace FinanceLibrary.Repository.SqlContexts
             }
         }
 
+        /// <summary>
+        /// Completely removes user from the database.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
         public void DeleteUser(string email)
         {
             DeleteTransactionsFromUser(email);
@@ -138,6 +142,10 @@ namespace FinanceLibrary.Repository.SqlContexts
             _db.Execute(query, parameters, Database.QueryType.NonQuery);
         }
 
+        /// <summary>
+        /// Removes all transactions of a user.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
         private void DeleteTransactionsFromUser(string email)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
@@ -146,6 +154,10 @@ namespace FinanceLibrary.Repository.SqlContexts
                 parameters, Database.QueryType.NonQuery);
         }
 
+        /// <summary>
+        /// Removes all payments of a user.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
         private void DeletePaymentsFromUser(string email)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
@@ -154,6 +166,10 @@ namespace FinanceLibrary.Repository.SqlContexts
                 parameters, Database.QueryType.NonQuery);
         }
 
+        /// <summary>
+        /// Removes all balances & balance history of a user.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
         private void DeleteBalancesFromUser(string email)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
