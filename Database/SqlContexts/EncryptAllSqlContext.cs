@@ -31,7 +31,7 @@ namespace Database.SqlContexts
             EncryptBankAccountData(user.Id, oldPassword, newPassword);
             EncryptPaymentData(user.Id, oldPassword, newPassword);
             
-            _changeContext.ChangeUser(user, newPassword);
+            _changeContext.ChangeUser(user);
             _changeContext.ChangePassword(user, newPassword);
 
             _deleteSqlContext.ActivateUser(user.Id);

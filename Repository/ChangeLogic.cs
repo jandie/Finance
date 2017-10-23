@@ -169,7 +169,7 @@ namespace Repository
                 user.Currency.Id = currencyId;
                 user.LanguageId = languageId;
 
-                _context.ChangeUser(user, currentPassword);
+                _context.ChangeUser(user);
 
                 if (string.IsNullOrWhiteSpace(newPassword)) return;
 

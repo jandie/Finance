@@ -44,20 +44,19 @@ namespace Database.SqlContexts
             string nameSalt = Hashing.GenerateSalt();
             string lastNameSalt = Hashing.GenerateSalt();
             string masterSalt = Hashing.GenerateSalt();
-            string masterPassword = new Encryption().EncryptText(
-                Hashing.GenerateSalt(), password, masterSalt);
+            string masterPassword = Hashing.GenerateSalt();
 
             Dictionary<string, object> parameters = new Dictionary<string, object>()
             {
-                {"name", _encryption.EncryptText(name, password, nameSalt)},
-                {"lastName", _encryption.EncryptText(lastName, password, lastNameSalt)},
+                {"name", _encryption.EncryptText(name, masterPassword, nameSalt)},
+                {"lastName", _encryption.EncryptText(lastName, masterPassword, lastNameSalt)},
                 {"email", email},
                 {"password", Hashing.CreateHash(password)},
                 {"currencyId", currencyId},
                 {"languageId", languageId},
                 {"nameSalt", nameSalt},
                 {"lastNameSalt", lastNameSalt},
-                {"masterPassword", masterPassword},
+                {"masterPassword", _encryption.EncryptText(masterPassword, password, masterSalt)},
                 {"masterSalt", masterSalt}
             };
 
@@ -103,10 +102,11 @@ namespace Database.SqlContexts
 
                 if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
 
-                string name = _encryption.DecryptText(row[1] as string, password, row[9] as string);
-                string lastName = _encryption.DecryptText(row[2] as string, password, row[10] as string);
                 string masterPassword = _encryption.DecryptText(row["MASTERPASSWORD"] as string, password,
                     row["MASTERSALT"] as string);
+                string name = _encryption.DecryptText(row[1] as string, masterPassword, row[9] as string);
+                string lastName = _encryption.DecryptText(row[2] as string, masterPassword, row[10] as string);
+                
 
                 user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt)
                 {

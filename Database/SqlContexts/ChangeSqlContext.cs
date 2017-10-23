@@ -128,8 +128,7 @@ namespace Database.SqlContexts
         /// Changes everything but the password of a user in the database.
         /// </summary>
         /// <param name="user">The changed user to save.</param>
-        /// <param name="password">Password used for encryption.</param>
-        public void ChangeUser(User user, string password)
+        public void ChangeUser(User user)
         {
             try
             {
@@ -142,8 +141,8 @@ namespace Database.SqlContexts
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
-                    {"name", _encryption.EncryptText(user.Name, password, nameSalt)},
-                    {"lastName", _encryption.EncryptText(user.LastName, password, lastNameSalt)},
+                    {"name", _encryption.EncryptText(user.Name, user.MasterPassword, nameSalt)},
+                    {"lastName", _encryption.EncryptText(user.LastName, user.MasterPassword, lastNameSalt)},
                     {"currencyId", user.Currency.Id},
                     {"languageId", user.LanguageId},
                     {"email", user.Email},

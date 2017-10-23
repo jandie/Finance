@@ -29,8 +29,7 @@ namespace Database.Interfaces
         /// Changes everything but the password of a user in the database.
         /// </summary>
         /// <param name="user">The changed user to save.</param>
-        /// <param name="password">Password used for encryption.</param>
-        void ChangeUser(User user, string password);
+        void ChangeUser(User user);
 
         /// <summary>
         /// Changes a password of a user in the database.
