@@ -123,6 +123,11 @@ namespace Database.SqlContexts
             return user;
         }
 
+        /// <summary>
+        /// When old encryption is used this method is used to change the masterpassword to the already exsisting password.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        /// <param name="password">The password of the user.</param>
         private void FixOldEncryption(string email, string password)
         {
             User user = new User(-1, "", "", email, -1, null, "", "")
