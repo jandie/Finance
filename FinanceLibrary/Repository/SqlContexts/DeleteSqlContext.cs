@@ -68,7 +68,7 @@ namespace FinanceLibrary.Repository.SqlContexts
         {
             try
             {
-                const string query = "UPDATE BANKACCOUNT SET ACTIVE = 0 WHERE ID = @id";
+                const string query = "DELETE FROM BANKACCOUNT WHERE ID = @id";
                 Dictionary<string, object> parameters = new Dictionary<string, object>{{"id", id}};
 
                 _db.Execute(query, parameters, Database.QueryType.NonQuery);
@@ -89,10 +89,12 @@ namespace FinanceLibrary.Repository.SqlContexts
         {
             try
             {
-                const string query = "UPDATE PAYMENT SET ACTIVE = 0 WHERE ID = @id";
-                Dictionary<string, object> parameters = new Dictionary<string, object>{{"id", id}};
+                Dictionary<string, object> parameters = new Dictionary<string, object> { { "id", id } };
 
-                _db.Execute(query, parameters, Database.QueryType.NonQuery);
+                _db.Execute("DELETE FROM PAYMENT WHERE ID = @id", 
+                    parameters, Database.QueryType.NonQuery);
+                _db.Execute("DELETE FROM TRANSACTION WHERE Payment_Id = @id", 
+                    parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
             {
@@ -110,7 +112,7 @@ namespace FinanceLibrary.Repository.SqlContexts
         {
             try
             {
-                const string query = "UPDATE TRANSACTION SET ACTIVE = 0 WHERE ID = @id";
+                const string query = "DELETE FROM TRANSACTION WHERE ID = @id";
                 Dictionary<string, object> parameters = new Dictionary<string, object>{{"id", id}};
 
                 _db.Execute(query, parameters, Database.QueryType.NonQuery);
@@ -121,6 +123,45 @@ namespace FinanceLibrary.Repository.SqlContexts
 
                 throw new DeleteTransactionException("Transaction could not be deleted.");
             }
+        }
+
+        public void DeleteUser(string email)
+        {
+            DeleteTransactionsFromUser(email);
+            DeletePaymentsFromUser(email);
+            DeleteBalancesFromUser(email);
+
+            const string query = "DELETE FROM user WHERE email = @email";
+
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
+
+            _db.Execute(query, parameters, Database.QueryType.NonQuery);
+        }
+
+        private void DeleteTransactionsFromUser(string email)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
+
+            _db.Execute("DELETE t FROM transaction t INNER JOIN payment p ON p.Id = t.Payment_Id INNER JOIN `user` u ON u.Id = p.User_Id WHERE u.Email = @email", 
+                parameters, Database.QueryType.NonQuery);
+        }
+
+        private void DeletePaymentsFromUser(string email)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
+
+            _db.Execute("DELETE p FROM payment p INNER JOIN `user` u ON u.Id = p.User_Id WHERE u.Email = @email", 
+                parameters, Database.QueryType.NonQuery);
+        }
+
+        private void DeleteBalancesFromUser(string email)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
+
+            _db.Execute("DELETE bh FROM balancehistory bh INNER JOIN `user` u ON u.Id = bh.UserId WHERE u.Email = @email", 
+                parameters, Database.QueryType.NonQuery);
+            _db.Execute("DELETE ba FROM bankaccount ba INNER JOIN `user` u ON u.Id = ba.User_Id WHERE u.Email = @email",
+                parameters, Database.QueryType.NonQuery);
         }
     }
 }

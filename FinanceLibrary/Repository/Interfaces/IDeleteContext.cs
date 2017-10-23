@@ -15,21 +15,27 @@
         void ActivateUser(int id);
 
         /// <summary>
-        /// Deactivates a balance in the database.
+        /// Deletes balance from the database.
         /// </summary>
         /// <param name="id">The id of the balance.</param>
         void DeleteBalance(int id);
 
         /// <summary>
-        /// Deactivates a payment in the database.
+        /// Deletes payment from the database.
         /// </summary>
         /// <param name="id">The id of the payment.</param>
         void DeletePayment(int id);
 
         /// <summary>
-        /// Deactivates a transaction in the database.
+        /// Deletes transaction from the database.
         /// </summary>
         /// <param name="id">The id of the transaction.</param>
         void DeleteTransaction(int id);
+
+        /// <summary>
+        /// Deletes user from the database.
+        /// </summary>
+        /// <param name="email"></param>
+        void DeleteUser(string email);
     }
 }

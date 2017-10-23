@@ -59,7 +59,18 @@ namespace Language_import
 
         private static void RemoveUser(string email)
         {
+            if (string.IsNullOrWhiteSpace(email)) return;
+
+            _stopwatch = new Stopwatch();
+            _stopwatch.Start();
+
             Console.WriteLine($"Removing user with email {email} ...");
+
+            new DeleteLogic().DeleteUser(email);
+
+            _stopwatch.Stop();
+
+            Console.WriteLine($"User deleted! ({_stopwatch.ElapsedMilliseconds}ms)");
         }
 
         private static void UpdateLanguage()

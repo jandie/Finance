@@ -102,5 +102,22 @@ namespace FinanceLibrary.Logic
 
             return true;
         }
+
+        /// <summary>
+        /// Deletes a user completely.
+        /// </summary>
+        /// <param name="email">The email of the user.</param>
+        public void DeleteUser(string email)
+        {
+            try
+            {
+                _context.DeleteUser(email);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
     }
 }
