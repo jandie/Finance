@@ -138,7 +138,7 @@ namespace Language_import
                     }
                 }
 
-                Console.WriteLine($"Json file converted! ({_stopwatch.ElapsedMilliseconds}ms)");
+                Console.WriteLine($"Json file parsed! ({_stopwatch.ElapsedMilliseconds}ms)");
             }
             catch (Exception e)
             {
