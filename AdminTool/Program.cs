@@ -2,74 +2,82 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 using FinanceLibrary.Classes.Language;
 using FinanceLibrary.Logic;
-using FinanceLibrary.Utils;
 using Newtonsoft.Json.Linq;
 
 namespace Language_import
 {
     internal class Program
     {
-        private static string _hashCollection;
+        private static Stopwatch _stopwatch;
 
-        [STAThread]
         private static void Main(string[] args)
         {
             while (true)
             {
-                switch (Console.ReadLine())
-                {
-                    case "1":
-                        UpdateLanguage();
-                        break;
-                    case "2":
-                        CreateHash(Console.ReadLine());
-                        break;
-                    case "3":
-                        TestValidate(Console.ReadLine(), _hashCollection);
-                        break;
-                    default:
-                        UpdateLanguage();
-                        break;
-                }
+                Console.WriteLine("Insert command:");
+                ExecuteCommand(Console.ReadLine());
+                Console.WriteLine("");
             }
-            // ReSharper disable once FunctionNeverReturns
         }
 
-        private static void CreateHash(string password)
+        private static void ExecuteCommand(string command)
         {
-            _hashCollection = Hashing.CreateHash(password);
-
-            Clipboard.SetText(_hashCollection);
-
-            Console.WriteLine(_hashCollection);
-        }
-
-        private static void TestValidate(string password, string hashCollection)
-        {
-            for (int i = 0; i < 101; i++)
+            switch (command.Split(' ')[0])
             {
-                Stopwatch s = new Stopwatch();
-                s.Start();
-
-                Console.WriteLine(Hashing.ValidatePassword(password, hashCollection));
-
-                s.Stop();
-
-                Console.WriteLine($"It took me {s.Elapsed.Milliseconds} ms to check");
+                case "language":
+                    UpdateLanguage();
+                    break;
+                case "remove":
+                    ExecuteRemove(command);
+                    break;
+                default:
+                    Console.WriteLine("Invalid command");
+                    break;
             }
+        }
+
+        private static void ExecuteRemove(string command)
+        {
+            if (command.Split(' ').Length < 3) return;
+
+            switch (command.Split(' ')[1])
+            {
+                case "user":
+                    RemoveUser(command.Split(' ')[2]);
+                    break;
+                default:
+                    Console.WriteLine("Invalid command");
+                    break;
+            }
+        }
+
+        private static void RemoveUser(string email)
+        {
+            Console.WriteLine($"Removing user with email {email} ...");
         }
 
         private static void UpdateLanguage()
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            const string path =
-                "E:\\BSync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
-            //const string path = "C:\\Users\\Jandie\\BitTorrent Sync\\Bsync\\Rest\\Projects\\Financial management app\\Finance\\Language_import\\JSON file\\Translations.json";
+            _stopwatch = new Stopwatch();
+            _stopwatch.Start();
+
+            List<Language> languages = ParseLanguages(GetLanguageJson());
+            PersistLanguages(languages);
+
+            _stopwatch.Stop();
+
+            Console.WriteLine($"Done! ({_stopwatch.ElapsedMilliseconds}ms)");
+        }
+
+        private static string GetLanguageJson()
+        {
             string json = "";
+            string path = Environment.GetEnvironmentVariable("FINANCE_LANGUAGE_PATH",
+                EnvironmentVariableTarget.Machine);
+
+            if (path == null) return null;
 
             try
             {
@@ -82,7 +90,7 @@ namespace Language_import
                     Console.WriteLine(line);
                 }
 
-                Console.WriteLine($"File read! ({stopwatch.ElapsedMilliseconds}ms)");
+                Console.WriteLine($"File read! ({_stopwatch.ElapsedMilliseconds}ms)");
             }
             catch (Exception e)
             {
@@ -90,6 +98,11 @@ namespace Language_import
                 Console.WriteLine(e.Message);
             }
 
+            return json;
+        }
+
+        private static List<Language> ParseLanguages(string json)
+        {
             List<Language> languages = new List<Language>();
 
             try
@@ -121,7 +134,7 @@ namespace Language_import
                     }
                 }
 
-                Console.WriteLine($"Json file converted! ({stopwatch.ElapsedMilliseconds}ms)");
+                Console.WriteLine($"Json file converted! ({_stopwatch.ElapsedMilliseconds}ms)");
             }
             catch (Exception e)
             {
@@ -129,21 +142,22 @@ namespace Language_import
                 Console.WriteLine(e.Message);
             }
 
+            return languages;
+        }
+
+        private static void PersistLanguages(List<Language> languages)
+        {
             try
             {
                 new LanguageLogic().AddLanguages(languages);
 
-                Console.WriteLine($"Languages saved to database! ({stopwatch.ElapsedMilliseconds}ms)");
+                Console.WriteLine($"Languages saved to database! ({_stopwatch.ElapsedMilliseconds}ms)");
             }
             catch (Exception e)
             {
                 Console.WriteLine("The languages could not be saved to the database.");
                 Console.WriteLine(e.Message);
             }
-
-            stopwatch.Stop();
-
-            Console.WriteLine($"Done! ({stopwatch.ElapsedMilliseconds}ms)");
         }
     }
 }
