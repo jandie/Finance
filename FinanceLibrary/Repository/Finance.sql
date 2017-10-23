@@ -168,6 +168,8 @@ CREATE TABLE `user` (
   `Token` varchar(10) DEFAULT NULL,
   `NameSalt` varchar(30) DEFAULT NULL,
   `LastNameSalt` varchar(30) DEFAULT NULL,
+  `MasterPassword` varchar(45) DEFAULT NULL,
+  `MasterSalt` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Email` (`Email`),
   KEY `Currency` (`Currency`),
@@ -192,4 +194,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-20 15:15:29
+-- Dump completed on 2017-10-23 14:11:15
