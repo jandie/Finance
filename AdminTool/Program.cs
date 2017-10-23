@@ -123,7 +123,6 @@ namespace Language_import
             try
             {
                 dynamic parsedData = JObject.Parse(json);
-
                 int languageId = 0;
 
                 foreach (dynamic language in parsedData.Languages)
@@ -135,14 +134,7 @@ namespace Language_import
 
                 foreach (dynamic translation in parsedData.Translations)
                 {
-                    int translationsCount = 0;
-
-                    foreach (dynamic t in translation.Translations)
-                    {
-                        translationsCount++;
-                    }
-
-                    for (int i = 0; i < translationsCount; i++)
+                    for (int i = 0; i < translation.Translations.Count; i++)
                     {
                         languages[i].AddTranslation(new Translation(Convert.ToInt32(translation.ID),
                             translation.Translations[i].ToString()));
