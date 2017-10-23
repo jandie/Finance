@@ -1,0 +1,210 @@
+﻿@using FinanceLibrary.Classes
+@using FinanceLibrary.Classes.Language
+@using Finance_Website.Models.Utilities
+@{
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
+    Language language = userUtility.Language;
+}
+<div class="modal fade" id="AddBalanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header primary-background">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title primary-content" id="myModalLabel">@language.GetText(26)</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        @using (Html.BeginForm("AddBalance", "Action"))
+                        {
+                            <input type="hidden" class="form-control" name="lastTab" aria-describedby="basic-addon3" value="1">
+                            <div class="form-group">
+                                <label for="name">@language.GetText(19)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="name" name="name" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="balance">@language.GetText(22)</label>
+                                <div class="input-group">
+                                    <input type="number" step="any" class="form-control" id="balance" name="balance" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    @language.GetText(1)
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@language.GetText(24)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AddMonthlyBill" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header primary-background">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title primary-content" id="myModalLabel">@language.GetText(27)</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        @using (Html.BeginForm("AddMonthlyBill", "Action"))
+                        {
+                            <input type="hidden" class="form-control" name="lastTab" aria-describedby="basic-addon3" value="2">
+
+                            <div class="form-group">
+                                <label for="billName">@language.GetText(19)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="billName" name="name" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount">@language.GetText(17)</label>
+                                <div class="input-group">
+                                    <input type="number" step="any" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    @language.GetText(1)
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@language.GetText(24)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AddMonthlyIncome" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header primary-background">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title primary-content" id="myModalLabel">@language.GetText(28)</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        @using (Html.BeginForm("AddMonthlyIncome", "Action"))
+                        {
+                            <input type="hidden" class="form-control" name="lastTab" aria-describedby="basic-addon3" value="3">
+
+                            <div class="form-group">
+                                <label for="incomeName">@language.GetText(19)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="incomeName" name="name" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount">@language.GetText(17)</label>
+                                <div class="input-group">
+                                    <input type="number" step="any" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    @language.GetText(1)
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@language.GetText(24)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="QuickTransaction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header primary-background">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title primary-content" id="myModalLabel">@language.GetText(25)</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        @using (Html.BeginForm("AddTransaction", "Action"))
+                        {
+                            <div class="form-group">
+                                <label for="balance">@language.GetText(21)</label>
+                                <select class="form-control" name="balanceId" id="balance">
+                                    @foreach (Balance balance in (ViewBag.User as User).Balances)
+                                    {
+                                        <option value="@balance.Id">@balance.Name</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="payent">@language.GetText(23)</label>
+                                <select class="form-control" name="paymentId" id="payent">
+                                    @foreach (IPayment payment in (ViewBag.User as User).Payments)
+                                    {
+                                        if (payment is MonthlyBill)
+                                        {
+                                            <option value="@payment.Id" class="negative">@payment.Name</option>
+                                        }
+                                        else if (payment is MonthlyIncome)
+                                        {
+                                            <option value="@payment.Id" class="positive">@payment.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">@language.GetText(18)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="description" name="description" aria-describedby="basic-addon3">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amount">@language.GetText(17)</label>
+                                <div class="input-group">
+                                    <input type="number" step="any" class="form-control" id="amount" name="amount" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">
+                                    @language.GetText(1)
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@language.GetText(24)</button>
+            </div>
+        </div>
+    </div>
+</div>

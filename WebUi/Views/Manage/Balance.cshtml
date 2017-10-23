@@ -1,0 +1,51 @@
+﻿@using Finance_Website.Models.Utilities
+@using FinanceLibrary.Classes
+@using FinanceLibrary.Classes.Language
+@{
+    SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
+    Language language = userUtility.Language;
+
+    ViewBag.Title = language.GetText(61);
+
+    Balance balance = ViewBag.Balance as Balance;
+}
+
+<div class="page-header">
+    <h1>@ViewBag.Title</h1>
+</div>
+
+@if (balance != null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            @using (Html.BeginForm("ChangeBalance", "Manage"))
+            {
+                <input type="hidden" class="form-control" name="id" aria-describedby="basic-addon3" value="@balance.Id">
+                <div class="form-group">
+                    <label for="name">@language.GetText(19)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="name" name="name" aria-describedby="basic-addon3" value="@balance.Name" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="balance">@language.GetText(22)</label>
+                    <div class="input-group">
+                        <input type="number" step="any" class="form-control" id="balance" name="balanceAmount" aria-describedby="basic-addon3" value="@balance.BalanceAmount" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">@language.GetText(2)</button>
+                        <a class="btn btn-danger" href="~/Manage/DeleteBalance?id=@balance.Id&lastTab=1" role="button">@language.GetText(30)</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>There is no balance available</p>
+}
