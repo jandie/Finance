@@ -12,7 +12,7 @@
 
 var drawGraph = function () {
     // Lines Graph
-    $.plot($('#graph-lines'), graphData, {
+    $.plot('#graph-lines', graphData, {
         series: {
             points: {
                 show: false
