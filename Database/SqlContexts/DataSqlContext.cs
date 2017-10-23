@@ -101,6 +101,7 @@ namespace Database.SqlContexts
                 Currency currency = new Currency(currencyId, currencyAbbrevation, currencyName, currencyHtml);
 
                 if (!Hashing.ValidatePassword(password, hash)) throw new WrongUsernameOrPasswordException();
+                if (string.IsNullOrWhiteSpace(row["MASTERPASSWORD"] as string)) FixOldEncryption(email, password);
 
                 string masterPassword = _encryption.DecryptText(row["MASTERPASSWORD"] as string, password,
                     row["MASTERSALT"] as string);
@@ -119,6 +120,15 @@ namespace Database.SqlContexts
             }
 
             return user;
+        }
+
+        private void FixOldEncryption(string email, string password)
+        {
+            User user = new User(-1, "", "", email, -1, null, "", "")
+            {
+                MasterPassword = password
+            };
+            new ChangeSqlContext(_db).ChangePassword(user, password);
         }
 
         /// <summary>
