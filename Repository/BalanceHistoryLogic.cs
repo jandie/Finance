@@ -19,12 +19,11 @@ namespace Repository
         /// Updates the Balance of an User.
         /// </summary>
         /// <param name="user">The User to update the Balance from.</param>
-        /// <param name="password">The password used for encryption.</param>
-        public void UpdateBalance(User user, string password)
+        public void UpdateBalance(User user)
         {
             try
             {
-                BalanceHistory balanceHistory = _context.UpdateBalanceHistory(user, password);
+                BalanceHistory balanceHistory = _context.UpdateBalanceHistory(user);
 
                 user.DeleteBalanceHistory(balanceHistory.DateTime);
                 user.AddBalanceHistory(balanceHistory);
@@ -40,14 +39,13 @@ namespace Repository
         /// Gets recent balancehistory of the User.
         /// </summary>
         /// <param name="user">The User to get the history from.</param>
-        /// <param name="password">The password used for encryption.</param>
         /// <returns>Recent balancehistory.</returns>
-        public List<BalanceHistory> GetBalanceHistoryOfUser(User user, string password)
+        public List<BalanceHistory> GetBalanceHistoryOfUser(User user)
         {
             User dummyUser = new User(-1, "", "", "", -1, null, "", "");
 
             List<BalanceHistory> balanceHistory = _context.GetBalanceHistoriesOfMonth(user,
-                DateTime.Now.AddDays(-62), password);
+                DateTime.Now.AddDays(-62));
 
             balanceHistory.ForEach(dummyUser.AddBalanceHistory);
 

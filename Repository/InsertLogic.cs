@@ -24,20 +24,19 @@ namespace Repository
         /// <param name="user">The user.</param>
         /// <param name="name">The name of the balance.</param>
         /// <param name="balance">The balance amount of the balance.</param>
-        /// <param name="password">The password for encryption.</param>
-        public void AddBankAccount(User user, string name, decimal balance, string password)
+        public void AddBankAccount(User user, string name, decimal balance)
         {
             try
             {
                 Balance dummyBalance = new Balance(-1, name, balance);
 
-                int id = _context.AddBankAccount(user.Id, dummyBalance, password);
+                int id = _context.AddBankAccount(user.Id, dummyBalance, user.MasterPassword);
 
                 dummyBalance.Id = id;
 
                 user.AddBalance(dummyBalance);
 
-                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
+                new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {
@@ -52,8 +51,7 @@ namespace Repository
         /// <param name="name">The name of the payment.</param>
         /// <param name="amount">The amount of the payment.</param>
         /// <param name="type">The type of payment.</param>
-        /// <param name="password">The password for encryption.</param>
-        public void AddPayment(User user, string name, decimal amount, PaymentType type, string password)
+        public void AddPayment(User user, string name, decimal amount, PaymentType type)
         {
             try
             {
@@ -73,13 +71,13 @@ namespace Repository
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
 
-                int id = _context.AddPayment(user.Id, dummyPayment, password);
+                int id = _context.AddPayment(user.Id, dummyPayment, user.MasterPassword);
 
                 dummyPayment.Id = id;
 
                 user.AddPayment((IPayment) dummyPayment);
 
-                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
+                new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {
@@ -95,10 +93,9 @@ namespace Repository
         /// <param name="balanceId">The id of the balance the transaction belongs to.</param>
         /// <param name="amount">The amount of the transaction.</param>
         /// <param name="description">The description of the transaction.</param>
-        /// <param name="password">The password for encryption.</param>
         /// <returns>Whether or not the action was a success.</returns>
         public bool AddTransaction(User user, int paymentId, int balanceId, decimal amount, 
-            string description, string password)
+            string description)
         {
             try
             {
@@ -122,7 +119,7 @@ namespace Repository
                         throw new ArgumentOutOfRangeException();
                 }
 
-                dummyTransaction.Id = _context.AddTransaction(payment.Id, dummyTransaction, password);
+                dummyTransaction.Id = _context.AddTransaction(payment.Id, dummyTransaction, user.MasterPassword);
 
                 payment.AddTransaction(dummyTransaction);
 
@@ -132,15 +129,15 @@ namespace Repository
                 {
                     case MonthlyBill _:
                         new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
-                            balance.BalanceAmount - amount, password);
+                            balance.BalanceAmount - amount);
                         break;
                     case MonthlyIncome _:
                         new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
-                            balance.BalanceAmount + amount, password);
+                            balance.BalanceAmount + amount);
                         break;
                 }
 
-                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
+                new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {

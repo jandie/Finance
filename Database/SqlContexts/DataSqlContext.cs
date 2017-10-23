@@ -110,7 +110,8 @@ namespace Database.SqlContexts
 
                 user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt)
                 {
-                    MasterPassword = masterPassword
+                    MasterPassword = masterPassword,
+                    MasterSalt = row["MASTERSALT"] as string
                 };
 
                 GetBalancesOfUser(id, masterPassword).ForEach(b => user.AddBalance(b));

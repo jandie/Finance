@@ -35,8 +35,8 @@ namespace Database.Interfaces
         /// <summary>
         /// Changes a password of a user in the database.
         /// </summary>
-        /// <param name="email">The email of the user (to identify).</param>
+        /// <param name="user">The user itself.</param>
         /// <param name="newPassword">The new password of the user.</param>
-        void ChangePassword(string email, string newPassword);
+        void ChangePassword(User user, string newPassword);
     }
 }

@@ -55,6 +55,11 @@ namespace Library.Classes
         public string MasterPassword { get; set; }
 
         /// <summary>
+        /// Salt of masterpassword used for encryption.
+        /// </summary>
+        public string MasterSalt { get; set; }
+
+        /// <summary>
         /// Returns a copy of the List of Balance objects of the User.
         /// </summary>
         public List<Balance> Balances => new List<Balance>(_balances);
