@@ -8,6 +8,7 @@ using Library.Enums;
 using Library.Exceptions;
 using Library.Interfaces;
 using Library.Utils;
+using MlkPwgen;
 
 namespace Database.SqlContexts
 {
@@ -44,7 +45,7 @@ namespace Database.SqlContexts
             string nameSalt = Hashing.GenerateSalt();
             string lastNameSalt = Hashing.GenerateSalt();
             string masterSalt = Hashing.GenerateSalt();
-            string masterPassword = Hashing.GenerateSalt();
+            string masterPassword = PasswordGenerator.Generate(20, Sets.Alphanumerics + Sets.FullSymbols);
 
             Dictionary<string, object> parameters = new Dictionary<string, object>()
             {
