@@ -42,46 +42,6 @@
 <script src="~/Scripts/jquery-3.2.1.min.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
 <script src="~/Scripts/Scripts.js"></script>
-    <script src="~/Scripts/jquery.flot.min.js"></script>
-<script>
-    var drawGraph = function () {
-        // Lines Graph
-        $.plot($('#graph-lines'), graphData, {
-            series: {
-                points: {
-                    show: false
-                },
-                lines: {
-                    show: true
-                },
-                shadowSize: 5
-            },
-            grid: {
-                color: '#646464',
-                borderColor: 'transparent',
-                borderWidth: 20,
-                hoverable: true
-            },
-            xaxis: {
-                tickColor: 'transparent',
-                show: false
-            }
-        });
-    }
-
-    var onresize = function (e) {
-        drawGraph();
-    }
-    window.addEventListener("resize", onresize);
-
-    $(document).ready(function () {
-
-        drawGraph();
-
-    });
-
-    
-</script>
-
+<script src="~/Scripts/jquery.flot.min.js"></script>
 </body>
 </html>

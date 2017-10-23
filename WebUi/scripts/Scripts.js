@@ -9,3 +9,38 @@
         $("#incomeName").focus();
     });
 });
+
+var drawGraph = function () {
+    // Lines Graph
+    $.plot($('#graph-lines'), graphData, {
+        series: {
+            points: {
+                show: false
+            },
+            lines: {
+                show: true
+            },
+            shadowSize: 5
+        },
+        grid: {
+            color: '#646464',
+            borderColor: 'transparent',
+            borderWidth: 20,
+            hoverable: true
+        },
+        xaxis: {
+            tickColor: 'transparent',
+            show: false
+        }
+    });
+}
+
+var onresize = function (e) {
+    drawGraph();
+}
+
+$(document).ready(function () {
+    drawGraph();
+    
+    window.addEventListener("resize", onresize);
+});
