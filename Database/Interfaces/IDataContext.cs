@@ -54,7 +54,7 @@ namespace Database.Interfaces
         /// <param name="password">The password used of decrypting data.</param>
         /// <param name="salt">The salt used for decrypting data.</param>
         /// <returns>List of balances of the user.</returns>
-        List<Balance> GetBalancesOfUser(int userId, string password, string salt);
+        List<Balance> GetBalancesOfUser(int userId, string password);
 
         /// <summary>
         /// Loads payments of a user from the database.
@@ -63,7 +63,7 @@ namespace Database.Interfaces
         /// <param name="password">The password used of decrypting data.</param>
         /// <param name="salt">The salt used for decrypting data.</param>
         /// <returns>List of payments of the user.</returns>
-        List<IPayment> GetPaymentsOfUser(int userId, string password, string salt);
+        List<IPayment> GetPaymentsOfUser(int userId, string password);
 
         /// <summary>
         /// Loads the transactions of a payment from the database.
@@ -75,7 +75,7 @@ namespace Database.Interfaces
         /// Leave empty to load all transactions.
         /// Example: 2015-01</param>
         /// <returns>List of transactions of the payment.</returns>
-        List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string salt,
+        List<Transaction> GetTransactionsOfPayment(IPayment payment, string password,
             string monthYear = null);
     }
 }

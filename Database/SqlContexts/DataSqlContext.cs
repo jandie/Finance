@@ -38,11 +38,14 @@ namespace Database.SqlContexts
             int languageId)
         {
             const string query =
-                "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD, CURRENCY, LANGUAGE, NAMESALT, LASTNAMESALT) " +
-                "VALUES (@name, @lastName, @email, @password, @currencyId, @languageId, @nameSalt, @lastNameSalt)";
+                "INSERT INTO USER (NAME, LASTNAME, EMAIL, PASSWORD, CURRENCY, LANGUAGE, NAMESALT, LASTNAMESALT, MASTERPASSWORD, MASTERSALT) " +
+                "VALUES (@name, @lastName, @email, @password, @currencyId, @languageId, @nameSalt, @lastNameSalt, @masterPassword, @masterSalt)";
 
             string nameSalt = Hashing.GenerateSalt();
             string lastNameSalt = Hashing.GenerateSalt();
+            string masterSalt = Hashing.GenerateSalt();
+            string masterPassword = new Encryption().EncryptText(
+                Hashing.GenerateSalt(), password, masterSalt);
 
             Dictionary<string, object> parameters = new Dictionary<string, object>()
             {
@@ -53,7 +56,9 @@ namespace Database.SqlContexts
                 {"currencyId", currencyId},
                 {"languageId", languageId},
                 {"nameSalt", nameSalt},
-                {"lastNameSalt", lastNameSalt}
+                {"lastNameSalt", lastNameSalt},
+                {"masterPassword", masterPassword},
+                {"masterSalt", masterSalt}
             };
 
             _db.Execute(query, parameters, Database.QueryType.NonQuery);
@@ -71,7 +76,7 @@ namespace Database.SqlContexts
         {
             User user;
             const string query =
-                "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD, U.NAMESALT, U.LASTNAMESALT FROM USER U " +
+                "SELECT U.ID, U.NAME, U.LASTNAME, U.LANGUAGE, C.ID, C.Abbrevation, C.NAME, C.HTML, U.PASSWORD, U.NAMESALT, U.LASTNAMESALT, U.MASTERPASSWORD, U.MASTERSALT FROM USER U " +
                 "INNER JOIN CURRENCY C ON C.ID = U.CURRENCY WHERE EMAIL = @email AND ACTIVE = 1;";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>()
@@ -100,11 +105,16 @@ namespace Database.SqlContexts
 
                 string name = _encryption.DecryptText(row[1] as string, password, row[9] as string);
                 string lastName = _encryption.DecryptText(row[2] as string, password, row[10] as string);
+                string masterPassword = _encryption.DecryptText(row["MASTERPASSWORD"] as string, password,
+                    row["MASTERSALT"] as string);
 
-                user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt);
+                user = new User(id, name, lastName, email, languageId, currency, UpdateToken(email), salt)
+                {
+                    MasterPassword = masterPassword
+                };
 
-                GetBalancesOfUser(id, password, salt).ForEach(b => user.AddBalance(b));
-                GetPaymentsOfUser(id, password, salt).ForEach(p => user.AddPayment(p));
+                GetBalancesOfUser(id, masterPassword).ForEach(b => user.AddBalance(b));
+                GetPaymentsOfUser(id, masterPassword).ForEach(p => user.AddPayment(p));
             }
 
             return user;
@@ -161,9 +171,8 @@ namespace Database.SqlContexts
         /// </summary>
         /// <param name="userId">The id of the user.</param>
         /// <param name="password">The password used of decrypting data.</param>
-        /// <param name="salt">The salt used for decrypting data.</param>
         /// <returns>List of balances of the user.</returns>
-        public List<Balance> GetBalancesOfUser(int userId, string password, string salt)
+        public List<Balance> GetBalancesOfUser(int userId, string password)
         {
             List<Balance> bankAccounts = new List<Balance>();
             const string query = "SELECT ID, BALANCE, NAME, BALANCESALT, NAMESALT " +
@@ -199,9 +208,8 @@ namespace Database.SqlContexts
         /// </summary>
         /// <param name="userId">The id of the user.</param>
         /// <param name="password">The password used of decrypting data.</param>
-        /// <param name="salt">The salt used for decrypting data.</param>
         /// <returns>List of payments of the user.</returns>
-        public List<IPayment> GetPaymentsOfUser(int userId, string password, string salt)
+        public List<IPayment> GetPaymentsOfUser(int userId, string password)
         {
             List<IPayment> payments = new List<IPayment>();
             const string query = "SELECT ID, NAME, AMOUNT, TYPE, NAMESALT, AMOUNTSALT " +
@@ -241,7 +249,7 @@ namespace Database.SqlContexts
                 }
             }
 
-            payments.ForEach(p => GetTransactionsOfPayment(p, password, salt,
+            payments.ForEach(p => GetTransactionsOfPayment(p, password,
                 DateTime.Now.ToString("yyyy-MM")).ForEach(p.AddTransaction));
 
             return payments;
@@ -252,12 +260,11 @@ namespace Database.SqlContexts
         /// </summary>
         /// <param name="payment">The payment itself.</param>
         /// <param name="password">The password used of decrypting data.</param>
-        /// <param name="salt">The salt used for decrypting data.</param>
         /// <param name="monthYear">Year and month of the transactions to load. 
         /// Leave empty to load all transactions.
         /// Example: 2015-01</param>
         /// <returns>List of transactions of the payment.</returns>
-        public List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string salt, string monthYear = null)
+        public List<Transaction> GetTransactionsOfPayment(IPayment payment, string password, string monthYear = null)
         {
             List<Transaction> transactions = new List<Transaction>();
             const string query = "SELECT ID, AMOUNT, DESCRIPTION, AMOUNTSALT, DESCRIPTIONSALT " +
