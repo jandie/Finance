@@ -7,8 +7,8 @@
     <ProjectGuid>{483DB1A5-8AD2-4A7E-8D41-3AEF7237357D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Language_import</RootNamespace>
-    <AssemblyName>Language_import</AssemblyName>
+    <RootNamespace>AdminTool</RootNamespace>
+    <AssemblyName>AdminTool</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

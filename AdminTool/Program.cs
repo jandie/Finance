@@ -6,7 +6,7 @@ using FinanceLibrary.Classes.Language;
 using FinanceLibrary.Logic;
 using Newtonsoft.Json.Linq;
 
-namespace Language_import
+namespace AdminTool
 {
     internal class Program
     {
