@@ -1,3 +1,3 @@
 # README #
 
-Finance is an open-source financial management application.
+Finance is an open-source financial management web-application.
