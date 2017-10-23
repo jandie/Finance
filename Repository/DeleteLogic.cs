@@ -21,9 +21,8 @@ namespace Repository
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="id">The id of the balance to delete.</param>
-        /// <param name="password">The password for encryption.</param>
         /// <returns>Whether or not the action was a success.</returns>
-        public bool DeleteBalance(User user, int id, string password)
+        public bool DeleteBalance(User user, int id)
         {
             try
             {
@@ -33,7 +32,7 @@ namespace Repository
 
                 user.DeleteBalance(id);
 
-                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
+                new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {
@@ -50,9 +49,8 @@ namespace Repository
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="id">The id of the payment.</param>
-        /// <param name="password">The password for encryption.</param>
         /// <returns>Whether or not the action was a success.</returns>
-        public bool DeletePayment(User user, int id, string password)
+        public bool DeletePayment(User user, int id)
         {
             try
             {
@@ -62,7 +60,7 @@ namespace Repository
 
                 user.DeletePayment(id);
 
-                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
+                new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {
@@ -79,9 +77,8 @@ namespace Repository
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="id">The id of the transaction.</param>
-        /// <param name="password">The password for encryption.</param>
         /// <returns></returns>
-        public bool DeleteTransaction(User user, int id, string password)
+        public bool DeleteTransaction(User user, int id)
         {
             try
             {
@@ -93,7 +90,7 @@ namespace Repository
 
                 payment.DeleteTransaction(id);
 
-                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
+                new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {

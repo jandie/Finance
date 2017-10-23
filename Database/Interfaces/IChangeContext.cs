@@ -29,14 +29,13 @@ namespace Database.Interfaces
         /// Changes everything but the password of a user in the database.
         /// </summary>
         /// <param name="user">The changed user to save.</param>
-        /// <param name="password">Password used for encryption.</param>
-        void ChangeUser(User user, string password);
+        void ChangeUser(User user);
 
         /// <summary>
         /// Changes a password of a user in the database.
         /// </summary>
-        /// <param name="email">The email of the user (to identify).</param>
+        /// <param name="user">The user itself.</param>
         /// <param name="newPassword">The new password of the user.</param>
-        void ChangePassword(string email, string newPassword);
+        void ChangePassword(User user, string newPassword);
     }
 }

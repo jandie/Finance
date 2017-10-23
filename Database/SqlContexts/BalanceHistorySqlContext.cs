@@ -22,21 +22,20 @@ namespace Database.SqlContexts
         /// Updates the balance history of the user to the new balance sum.
         /// </summary>
         /// <param name="user">The user.</param>
-        /// <param name="password">The password.</param>
         /// <returns>The new BalanceHistory with the updated value.</returns>
-        public BalanceHistory UpdateBalanceHistory(User user, string password)
+        public BalanceHistory UpdateBalanceHistory(User user)
         {
             try
             {
                 int exsistingId = CheckExistingBalanceHistory(user);
 
                 if (exsistingId < 0)
-                    return AddBalanceHistory(user, password);
+                    return AddBalanceHistory(user);
 
                 const string query = "UPDATE `balancehistory` SET `BankAccountHistory` = @totalBalance, `BankAccountHistorySalt` = @totalBalanceSalt WHERE `ID` = @id";
                 string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(CultureInfo.InvariantCulture)));
                 string encryptedTotalBalance =
-                    _encryption.EncryptText(user.TotalBalance.ToString(CultureInfo.InvariantCulture), password,
+                    _encryption.EncryptText(user.TotalBalance.ToString(CultureInfo.InvariantCulture), user.MasterPassword,
                         totalBalanceSalt);
                 BalanceHistory balanceHistory = new BalanceHistory(-1, user.TotalBalance, totalBalanceSalt);
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
@@ -94,9 +93,8 @@ namespace Database.SqlContexts
         /// Adds new balance history to the user.
         /// </summary>
         /// <param name="user">The user to add the balancehistory to.</param>
-        /// <param name="password">The password for encryption.</param>
         /// <returns></returns>
-        private BalanceHistory AddBalanceHistory(User user, string password)
+        private BalanceHistory AddBalanceHistory(User user)
         {
             try
             {
@@ -106,7 +104,7 @@ namespace Database.SqlContexts
 
                 string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(CultureInfo.InvariantCulture)));
                 string encryptedTotalBalance =
-                    _encryption.EncryptText(user.TotalBalance.ToString(CultureInfo.InvariantCulture), password,
+                    _encryption.EncryptText(user.TotalBalance.ToString(CultureInfo.InvariantCulture), user.MasterPassword,
                         totalBalanceSalt);
 
                 BalanceHistory balanceHistory = new BalanceHistory(-1, user.TotalBalance, totalBalanceSalt);
@@ -138,7 +136,7 @@ namespace Database.SqlContexts
         /// <param name="month">The month to get the objects from.</param>
         /// <param name="password">The password for encryption.</param>
         /// <returns>List of balancehistory objects.</returns>
-        public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, DateTime month, string password)
+        public List<BalanceHistory> GetBalanceHistoriesOfMonth(User user, DateTime month)
         {
             try
             {
@@ -162,7 +160,7 @@ namespace Database.SqlContexts
                         DateTime dateTime = Convert.ToDateTime(row[3]);
 
                         decimal decryptedBalance =
-                            Convert.ToDecimal(_encryption.DecryptText(encryptedBalance, password, balanceSalt));
+                            Convert.ToDecimal(_encryption.DecryptText(encryptedBalance, user.MasterPassword, balanceSalt));
 
                         BalanceHistory balanceHistory = new BalanceHistory(id, decryptedBalance, balanceSalt)
                         {

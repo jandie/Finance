@@ -26,10 +26,9 @@ namespace Repository
         /// <param name="balanceId">The ID of the Balance of the User.</param>
         /// <param name="name">The name of the Balance.</param>
         /// <param name="balanceAmount">The amount of the balance.</param>
-        /// <param name="password">The password used for encyption.</param>
         /// <returns>Whether or not the action was completed successfully.</returns>
         public bool ChangeBalance(User user, int balanceId, string name, 
-            decimal balanceAmount, string password)
+            decimal balanceAmount)
         {
             try
             {
@@ -39,12 +38,12 @@ namespace Repository
 
                 Balance dummyBalance = new Balance(balanceId, name, balanceAmount);
 
-                _context.ChangeBalance(dummyBalance, password);
+                _context.ChangeBalance(dummyBalance, user.MasterPassword);
 
                 balance.Name = name;
                 balance.BalanceAmount = balanceAmount;
 
-                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
+                new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {
@@ -63,9 +62,8 @@ namespace Repository
         /// <param name="paymentId">The id of the payment of the user.</param>
         /// <param name="name">The name of the payment.</param>
         /// <param name="amount">The amount of the payment.</param>
-        /// <param name="password">The password used for encryption.</param>
         /// <returns>Whether or not the action was completed successfully.</returns>
-        public bool ChangePayment(User user, int paymentId, string name, decimal amount, string password)
+        public bool ChangePayment(User user, int paymentId, string name, decimal amount)
         {
             try
             {
@@ -78,12 +76,12 @@ namespace Repository
                 dummyPayment.Name = name;
                 dummyPayment.Amount = amount;
 
-                _context.ChangePayment(dummyPayment, password);
+                _context.ChangePayment(dummyPayment, user.MasterPassword);
 
                 payment.Name = name;
                 payment.Amount = amount;
 
-                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
+                new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {
@@ -102,9 +100,8 @@ namespace Repository
         /// <param name="transactionId">The id of the transaction.</param>
         /// <param name="amount">The amount of the transaction.</param>
         /// <param name="description">The description of the transaction.</param>
-        /// <param name="password">The password used for encryption.</param>
         /// <returns>Whether or not the action was completed with success.</returns>
-        public bool ChangeTransaction(User user, int transactionId, decimal amount, string description, string password)
+        public bool ChangeTransaction(User user, int transactionId, decimal amount, string description)
         {
             try
             {
@@ -114,12 +111,12 @@ namespace Repository
 
                 Transaction dummyTransaction = new Transaction(transaction.Id, amount, description, transaction.Positive);
 
-                _context.ChangeTransaction(dummyTransaction, password);
+                _context.ChangeTransaction(dummyTransaction, user.MasterPassword);
 
                 transaction.Amount = amount;
                 transaction.Description = description;
 
-                new BalanceHistoryLogic(_database).UpdateBalance(user, password);
+                new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {
@@ -172,11 +169,11 @@ namespace Repository
                 user.Currency.Id = currencyId;
                 user.LanguageId = languageId;
 
-                _context.ChangeUser(user, currentPassword);
+                _context.ChangeUser(user);
 
                 if (string.IsNullOrWhiteSpace(newPassword)) return;
 
-                new EncryptAllSqlContext(_database).EncryptUserData(user, currentPassword, newPassword);
+                _context.ChangePassword(user, newPassword);
             }
             catch (Exception ex)
             {

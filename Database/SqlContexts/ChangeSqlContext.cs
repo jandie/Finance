@@ -128,8 +128,7 @@ namespace Database.SqlContexts
         /// Changes everything but the password of a user in the database.
         /// </summary>
         /// <param name="user">The changed user to save.</param>
-        /// <param name="password">Password used for encryption.</param>
-        public void ChangeUser(User user, string password)
+        public void ChangeUser(User user)
         {
             try
             {
@@ -142,8 +141,8 @@ namespace Database.SqlContexts
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
-                    {"name", _encryption.EncryptText(user.Name, password, nameSalt)},
-                    {"lastName", _encryption.EncryptText(user.LastName, password, lastNameSalt)},
+                    {"name", _encryption.EncryptText(user.Name, user.MasterPassword, nameSalt)},
+                    {"lastName", _encryption.EncryptText(user.LastName, user.MasterPassword, lastNameSalt)},
                     {"currencyId", user.Currency.Id},
                     {"languageId", user.LanguageId},
                     {"email", user.Email},
@@ -164,19 +163,24 @@ namespace Database.SqlContexts
         /// <summary>
         /// Changes a password of a user in the database.
         /// </summary>
-        /// <param name="email">The email of the user (to identify).</param>
+        /// <param name="user">The user itself.</param>
         /// <param name="newPassword">The new password of the user.</param>
-        public void ChangePassword(string email, string newPassword)
+        public void ChangePassword(User user, string newPassword)
         {
             try
             {
-                const string query = "UPDATE USER SET PASSWORD = @newPassword " +
+                const string query = "UPDATE USER SET PASSWORD = @newPassword, MASTERPASSWORD = @masterPassword, MASTERSALT = @masterSalt " +
                                      "WHERE EMAIL = @email";
+
+                string masterSalt = Hashing.GenerateSalt();
+                string masterPassword = _encryption.EncryptText(user.MasterPassword, newPassword, masterSalt);
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
                     {"newPassword", Hashing.CreateHash(newPassword)},
-                    {"email", email}
+                    {"email", user.Email},
+                    {"masterPassword", masterPassword},
+                    {"masterSalt", masterSalt}
                 };
 
                 _db.Execute(query, parameters, Database.QueryType.NonQuery);
