@@ -11,12 +11,11 @@
     ViewBag.Title = language.GetText(8);
 }
 
-<div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+@using (Html.BeginForm())
+{
+    <div class="row">
         <h2>@ViewBag.Title</h2>
-        @using (Html.BeginForm())
-        {
+        <div class="col-md-4">
             <div class="form-group">
                 <label for="name">@language.GetText(19)</label>
                 <div class="input-group">
@@ -63,7 +62,8 @@
                     </select>
                 }
             </div>
-
+        </div>
+        <div class="col-md-4">
             <div class="form-group">
                 <label for="password">@language.GetText(5)</label>
                 <div class="input-group">
@@ -84,13 +84,15 @@
                     <input type="text" class="form-control" id="alphaKey" name="alphaKey" value="@ViewBag.AlphaKey" required>
                 </div>
             </div>
-
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
             <div class="form-group">
                 <button type="submit" class="btn btn-default">
                     @language.GetText(8)
                 </button>
             </div>
-        }
+        </div>
     </div>
-    <div class="col-md-4"></div>
-</div>
+}
