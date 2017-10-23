@@ -50,6 +50,11 @@ namespace Library.Classes
         }
 
         /// <summary>
+        /// Master password of the user, used for encryption.
+        /// </summary>
+        public string MasterPassword { get; }
+
+        /// <summary>
         /// Returns a copy of the List of Balance objects of the User.
         /// </summary>
         public List<Balance> Balances => new List<Balance>(_balances);
