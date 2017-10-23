@@ -91,9 +91,9 @@ namespace FinanceLibrary.Repository.SqlContexts
             {
                 Dictionary<string, object> parameters = new Dictionary<string, object> { { "id", id } };
 
-                _db.Execute("DELETE FROM PAYMENT WHERE ID = @id", 
+                _db.Execute("DELETE FROM TRANSACTION WHERE Payment_Id = @id",
                     parameters, Database.QueryType.NonQuery);
-                _db.Execute("DELETE FROM TRANSACTION WHERE Payment_Id = @id", 
+                _db.Execute("DELETE FROM PAYMENT WHERE ID = @id", 
                     parameters, Database.QueryType.NonQuery);
             }
             catch (Exception ex)
