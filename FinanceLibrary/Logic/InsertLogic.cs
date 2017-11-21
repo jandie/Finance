@@ -103,7 +103,7 @@ namespace FinanceLibrary.Logic
                 IPayment payment = user.GetPayment(paymentId);
                 Balance balance = user.GetBalance(balanceId);
 
-                if (payment == null) return false;
+                if (payment == null || balance == null) return false;
 
                 switch (payment.PaymentType)
                 {
@@ -122,8 +122,6 @@ namespace FinanceLibrary.Logic
                 dummyTransaction.Id = _context.AddTransaction(payment.Id, dummyTransaction, user.MasterPassword);
 
                 payment.AddTransaction(dummyTransaction);
-
-                if (balance == null) return true;
 
                 switch (payment)
                 {
