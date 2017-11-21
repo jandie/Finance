@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    if (typeof user === 'undefined') return;
+    if (typeof user === "undefined") return;
 
     refreshSummary();
     refreshTransactions();
@@ -29,8 +29,8 @@ function buildTransactionUi(transaction) {
     var id = transaction.Id;
     var amount = transaction.Amount.toFixed(2);
     var description = transaction.Description;
-    var glyphClass = transaction.Positive ? 'glyphicon glyphicon-plus positive' :
-        'glyphicon glyphicon-minus negative';
+    var glyphClass = transaction.Positive ? "glyphicon glyphicon-plus positive" :
+        "glyphicon glyphicon-minus negative";
     var content = `<div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
@@ -42,7 +42,7 @@ function buildTransactionUi(transaction) {
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <p>${description}</p>
+                                        <p><strong>${getTranslation(18)}</strong> ${description}</p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -60,4 +60,8 @@ function buildTransactionUi(transaction) {
                     </div>`;
 
     return content;
+}
+
+function getTranslation(id) {
+    return language.Translations[id - 1].TranslationText;
 }

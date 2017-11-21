@@ -274,6 +274,7 @@
     var dataArray = @Html.Raw(Json.Encode(graphDataC));
     var size = @counter;
     var user = @Html.Raw(JsonConvert.SerializeObject(user));
+    var language = @Html.Raw(JsonConvert.SerializeObject(language));
     var x = new Array(size);
     for (var i = 0; i < size; i++) {
         x[i] = new Array(2);
