@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FinanceLibrary.Enums;
+using Newtonsoft.Json;
 
 namespace FinanceLibrary.Classes
 {
@@ -48,11 +49,13 @@ namespace FinanceLibrary.Classes
         /// <summary>
         /// The salt of the name. Used for encryption.
         /// </summary>
+        [JsonIgnore]
         public string NameSalt { get; set; }
 
         /// <summary>
         /// The slat of the amount. Used for encryption.
         /// </summary>
+        [JsonIgnore]
         public string AmountSalt { get; set; }
 
         /// <summary>

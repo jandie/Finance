@@ -1,6 +1,7 @@
 ﻿@using FinanceLibrary.Classes
 @using FinanceLibrary.Classes.Language
 @using Finance_Website.Models.Utilities
+@using Newtonsoft.Json
 @{
     SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
     User user = userUtility.User;
@@ -272,7 +273,7 @@
 <script>
     var dataArray = @Html.Raw(Json.Encode(graphDataC));
     var size = @counter;
-    var user = @Html.Raw(Json.Encode(user));
+    var user = @Html.Raw(JsonConvert.SerializeObject(user));
     var x = new Array(size);
     for (var i = 0; i < size; i++) {
         x[i] = new Array(2);
