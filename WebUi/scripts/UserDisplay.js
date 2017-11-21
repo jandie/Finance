@@ -85,7 +85,7 @@ function buildBalanceUi(balance) {
                         <td>${amount}</td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-primary btn-sm" role="button" href="~/Manage/Balance?id=${id}&lastTab=1">
+                                <a class="btn btn-primary btn-sm" role="button" href="../Manage/Balance?id=${id}&lastTab=1">
                                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                 </a>
                             </div>
