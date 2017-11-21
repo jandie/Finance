@@ -1,4 +1,8 @@
 ﻿$(document).ready(function () {
+    refreshUser();
+});
+
+function refreshUser() {
     if (typeof user === "undefined") return;
 
     refreshSummary();
@@ -6,7 +10,7 @@
     refreshBalances();
     refreshPayments();
     fillQuickTransactionOptions();
-});
+}
 
 function refreshSummary() {
     $("#UserTotalBalance").text(user.TotalBalance.toFixed(2));
@@ -25,8 +29,6 @@ function addTransactionUi(item) {
 }
 
 function buildTransactionUi(transaction) {
-    console.log(`${transaction.Description} - ${transaction.Amount.toFixed(2)}`);
-
     var href = `#transaction${transaction.Id}`;
     var panelId = `transaction${transaction.Id}`;
     var id = transaction.Id;
