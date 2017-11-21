@@ -3,6 +3,7 @@
 
     refreshSummary();
     refreshTransactions();
+    refreshBalances();
 });
 
 function refreshSummary() {
@@ -58,6 +59,33 @@ function buildTransactionUi(transaction) {
                             </div>
                         </div>
                     </div>`;
+
+    return content;
+}
+
+function refreshBalances() {
+    user.Balances.forEach(addBalanceUi);
+}
+
+function addBalanceUi(balance) {
+    $("#UserBalances").append(buildBalanceUi(balance));
+}
+
+function buildBalanceUi(balance) {
+    var id = balance.Id;
+    var name = balance.Name;
+    var amount = balance.BalanceAmount.toFixed(2);
+    var content = `<tr>
+                        <td>${name}</td>
+                        <td>${amount}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-primary btn-sm" role="button" href="~/Manage/Balance?id=${id}&lastTab=1">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>`;
 
     return content;
 }
