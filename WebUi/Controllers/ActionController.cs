@@ -1,7 +1,9 @@
 ﻿using System.Web.Mvc;
 using FinanceLibrary.Enums;
 using FinanceLibrary.Logic;
+using Finance_Website.Models;
 using Finance_Website.Models.Utilities;
+using Newtonsoft.Json;
 
 namespace Finance_Website.Controllers
 {
@@ -83,26 +85,48 @@ namespace Finance_Website.Controllers
             return View();
         }
 
-        public ActionResult AddTransaction(int paymentId, string description, decimal amount, int balanceId)
+        public string AddTransaction(int paymentId, string description, decimal amount, 
+            int balanceId)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
-            if (new InsertLogic().AddTransaction(_userUtility.User, paymentId, balanceId, amount, 
-                description.Trim()))
+            if (!new InsertLogic().AddTransaction(_userUtility.User, paymentId, 
+                balanceId, amount, description.Trim()))
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(47),
+                    Success = false,
+                    Object = null
+                });
+
+            SaveAction();
+            return JsonConvert.SerializeObject(new Response
             {
-                SaveAction();
+                Message = _userUtility.Language.GetText(50),
+                Success = true,
+                Object = _userUtility.User
+            });
+        }
 
-                Session["Message"] = _userUtility.Language.GetText(50);
-            }
-            else
+        public string TestAjax(string message)
+        {
+            Response response = new Response
             {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
+                Message = "Request received!",
+                Success = true,
+                Object = message
+            };
 
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(response);
         }
     }
 }

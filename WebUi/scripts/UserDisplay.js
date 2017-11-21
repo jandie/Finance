@@ -180,3 +180,49 @@ function getTranslation(id) {
 function decideProgress(total, amount) {
     return (amount === 0 ? 100 : total / amount * 100).toFixed(0);
 }
+
+function addTransactionLogic() {
+    var paymentId = $("#PaymentOption").val();
+    var description = $("#QuickTransDescription").val();
+    var amount = $("#QuickTransAmount").val();
+    var balanceId = $("#BalanceOption").val();
+
+    $.ajax({
+        type: "POST",
+        url: "../Action/AddTransaction",
+        data: JSON.stringify({
+            paymentId: paymentId, description: description,
+            amount: amount, balanceId: balanceId
+        }),
+        contentType: "application/json",
+        success: function (r) {
+            var response = JSON.parse(r);
+            handleResponse(response);
+
+            if (response.Success) {
+                user = response.Object;
+                refreshTransactions();
+                refreshSummary();
+            }
+        }
+    });
+}
+
+function handleResponse(response) {
+    console.log(response.Message);
+
+    if (response.Success) {
+        user = response.Object;
+    }
+}
+
+function logOut() {
+    $.ajax({
+        type: "POST",
+        url: "../Account/Loguit",
+        contentType: "application/json",
+        success: function () {
+            window.location.reload(true);
+        }
+    });
+}
