@@ -11,6 +11,8 @@
 });
 
 var drawGraph = function () {
+    if (typeof graphData == 'undefined') return;
+
     // Lines Graph
     $.plot('#graph-lines', graphData, {
         series: {

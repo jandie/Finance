@@ -21,22 +21,19 @@
                 <tbody>
                 <tr>
                     <th>@language.GetText(71)</th>
-                    <td>@user.TotalBalance.ToString("0.00")</td>
+                    <td id="UserTotalBalance"></td>
                 </tr>
-
                 <tr>
                     <th>@language.GetText(66)</th>
-                    <td>@user.Prediction.ToString("0.00")</td>
+                    <td id="UserPrediction"></td>
                 </tr>
-
                 <tr>
                     <th>@language.GetText(67)</th>
-                    <td>@user.ToPay.ToString("0.00")</td>
+                    <td id="UserToPay"></td>
                 </tr>
-
                 <tr>
                     <th>@language.GetText(68)</th>
-                    <td>@user.ToGet.ToString("0.00")</td>
+                    <td id="UserToGet"></td>
                 </tr>
                 </tbody>
             </table>
@@ -57,53 +54,6 @@
         </div>
     </div>
 </div>
-
-@{
-    int[,] graphDataC = new int[user.BalanceHistories.Count, 2];
-
-    int counter = 0;
-
-    foreach (BalanceHistory balanceHistory in user.BalanceHistories)
-    {
-        graphDataC[counter, 1] = Convert.ToInt32(balanceHistory.Amount);
-        graphDataC[counter, 0] = counter;
-
-        counter++;
-    }
-}
-
-<script>
-    var dataArray = @Html.Raw(Json.Encode(graphDataC));
-    var size = @counter;
-    var x = new Array(size);
-    for (var i = 0; i < size; i++) {
-        x[i] = new Array(2);
-    }
-
-    var arrayCounterX = 0;
-    var arrayCounterY = 0;
-
-
-    for (var i = 0; i < dataArray.length; i++) {
-        x[arrayCounterX][arrayCounterY] = dataArray[i];
-
-        arrayCounterY += 1;
-
-        if (arrayCounterY === 2) {
-            arrayCounterY = 0;
-            arrayCounterX += 1;
-        }
-    }
-
-    // Graph Data
-    var graphData = [{
-            // Visits
-            data: x,
-            color: '#71c73e'
-        }
-    ];
-</script>
-
 <div class="row">
 <div class="col-md-12">
 <!-- Nav tabs -->
@@ -378,3 +328,50 @@
 </div>
 
 @Html.Partial("_ModelsPartial")
+
+@*Init scripts*@
+@{
+    int[,] graphDataC = new int[user.BalanceHistories.Count, 2];
+
+    int counter = 0;
+
+    foreach (BalanceHistory balanceHistory in user.BalanceHistories)
+    {
+        graphDataC[counter, 1] = Convert.ToInt32(balanceHistory.Amount);
+        graphDataC[counter, 0] = counter;
+
+        counter++;
+    }
+}
+<script>
+    var dataArray = @Html.Raw(Json.Encode(graphDataC));
+    var size = @counter;
+    var user = @Html.Raw(Json.Encode(user));
+    var x = new Array(size);
+    for (var i = 0; i < size; i++) {
+        x[i] = new Array(2);
+    }
+
+    var arrayCounterX = 0;
+    var arrayCounterY = 0;
+
+
+    for (var i = 0; i < dataArray.length; i++) {
+        x[arrayCounterX][arrayCounterY] = dataArray[i];
+
+        arrayCounterY += 1;
+
+        if (arrayCounterY === 2) {
+            arrayCounterY = 0;
+            arrayCounterX += 1;
+        }
+    }
+
+    // Graph Data
+    var graphData = [{
+            // Visits
+            data: x,
+            color: '#71c73e'
+        }
+    ];
+</script>
