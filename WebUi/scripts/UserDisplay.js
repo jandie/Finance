@@ -5,6 +5,7 @@
     refreshTransactions();
     refreshBalances();
     refreshPayments();
+    fillQuickTransactionOptions();
 });
 
 function refreshSummary() {
@@ -142,6 +143,32 @@ function buildPaymentUi(payment) {
                     </tr>`;
 
     return content;
+}
+
+function fillQuickTransactionOptions() {
+    $("#PaymentOption").empty();
+    $("#BalanceOption").empty();
+    user.Bills.forEach(addBillOption);
+    user.Income.forEach(addIncomeOption);
+    user.Balances.forEach(addBalanceOption);
+}
+
+function addBillOption(bill) {
+    var content = `<option value="${bill.Id}" class="negative">${bill.Name}</option>`;
+
+    $("#PaymentOption").append(content);
+}
+
+function addIncomeOption(income) {
+    var content = `<option value="${income.Id}" class="positive">${income.Name}</option>`;
+
+    $("#PaymentOption").append(content);
+}
+
+function addBalanceOption(balance) {
+    var content = `<option value="${balance.Id}">${balance.Name}</option>`;
+
+    $("#BalanceOption").append(content);
 }
 
 function getTranslation(id) {
