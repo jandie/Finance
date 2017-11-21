@@ -8,6 +8,7 @@ using FinanceLibrary.Exceptions;
 using FinanceLibrary.Repository.Interfaces;
 using FinanceLibrary.Utils;
 using MlkPwgen;
+using System.Globalization;
 
 namespace FinanceLibrary.Repository.SqlContexts
 {
@@ -209,7 +210,7 @@ namespace FinanceLibrary.Repository.SqlContexts
                     int id = Convert.ToInt32(row[0]);
                     string balanceSalt = row[3] as string;
                     string nameSalt = row[4] as string;
-                    decimal balance = Convert.ToDecimal(_encryption.DecryptText(row[1] as string, password, balanceSalt));
+                    decimal balance = Convert.ToDecimal(_encryption.DecryptText(row[1] as string, password, balanceSalt), new CultureInfo("en-US"));
                     string name = _encryption.DecryptText(row[2] as string, password, nameSalt);
 
                     bankAccounts.Add(new Balance(id, name, balance));
@@ -249,7 +250,7 @@ namespace FinanceLibrary.Repository.SqlContexts
                     string amountSalt = row[5] as string;
 
                     string name = _encryption.DecryptText(row[1] as string, password, nameSalt);
-                    decimal amount = Convert.ToDecimal(_encryption.DecryptText(row[2] as string, password, amountSalt));
+                    decimal amount = Convert.ToDecimal(_encryption.DecryptText(row[2] as string, password, amountSalt), new CultureInfo("en-US"));
 
                     switch (type)
                     {
@@ -303,7 +304,7 @@ namespace FinanceLibrary.Repository.SqlContexts
                     int id = Convert.ToInt32(row[0]);
                     string amountSalt = row[3] as string;
                     string descriptionSalt = row[4] as string;
-                    decimal amount = Convert.ToDecimal(_encryption.DecryptText(row[1] as string, password, amountSalt));
+                    decimal amount = Convert.ToDecimal(_encryption.DecryptText(row[1] as string, password, amountSalt), new CultureInfo("en-US"));
                     string description = _encryption.DecryptText(row[2] as string, password, descriptionSalt);
 
                     switch (payment)
