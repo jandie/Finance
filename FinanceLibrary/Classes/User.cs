@@ -71,6 +71,10 @@ namespace FinanceLibrary.Classes
         /// </summary>
         public List<IPayment> Payments => new List<IPayment>(_payments);
 
+        public List<MonthlyBill> Bills => new List<MonthlyBill>(_payments.OfType<MonthlyBill>());
+
+        public List<MonthlyIncome> Income => new List<MonthlyIncome>(_payments.OfType<MonthlyIncome>());
+
         /// <summary>
         /// The ID of the User.
         /// </summary>

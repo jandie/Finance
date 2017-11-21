@@ -4,6 +4,7 @@
     refreshSummary();
     refreshTransactions();
     refreshBalances();
+    refreshPayments();
 });
 
 function refreshSummary() {
@@ -64,6 +65,7 @@ function buildTransactionUi(transaction) {
 }
 
 function refreshBalances() {
+    $("#UserBalances").empty();
     user.Balances.forEach(addBalanceUi);
 }
 
@@ -90,6 +92,62 @@ function buildBalanceUi(balance) {
     return content;
 }
 
+function refreshPayments() {
+    $("#UserBills").empty();
+    $("#UserIncome").empty();
+    user.Bills.forEach(addBillUi);
+    user.Income.forEach(addIncomeUi);
+}
+
+function addBillUi(bill) {
+    $("#UserBills").append(buildPaymentUi(bill));
+}
+
+function addIncomeUi(income) {
+    $("#UserIncome").append(buildPaymentUi(income));
+}
+
+function buildPaymentUi(payment) {
+    var id = payment.Id;
+    var name = payment.Name;
+    var total = payment.Total;
+    var amount = payment.Amount;
+    var progress = decideProgress(total, amount);
+    var progressString = `${progress}%`;
+
+    var content = `<tr>
+                        <td>${name}</td>
+                        <td>${amount.toFixed(2)}</td>
+                        <td>${total.toFixed(2)}</td>
+                        <td>
+                            <div class="btn-group-vertical">
+                                <a class="btn btn-primary btn-sm" role="button" href="../Manage/Payment?id=${id}&lastTab=2">
+                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                </a>
+                                <a class="btn btn-success btn-sm" role="button" href="../Action/Transaction?paymentId=${id}&lastTab=2">
+                                    <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="4">
+                            <div class="progress" style="margin-bottom: 0px;">
+                                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100" style="width: ${progressString}">
+                                    ${progress} %
+                                </div>
+                            </div>
+                        </td>
+                    </tr>`;
+
+    return content;
+}
+
 function getTranslation(id) {
     return language.Translations[id - 1].TranslationText;
+}
+
+function decideProgress(total, amount) {
+    return (amount === 0 ? 100 : total / amount * 100).toFixed(0);
 }

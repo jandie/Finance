@@ -17,6 +17,8 @@ namespace FinanceLibrary.Classes
         {
         }
 
+        public decimal Total => GetTotalAmount();
+
         /// <summary>
         /// Calculates the total sum of all transactions of the Income.
         /// </summary>
