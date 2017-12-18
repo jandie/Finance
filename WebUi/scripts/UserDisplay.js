@@ -203,7 +203,7 @@ function showErrorMessage(message) {
     $("#ErrorMessage").empty();
     $("#ErrorMessage").append("<strong>Error!</strong> " + message);
 
-    $("#ErrorMessage").show();
+    $("#ErrorAlert").show();
 }
 
 function showDeleteTransactionConfirmation(id) {
@@ -214,6 +214,7 @@ function showDeleteTransactionConfirmation(id) {
 function addTransactionLogic() {
     showLoading();
     $("#QuickTransaction").modal("toggle");
+
     var paymentId = $("#PaymentOption").val();
     var description = $("#QuickTransDescription").val();
     var amount = $("#QuickTransAmount").val();
@@ -235,7 +236,15 @@ function addTransactionLogic() {
                 user = response.Object;
                 refreshTransactions();
                 refreshSummary();
+
+                $("#QuickTransDescription").val("");
+                $("#QuickTransAmount").val("");
             }
+        },
+        error: function () {
+            hideMessages();
+            showErrorMessage("Something went wrong!");
+            hideLoading();
         }
     });
 }
@@ -259,6 +268,11 @@ function removeTransaction(id) {
                 refreshTransactions();
                 refreshSummary();
             }
+        },
+        error: function () {
+            hideMessages();
+            showErrorMessage("Something went wrong!");
+            hideLoading();
         }
     });
 }
