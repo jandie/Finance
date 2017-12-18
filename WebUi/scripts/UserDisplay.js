@@ -23,6 +23,8 @@ function refreshSummary() {
     $("#UserPrediction").text(user.Prediction.toFixed(2));
     $("#UserToPay").text(user.ToPay.toFixed(2));
     $("#UserToGet").text(user.ToGet.toFixed(2));
+
+    drawGraph();
 }
 
 function refreshTransactions() {
@@ -91,7 +93,7 @@ function buildBalanceUi(balance) {
                         <td>${amount}</td>
                         <td>
                             <div class="btn-group">
-                                <a class="btn btn-primary btn-sm" role="button" href="../Manage/Balance?id=${id}&lastTab=1">
+                                <a class="btn btn-primary btn-sm" role="button" onclick="showManageBalance(${id})">
                                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                 </a>
                             </div>
@@ -251,6 +253,32 @@ function findTransaction(transactions, id) {
     }
 }
 
+function showManageBalance(id) {
+    var balance = findBalance(id);
+
+    $("#EditBalanceName").val(balance.Name);
+    $("#EditBalanceAmount").val(balance.BalanceAmount);
+    $("#EditBalanceButton").attr("onclick", `changeBalance(${id})`);
+    $("#RemoveBalanceButton").attr("onclick", `showDeleteBalanceConfirmation(${id})`);
+
+    $("#BalanceModal").modal("toggle");
+}
+
+function findBalance(id) {
+    for (var i = 0; i < user.Balances.length; i++) {
+        if (user.Balances[i].Id === id)
+            return user.Balances[i];
+    }
+
+    return undefined;
+}
+
+function showDeleteBalanceConfirmation(id) {
+    $("#BalanceModal").modal("toggle");
+    $("#DeleteBalanceModalButton").attr("onclick", `removeBalance(${id})`);
+    $("#DeleteBalanceModal").modal("toggle");
+}
+
 function addTransactionLogic() {
     showLoading();
     $("#QuickTransaction").modal("toggle");
@@ -343,13 +371,68 @@ function changeTransaction(id) {
                 user = response.Object;
                 refreshTransactions();
                 refreshSummary();
-
-                $("#EditTransactionDescription").val("");
-                $("#EditTransactionAmount").val("");
             }
         },
         error: function () {
-            hideMessages();
+            showErrorMessage("Something went wrong!");
+            hideLoading();
+        }
+    });
+}
+
+function changeBalance(id) {
+    showLoading();
+    $("#BalanceModal").modal("toggle");
+
+    var name = $("#EditBalanceName").val();
+    var amount = $("#EditBalanceAmount").val();
+
+    $.ajax({
+        type: "POST",
+        url: "../Manage/ChangeBalance",
+        data: JSON.stringify({
+            id: id, name: name, balanceAmount: amount
+        }),
+        contentType: "application/json",
+        success: function (r) {
+            var response = JSON.parse(r);
+            handleResponse(response);
+
+            if (response.Success) {
+                user = response.Object;
+                refreshBalances();
+                refreshSummary();
+            }
+        },
+        error: function () {
+            showErrorMessage("Something went wrong!");
+            hideLoading();
+        }
+    });
+}
+
+function removeBalance(id) {
+    showLoading();
+    $("#DeleteBalanceModal").modal("toggle");
+
+    $.ajax({
+        type: "POST",
+        url: "../Manage/DeleteBalance",
+        data: JSON.stringify({
+            id: id
+        }),
+        contentType: "application/json",
+        success: function (r) {
+            var response = JSON.parse(r);
+            handleResponse(response);
+
+            if (response.Success) {
+                user = response.Object;
+                refreshBalances();
+                refreshSummary();
+            }
+        },
+        error: function () {
             showErrorMessage("Something went wrong!");
             hideLoading();
         }

@@ -24,59 +24,69 @@ namespace Finance_Website.Controllers
         }
 
         #region Balance
-
-        [HttpGet]
-        public ActionResult Balance(int id = 0, string lastTab = null)
-        {
-            InitializeAction(lastTab);
-
-            if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
-
-            ViewBag.User = _userUtility.User;
-            ViewBag.Balance = _userUtility.User.GetBalance(id);
-
-            return View();
-        }
-
-        public ActionResult ChangeBalance(int id, string name, decimal balanceAmount)
+        [HttpPost]
+        public string ChangeBalance(int id, string name, decimal balanceAmount)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
             if (new ChangeLogic().ChangeBalance(_userUtility.User, id, name,
                     balanceAmount))
-            {
-                Session["Message"] = _userUtility.Language.GetText(51);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(51),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
 
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
-        [HttpGet]
-        public ActionResult DeleteBalance(int id, string lastTab = null)
+        [HttpPost]
+        public string DeleteBalance(int id)
         {
-            InitializeAction(lastTab);
+            InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
             if (new DeleteLogic().DeleteBalance(_userUtility.User, id))
-            {
-                Session["Message"] = _userUtility.Language.GetText(52);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(52),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
 
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
         #endregion
@@ -138,23 +148,6 @@ namespace Finance_Website.Controllers
         #endregion Payment
 
         #region Transaction
-
-        [HttpGet]
-        public ActionResult Transaction(int id = 0)
-        {
-            InitializeAction();
-
-            if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
-
-            IPayment payment = _userUtility.User.GetPaymentByTransaction(id);
-
-            ViewBag.Transaction = _userUtility.User.GetTransaction(id);
-            ViewBag.PaymentId = payment?.Id;
-            ViewBag.PaymentType = payment?.PaymentType.ToString();
-
-            return View();
-        }
 
         [HttpPost]
         public string ChangeTransaction(int id, decimal amount, string description)

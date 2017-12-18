@@ -73,20 +73,6 @@ namespace Finance_Website.Controllers
             return RedirectToAction("Index", "Account");
         }
 
-        public ActionResult Transaction(int paymentId, string lastTab = null)
-        {
-            InitializeAction(lastTab);
-
-            if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
-
-            ViewBag.PaymentId = paymentId;
-            ViewBag.PaymentName = _userUtility.User.GetPayment(paymentId).Name;
-            ViewBag.User = _userUtility.User;
-
-            return View();
-        }
-
         public string AddTransaction(int paymentId, string description, decimal amount, 
             int balanceId)
         {

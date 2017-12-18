@@ -188,50 +188,7 @@
 
 @Html.Partial("_ModelsPartial")
 
-@*Init scripts*@
-@{
-    int[,] graphDataC = new int[user.BalanceHistories.Count, 2];
-
-    int counter = 0;
-
-    foreach (BalanceHistory balanceHistory in user.BalanceHistories)
-    {
-        graphDataC[counter, 1] = Convert.ToInt32(balanceHistory.Amount);
-        graphDataC[counter, 0] = counter;
-
-        counter++;
-    }
-}
 <script>
-    var dataArray = @Html.Raw(Json.Encode(graphDataC));
-    var size = @counter;
     var user = @Html.Raw(JsonConvert.SerializeObject(user));
     var language = @Html.Raw(JsonConvert.SerializeObject(language));
-    var x = new Array(size);
-    for (var i = 0; i < size; i++) {
-        x[i] = new Array(2);
-    }
-
-    var arrayCounterX = 0;
-    var arrayCounterY = 0;
-
-
-    for (var i = 0; i < dataArray.length; i++) {
-        x[arrayCounterX][arrayCounterY] = dataArray[i];
-
-        arrayCounterY += 1;
-
-        if (arrayCounterY === 2) {
-            arrayCounterY = 0;
-            arrayCounterX += 1;
-        }
-    }
-
-    // Graph Data
-    var graphData = [{
-            // Visits
-            data: x,
-            color: '#71c73e'
-        }
-    ];
 </script>

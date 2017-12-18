@@ -541,6 +541,13 @@
             "Transactie verwijderen?",
             "Delete transaction?"
          ]
+      },
+	  {
+         "ID":"78",
+         "Translations":[
+            "Balans verwijderen?",
+            "Delete balance?"
+         ]
       }
    ]
 }
