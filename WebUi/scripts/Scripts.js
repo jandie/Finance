@@ -48,9 +48,9 @@ $(document).ready(function () {
 });
 
 function showLoading() {
-    document.getElementById("loader").style.display = "block";
+    $("#loader").show();
 }
 
 function hideLoading() {
-    document.getElementById("loader").style.display = "none";
+    $("#loader").hide();
 }

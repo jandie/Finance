@@ -1,5 +1,8 @@
 ﻿$(document).ready(function () {
     refreshUser();
+
+    hideLoading();
+    hideMessages();
 });
 
 function refreshUser() {
@@ -12,6 +15,7 @@ function refreshUser() {
     fillQuickTransactionOptions();
 
     hideLoading();
+    hideMessages();
 }
 
 function refreshSummary() {
@@ -183,6 +187,25 @@ function decideProgress(total, amount) {
     return (amount === 0 ? 100 : total / amount * 100).toFixed(0);
 }
 
+function hideMessages() {
+    $("#ErrorAlert").hide();
+    $("#SuccessAlert").hide();
+}
+
+function showSuccessMessage(message) {
+    $("#SuccessMessage").empty();
+    $("#SuccessMessage").append("<strong>Success!</strong> " + message);
+
+    $("#SuccessAlert").show();
+}
+
+function showErrorMessage(message) {
+    $("#ErrorMessage").empty();
+    $("#ErrorMessage").append("<strong>Error!</strong> " + message);
+
+    $("#ErrorMessage").show();
+}
+
 function addTransactionLogic() {
     showLoading();
     $('#QuickTransaction').modal('toggle');
@@ -213,10 +236,14 @@ function addTransactionLogic() {
 }
 
 function handleResponse(response) {
+    hideMessages();
     console.log(response.Message);
 
     if (response.Success) {
         user = response.Object;
+        showSuccessMessage(response.Message);
+    } else {
+        showErrorMessage(response.Message);
     }
 
     hideLoading();
