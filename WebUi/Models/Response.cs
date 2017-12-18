@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Finance_Website.Models
+﻿namespace Finance_Website.Models
 {
     public class Response
     {
