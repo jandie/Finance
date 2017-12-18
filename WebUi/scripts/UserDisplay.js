@@ -61,7 +61,7 @@ function buildTransactionUi(transaction) {
                                         <div class="btn-group">
                                             <a class="btn btn-primary btn-sm" role="button" href="../Manage/Transaction?id=${id}">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
-                                            <a class="btn btn-danger btn-sm" role="button" href="../Manage/DeleteTransaction?id=${id}&quick=true">
+                                            <a class="btn btn-danger btn-sm" role="button" onclick="showDeleteTransactionConfirmation(${id})">
                                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
                                         </div>
                                     </div>
@@ -206,9 +206,14 @@ function showErrorMessage(message) {
     $("#ErrorMessage").show();
 }
 
+function showDeleteTransactionConfirmation(id) {
+    $("#DeleteTransactionButton").attr("onclick", `removeTransaction(${id})`);
+    $("#DeleteTransactionModal").modal("toggle");
+}
+
 function addTransactionLogic() {
     showLoading();
-    $('#QuickTransaction').modal('toggle');
+    $("#QuickTransaction").modal("toggle");
     var paymentId = $("#PaymentOption").val();
     var description = $("#QuickTransDescription").val();
     var amount = $("#QuickTransAmount").val();
@@ -220,6 +225,29 @@ function addTransactionLogic() {
         data: JSON.stringify({
             paymentId: paymentId, description: description,
             amount: amount, balanceId: balanceId
+        }),
+        contentType: "application/json",
+        success: function (r) {
+            var response = JSON.parse(r);
+            handleResponse(response);
+
+            if (response.Success) {
+                user = response.Object;
+                refreshTransactions();
+                refreshSummary();
+            }
+        }
+    });
+}
+
+function removeTransaction(id) {
+    showLoading();
+    $('#DeleteTransactionModal').modal("toggle");
+    $.ajax({
+        type: "POST",
+        url: "../Manage/DeleteTransaction",
+        data: JSON.stringify({
+            id: id
         }),
         contentType: "application/json",
         success: function (r) {

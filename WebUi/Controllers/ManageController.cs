@@ -1,7 +1,9 @@
 ﻿using System.Web.Mvc;
 using FinanceLibrary.Classes;
 using FinanceLibrary.Logic;
+using Finance_Website.Models;
 using Finance_Website.Models.Utilities;
+using Newtonsoft.Json;
 
 namespace Finance_Website.Controllers
 {
@@ -175,30 +177,36 @@ namespace Finance_Website.Controllers
                 new {id = _userUtility.User.GetPaymentByTransaction(id)?.Id, lastTab = Session["LastTab"]});
         }
 
-        [HttpGet]
-        public ActionResult DeleteTransaction(int id, bool quick = false)
+        [HttpPost]
+        public string DeleteTransaction(int id)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
             if (new DeleteLogic().DeleteTransaction(_userUtility.User, id))
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(56),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
+
+            return JsonConvert.SerializeObject(new Response
             {
-                Session["Message"] = _userUtility.Language.GetText(56);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
-
-            IPayment payment = _userUtility.User.GetPaymentByTransaction(id);
-
-            if (quick || payment == null)
-                return RedirectToAction("Index", "Account");
-
-            return RedirectToAction("Payment", "Manage",
-                new {id = payment.Id, lastTab = Session["LastTab"]});
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
         #endregion Transaction

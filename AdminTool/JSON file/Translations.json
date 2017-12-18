@@ -534,6 +534,13 @@
             "Gebruiker gegevens zijn aangepast",
             "User data has been changed"
          ]
+      },
+	  {
+         "ID":"77",
+         "Translations":[
+            "Transactie verwijderen?",
+            "Delete transaction?"
+         ]
       }
    ]
 }
