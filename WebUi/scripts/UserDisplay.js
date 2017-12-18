@@ -9,7 +9,6 @@ function refreshUser() {
     if (typeof user === "undefined") return;
 
     refreshSummary();
-    refreshTransactions();
     refreshBalances();
     refreshPayments();
     fillQuickTransactionOptions();
@@ -108,6 +107,8 @@ function refreshPayments() {
     $("#UserIncome").empty();
     user.Bills.forEach(addBillUi);
     user.Income.forEach(addIncomeUi);
+
+    refreshTransactions();
 }
 
 function addBillUi(bill) {
