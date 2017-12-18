@@ -59,7 +59,7 @@ function buildTransactionUi(transaction) {
                                 <div class="row">
                                     <div class="col-md-2 pull-right">
                                         <div class="btn-group">
-                                            <a class="btn btn-primary btn-sm" role="button" href="../Manage/Transaction?id=${id}">
+                                            <a class="btn btn-primary btn-sm" role="button" onclick="showManageTransaction(${id})">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
                                             <a class="btn btn-danger btn-sm" role="button" onclick="showDeleteTransactionConfirmation(${id})">
                                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
@@ -193,6 +193,7 @@ function hideMessages() {
 }
 
 function showSuccessMessage(message) {
+    hideMessages();
     $("#SuccessMessage").empty();
     $("#SuccessMessage").append("<strong>Success!</strong> " + message);
 
@@ -200,6 +201,7 @@ function showSuccessMessage(message) {
 }
 
 function showErrorMessage(message) {
+    hideMessages();
     $("#ErrorMessage").empty();
     $("#ErrorMessage").append("<strong>Error!</strong> " + message);
 
@@ -211,6 +213,44 @@ function showDeleteTransactionConfirmation(id) {
     $("#DeleteTransactionModal").modal("toggle");
 }
 
+function showManageTransaction(id) {
+    var transaction = findTransactionById(id);
+
+    $("#EditTransactionDescription").val(transaction.Description);
+    $("#EditTransactionAmount").val(transaction.Amount);
+    $("#EditTransactionButton").attr("onclick", `changeTransaction(${id})`);
+
+    $("#TransactionModal").modal("toggle");
+}
+
+function findTransactionById(id) {
+    var t;
+    var i;
+
+    for (i = 0; i < user.Bills.length; i++) {
+        t = findTransaction(user.Bills[i].AllTransactions, id);
+
+        if (!(typeof t === "undefined"))
+            return t;
+    }
+
+    for (i = 0; i < user.Income.length; i++) {
+        t = findTransaction(user.Income[i].AllTransactions, id);
+
+        if (!(typeof t === "undefined"))
+            return t;
+    }
+
+    return undefined;
+}
+
+function findTransaction(transactions, id) {
+    for (var i = 0; i < transactions.length; i++) {
+        if (transactions[i].Id === id)
+            return transactions[i];
+    }
+}
+
 function addTransactionLogic() {
     showLoading();
     $("#QuickTransaction").modal("toggle");
@@ -219,6 +259,12 @@ function addTransactionLogic() {
     var description = $("#QuickTransDescription").val();
     var amount = $("#QuickTransAmount").val();
     var balanceId = $("#BalanceOption").val();
+
+    if (amount === "") {
+        showErrorMessage("Invalid number as amount");
+        hideLoading();
+        return;
+    }
 
     $.ajax({
         type: "POST",
@@ -238,11 +284,10 @@ function addTransactionLogic() {
                 refreshSummary();
 
                 $("#QuickTransDescription").val("");
-                $("#QuickTransAmount").val("");
+                $("#QuickTransAmount").val("0.00");
             }
         },
         error: function () {
-            hideMessages();
             showErrorMessage("Something went wrong!");
             hideLoading();
         }
@@ -251,7 +296,7 @@ function addTransactionLogic() {
 
 function removeTransaction(id) {
     showLoading();
-    $('#DeleteTransactionModal').modal("toggle");
+    $("#DeleteTransactionModal").modal("toggle");
     $.ajax({
         type: "POST",
         url: "../Manage/DeleteTransaction",
@@ -267,6 +312,40 @@ function removeTransaction(id) {
                 user = response.Object;
                 refreshTransactions();
                 refreshSummary();
+            }
+        },
+        error: function () {
+            showErrorMessage("Something went wrong!");
+            hideLoading();
+        }
+    });
+}
+
+function changeTransaction(id) {
+    showLoading();
+    $("#TransactionModal").modal("toggle");
+
+    var description = $("#EditTransactionDescription").val();
+    var amount = $("#EditTransactionAmount").val();
+    
+    $.ajax({
+        type: "POST",
+        url: "../Manage/ChangeTransaction",
+        data: JSON.stringify({
+            id: id, amount: amount, description: description
+        }),
+        contentType: "application/json",
+        success: function (r) {
+            var response = JSON.parse(r);
+            handleResponse(response);
+
+            if (response.Success) {
+                user = response.Object;
+                refreshTransactions();
+                refreshSummary();
+
+                $("#EditTransactionDescription").val("");
+                $("#EditTransactionAmount").val("");
             }
         },
         error: function () {

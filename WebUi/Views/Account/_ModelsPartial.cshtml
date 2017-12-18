@@ -59,7 +59,6 @@
                 <h4 class="modal-title primary-content" id="AddMonthlyBillLabel">@language.GetText(27)</h4>
             </div>
             <div class="modal-body">
-                s
                 <div class="row">
                     <div class="col-md-4">
                         @using (Html.BeginForm("AddMonthlyBill", "Action"))
@@ -174,7 +173,7 @@
                         <div class="form-group">
                             <label for="QuickTransAmount">@language.GetText(17)</label>
                             <div class="input-group">
-                                <input type="number" step="any" class="form-control" id="QuickTransAmount" name="amount" aria-describedby="basic-addon3" required>
+                                <input type="number" step="any" class="form-control" id="QuickTransAmount" name="amount" aria-describedby="basic-addon3" value="0">
                             </div>
                         </div>
 
@@ -208,6 +207,45 @@
                         <button id="DeleteTransactionButton" class="btn btn-danger" style="width: 100%;" onclick="">
                             @language.GetText(30)
                         </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@language.GetText(24)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="TransactionModal" tabindex="-1" role="dialog" aria-labelledby="TransactionModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header primary-background">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title primary-content" id="TransactionModalLabel">@language.GetText(77)</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="EditTransactionDescription">@language.GetText(18)</label>
+                            <div class="input-group">
+                                <input id="EditTransactionDescription" type="text" class="form-control" aria-describedby="basic-addon3" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="EditTransactionAmount">@language.GetText(22)</label>
+                            <div class="input-group">
+                                <input id="EditTransactionAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button id="EditTransactionButton" class="btn btn-primary">@language.GetText(2)</button>
+                        </div>
                     </div>
                 </div>
             </div>

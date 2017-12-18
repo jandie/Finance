@@ -157,24 +157,35 @@ namespace Finance_Website.Controllers
         }
 
         [HttpPost]
-        public ActionResult Transaction(int id, decimal amount, string description)
+        public string ChangeTransaction(int id, decimal amount, string description)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
             if (new ChangeLogic().ChangeTransaction(_userUtility.User, id, amount, description))
-            {
-                Session["Message"] = _userUtility.Language.GetText(55);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(55),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
 
-            return RedirectToAction("Payment", "Manage",
-                new {id = _userUtility.User.GetPaymentByTransaction(id)?.Id, lastTab = Session["LastTab"]});
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
         [HttpPost]

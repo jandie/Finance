@@ -177,7 +177,6 @@
     <Content Include="Views\Manage\Balance.cshtml" />
     <Content Include="Views\Manage\Payment.cshtml" />
     <Content Include="Views\Action\Transaction.cshtml" />
-    <Content Include="Views\Manage\Transaction.cshtml" />
     <Content Include="Views\Account\MyAccount.cshtml" />
     <Content Include="scripts\jquery-3.2.1.slim.min.map" />
     <Content Include="scripts\jquery-3.2.1.min.map" />
