@@ -10,6 +10,8 @@ function refreshUser() {
     refreshBalances();
     refreshPayments();
     fillQuickTransactionOptions();
+
+    hideLoading();
 }
 
 function refreshSummary() {
@@ -182,6 +184,8 @@ function decideProgress(total, amount) {
 }
 
 function addTransactionLogic() {
+    showLoading();
+    $('#QuickTransaction').modal('toggle');
     var paymentId = $("#PaymentOption").val();
     var description = $("#QuickTransDescription").val();
     var amount = $("#QuickTransAmount").val();
@@ -214,6 +218,8 @@ function handleResponse(response) {
     if (response.Success) {
         user = response.Object;
     }
+
+    hideLoading();
 }
 
 function logOut() {

@@ -67,3 +67,42 @@
     color: #666;
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
+/* Center the loader */
+#loader {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border: 16px solid rgba(0, 0, 0, 0);
+    border-radius: 50%;
+    border-top: 16px solid #428bca;
+    border-bottom: 16px solid #428bca;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 0.5s linear infinite;
+    animation: spin 0.5s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -46,3 +46,11 @@ $(document).ready(function () {
     
     window.addEventListener("resize", onresize);
 });
+
+function showLoading() {
+    document.getElementById("loader").style.display = "block";
+}
+
+function hideLoading() {
+    document.getElementById("loader").style.display = "none";
+}
