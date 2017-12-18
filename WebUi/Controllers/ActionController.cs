@@ -13,7 +13,8 @@ namespace Finance_Website.Controllers
 
         private void InitializeAction(string lastTab = null)
         {
-            _userUtility = SessionUtility.InitializeUtil(Session["UserUtility"], lastTab);
+            _userUtility = SessionUtility.InitializeUtil(Session["UserUtility"], 
+                lastTab);
 
             Session["UserUtility"] = _userUtility;
         }
@@ -23,55 +24,100 @@ namespace Finance_Website.Controllers
             Session["UserUtility"] = _userUtility;
         }
 
-        public ActionResult AddBalance(string name, decimal balance, string lastTab = null)
+        public string AddBalance(string name, decimal balance)
         {
-            InitializeAction(lastTab);
+            InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
-            new InsertLogic().AddBankAccount(_userUtility.User, name.Trim(), balance);
+            if (!new InsertLogic().AddBankAccount(_userUtility.User, name.Trim(), 
+                balance))
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(47),
+                    Success = false,
+                    Object = null
+                });
 
             SaveAction();
-
-            Session["Message"] = _userUtility.Language.GetText(44);
-
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(44),
+                Success = true,
+                Object = _userUtility.User
+            });
         }
 
-        public ActionResult AddMonthlyBill(string name, decimal amount, string lastTab = null)
+        public string AddMonthlyBill(string name, decimal amount)
         {
-            InitializeAction(lastTab);
+            InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
-            new InsertLogic().AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyBill);
+            if (!new InsertLogic().AddPayment(_userUtility.User, name.Trim(),
+                amount, PaymentType.MonthlyBill))
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(47),
+                    Success = false,
+                    Object = null
+                });
 
             SaveAction();
-
-            Session["Message"] = _userUtility.Language.GetText(46);
-
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(46),
+                Success = true,
+                Object = _userUtility.User
+            });
         }
 
-        public ActionResult AddMonthlyIncome(string name, decimal amount, string lastTab = null)
+        public string AddMonthlyIncome(string name, decimal amount)
         {
-            InitializeAction(lastTab);
+            InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
-            new InsertLogic().AddPayment(_userUtility.User, name.Trim(), amount, PaymentType.MonthlyIncome);
+            if (!new InsertLogic().AddPayment(_userUtility.User, name.Trim(),
+                amount, PaymentType.MonthlyIncome))
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(47),
+                    Success = false,
+                    Object = null
+                });
 
             SaveAction();
-
-            Session["Message"] = _userUtility.Language.GetText(48);
-
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(48),
+                Success = true,
+                Object = _userUtility.User
+            });
         }
 
-        public string AddTransaction(int paymentId, string description, decimal amount, 
+        public string AddTransaction(int paymentId, string description, decimal amount,
             int balanceId)
         {
             InitializeAction();
@@ -85,7 +131,7 @@ namespace Finance_Website.Controllers
                     Object = null
                 });
 
-            if (!new InsertLogic().AddTransaction(_userUtility.User, paymentId, 
+            if (!new InsertLogic().AddTransaction(_userUtility.User, paymentId,
                 balanceId, amount, description.Trim()))
                 return JsonConvert.SerializeObject(new Response
                 {
@@ -101,18 +147,6 @@ namespace Finance_Website.Controllers
                 Success = true,
                 Object = _userUtility.User
             });
-        }
-
-        public string TestAjax(string message)
-        {
-            Response response = new Response
-            {
-                Message = "Request received!",
-                Success = true,
-                Object = message
-            };
-
-            return JsonConvert.SerializeObject(response);
         }
     }
 }

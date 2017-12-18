@@ -24,7 +24,7 @@ namespace FinanceLibrary.Logic
         /// <param name="user">The user.</param>
         /// <param name="name">The name of the balance.</param>
         /// <param name="balance">The balance amount of the balance.</param>
-        public void AddBankAccount(User user, string name, decimal balance)
+        public bool AddBankAccount(User user, string name, decimal balance)
         {
             try
             {
@@ -41,7 +41,11 @@ namespace FinanceLibrary.Logic
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
+
+            return true;
         }
 
         /// <summary>
@@ -51,7 +55,7 @@ namespace FinanceLibrary.Logic
         /// <param name="name">The name of the payment.</param>
         /// <param name="amount">The amount of the payment.</param>
         /// <param name="type">The type of payment.</param>
-        public void AddPayment(User user, string name, decimal amount, PaymentType type)
+        public bool AddPayment(User user, string name, decimal amount, PaymentType type)
         {
             try
             {
@@ -82,7 +86,11 @@ namespace FinanceLibrary.Logic
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
+
+            return true;
         }
 
         /// <summary>

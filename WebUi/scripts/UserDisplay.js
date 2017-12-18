@@ -33,12 +33,12 @@ function refreshTransactions() {
 }
 
 function addTransactionUi(item) {
-    $("#TransactionList").append(buildTransactionUi(item));
+    $("#TransactionList").append(buildTransactionUi(item, ""));
 }
 
-function buildTransactionUi(transaction) {
-    var href = `#transaction${transaction.Id}`;
-    var panelId = `transaction${transaction.Id}`;
+function buildTransactionUi(transaction, divId) {
+    var href = `#transaction${divId}${transaction.Id}`;
+    var panelId = `transaction${divId}${transaction.Id}`;
     var id = transaction.Id;
     var amount = transaction.Amount.toFixed(2);
     var description = transaction.Description;
@@ -48,7 +48,7 @@ function buildTransactionUi(transaction) {
                         <div class="panel-heading">
                             <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#accordion" href="${href}">
-                                <span class="${glyphClass}" aria-hidden="true"></span>${amount}</a>
+                                <span class="${glyphClass}" aria-hidden="true"></span> ${amount}</a>
                             </h4>
                         </div>
                         <div id="${panelId}" class="panel-collapse collapse">
@@ -132,7 +132,7 @@ function buildPaymentUi(payment) {
                         <td>${total.toFixed(2)}</td>
                         <td>
                             <div class="btn-group-vertical">
-                                <a class="btn btn-primary btn-sm" role="button" href="../Manage/Payment?id=${id}&lastTab=2">
+                                <a class="btn btn-primary btn-sm" role="button" onclick="showManagePayment(${id})">
                                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                 </a>
                                 <a class="btn btn-success btn-sm" role="button" href="../Action/Transaction?paymentId=${id}&lastTab=2">
@@ -211,18 +211,21 @@ function showErrorMessage(message) {
 }
 
 function showDeleteTransactionConfirmation(id) {
+    $("#PaymentModal").modal("hide");
     $("#DeleteTransactionButton").attr("onclick", `removeTransaction(${id})`);
-    $("#DeleteTransactionModal").modal("toggle");
+    $("#DeleteTransactionModal").modal("show");
 }
 
 function showManageTransaction(id) {
+    $("#PaymentModal").modal("hide");
     var transaction = findTransactionById(id);
 
+    $("#TransactionModalLabel").html(transaction.Description);
     $("#EditTransactionDescription").val(transaction.Description);
     $("#EditTransactionAmount").val(transaction.Amount);
     $("#EditTransactionButton").attr("onclick", `changeTransaction(${id})`);
 
-    $("#TransactionModal").modal("toggle");
+    $("#TransactionModal").modal("show");
 }
 
 function findTransactionById(id) {
@@ -261,7 +264,7 @@ function showManageBalance(id) {
     $("#EditBalanceButton").attr("onclick", `changeBalance(${id})`);
     $("#RemoveBalanceButton").attr("onclick", `showDeleteBalanceConfirmation(${id})`);
 
-    $("#BalanceModal").modal("toggle");
+    $("#BalanceModal").modal("show");
 }
 
 function findBalance(id) {
@@ -274,14 +277,121 @@ function findBalance(id) {
 }
 
 function showDeleteBalanceConfirmation(id) {
-    $("#BalanceModal").modal("toggle");
+    $("#BalanceModal").modal("hide");
     $("#DeleteBalanceModalButton").attr("onclick", `removeBalance(${id})`);
-    $("#DeleteBalanceModal").modal("toggle");
+    $("#DeleteBalanceModal").modal("show");
+}
+
+function showManagePayment(id) {
+    var payment = findPayment(id);
+
+    $("#PaymentModalLabel").html(payment.Name);
+    $("#EditPaymentName").val(payment.Name);
+    $("#EditPaymentAmount").val(payment.Amount);
+    $("#EditPaymentButton").attr("onclick", `changePaymentLogic(${id})`);
+    $("#RemovePaymentButton").attr("onclick", `showRemovePaymentConfirmation(${id})`);
+
+    $("#PaymentModalTransactionList").empty();
+
+    for (var i = 0; i < payment.AllTransactions.length; i++) {
+        $("#PaymentModalTransactionList").append(buildTransactionUi(
+            payment.AllTransactions[i], "pmtl"));
+    }
+
+    $("#PaymentModal").modal("show");
+}
+
+function findPayment(id) {
+    var i;
+
+    for (i = 0; i < user.Bills.length; i++) {
+        if (user.Bills[i].Id === id)
+            return user.Bills[i];
+    }
+
+    for (i = 0; i < user.Income.length; i++) {
+        if (user.Income[i].Id === id)
+            return user.Income[i];
+    }
+
+    return undefined;
+}
+
+function addBillLogic() {
+    showLoading();
+    $("#AddMonthlyBill").modal("hide");
+
+    var name = $("#AddBillName").val();
+    var amount = $("#AddBillAmount").val();
+
+    if (amount === "") {
+        showErrorMessage("Invalid number as amount");
+        hideLoading();
+        return;
+    }
+
+    sendPostRequest("../Action/AddMonthlyBill", {
+            name: name, amount: amount
+        },
+        refreshPayments);
+
+    $("#AddBillName").val("");
+    $("#AddBillAmount").val("");
+}
+
+function addIncomeLogic() {
+    showLoading();
+    $("#AddMonthlyIncome").modal("hide");
+
+    var name = $("#AddIncomeName").val();
+    var amount = $("#AddIncomeAmount").val();
+
+    if (amount === "") {
+        showErrorMessage("Invalid number as amount");
+        hideLoading();
+        return;
+    }
+
+    sendPostRequest("../Action/AddMonthlyIncome", {
+            name: name, amount: amount
+        },
+        refreshPayments);
+
+    $("#AddIncomeName").val("");
+    $("#AddIncomeAmount").val("");
+}
+
+function changePaymentLogic(id) {
+    showLoading();
+    $("#PaymentModal").modal("hide");
+
+    var name = $("#EditPaymentName").val();
+    var amount = $("#EditPaymentAmount").val();
+
+    if (amount === "") {
+        showErrorMessage("Invalid number as amount");
+        hideLoading();
+        return;
+    }
+
+    sendPostRequest("../Manage/ChangePayment", {
+            id: id, name: name, amount: amount
+        },
+        refreshPayments);
+}
+
+function removePayment(id) {
+    showLoading();
+
+    sendPostRequest("../Manage/DeletePayment", {
+            id: id
+        },
+        refreshPayments);
 }
 
 function addTransactionLogic() {
     showLoading();
-    $("#QuickTransaction").modal("toggle");
+    $("#QuickTransaction").modal("hide");
 
     var paymentId = $("#PaymentOption").val();
     var description = $("#QuickTransDescription").val();
@@ -294,59 +404,14 @@ function addTransactionLogic() {
         return;
     }
 
-    $.ajax({
-        type: "POST",
-        url: "../Action/AddTransaction",
-        data: JSON.stringify({
-            paymentId: paymentId, description: description,
-            amount: amount, balanceId: balanceId
-        }),
-        contentType: "application/json",
-        success: function (r) {
-            var response = JSON.parse(r);
-            handleResponse(response);
+    sendPostRequest("../Action/AddTransaction", {
+        paymentId: paymentId, description: description,
+        amount: amount, balanceId: balanceId
+    },
+        refreshTransactions);
 
-            if (response.Success) {
-                user = response.Object;
-                refreshTransactions();
-                refreshSummary();
-
-                $("#QuickTransDescription").val("");
-                $("#QuickTransAmount").val("0.00");
-            }
-        },
-        error: function () {
-            showErrorMessage("Something went wrong!");
-            hideLoading();
-        }
-    });
-}
-
-function removeTransaction(id) {
-    showLoading();
-    $("#DeleteTransactionModal").modal("toggle");
-    $.ajax({
-        type: "POST",
-        url: "../Manage/DeleteTransaction",
-        data: JSON.stringify({
-            id: id
-        }),
-        contentType: "application/json",
-        success: function (r) {
-            var response = JSON.parse(r);
-            handleResponse(response);
-
-            if (response.Success) {
-                user = response.Object;
-                refreshTransactions();
-                refreshSummary();
-            }
-        },
-        error: function () {
-            showErrorMessage("Something went wrong!");
-            hideLoading();
-        }
-    });
+    $("#QuickTransDescription").val("");
+    $("#QuickTransAmount").val("0.00");
 }
 
 function changeTransaction(id) {
@@ -355,29 +420,43 @@ function changeTransaction(id) {
 
     var description = $("#EditTransactionDescription").val();
     var amount = $("#EditTransactionAmount").val();
-    
-    $.ajax({
-        type: "POST",
-        url: "../Manage/ChangeTransaction",
-        data: JSON.stringify({
-            id: id, amount: amount, description: description
-        }),
-        contentType: "application/json",
-        success: function (r) {
-            var response = JSON.parse(r);
-            handleResponse(response);
 
-            if (response.Success) {
-                user = response.Object;
-                refreshTransactions();
-                refreshSummary();
-            }
-        },
-        error: function () {
-            showErrorMessage("Something went wrong!");
-            hideLoading();
-        }
-    });
+    sendPostRequest("../Manage/ChangeTransaction", {
+        id: id, amount: amount, description: description
+    },
+        refreshTransactions);
+}
+
+function removeTransaction(id) {
+    showLoading();
+    $("#DeleteTransactionModal").modal("toggle");
+
+    sendPostRequest("../Manage/DeleteTransaction", {
+        id: id
+    },
+        refreshTransactions);
+}
+
+function addBalanceLogic() {
+    showLoading();
+    $("#AddBalanceModal").modal("toggle");
+
+    var name = $("#AddBalanceName").val();
+    var balance = $("#AddBalanceBalance").val();
+
+    if (balance === "") {
+        showErrorMessage("Invalid number as balance");
+        hideLoading();
+        return;
+    }
+
+    sendPostRequest("../Action/AddBalance", {
+        name: name, balance: balance
+    },
+        refreshBalances);
+
+    $("#QuickTransDescription").val("");
+    $("#QuickTransAmount").val("0.00");
 }
 
 function changeBalance(id) {
@@ -387,40 +466,25 @@ function changeBalance(id) {
     var name = $("#EditBalanceName").val();
     var amount = $("#EditBalanceAmount").val();
 
-    $.ajax({
-        type: "POST",
-        url: "../Manage/ChangeBalance",
-        data: JSON.stringify({
-            id: id, name: name, balanceAmount: amount
-        }),
-        contentType: "application/json",
-        success: function (r) {
-            var response = JSON.parse(r);
-            handleResponse(response);
-
-            if (response.Success) {
-                user = response.Object;
-                refreshBalances();
-                refreshSummary();
-            }
-        },
-        error: function () {
-            showErrorMessage("Something went wrong!");
-            hideLoading();
-        }
-    });
+    sendPostRequest("../Manage/ChangeBalance", {
+        id: id, name: name,
+        balanceAmount: amount
+    },
+        refreshBalances);
 }
 
 function removeBalance(id) {
     showLoading();
     $("#DeleteBalanceModal").modal("toggle");
+    sendPostRequest("../Manage/DeleteBalance", { id: id },
+        refreshBalances);
+}
 
+function sendPostRequest(url, data, refreshCallBack) {
     $.ajax({
         type: "POST",
-        url: "../Manage/DeleteBalance",
-        data: JSON.stringify({
-            id: id
-        }),
+        url: url,
+        data: JSON.stringify(data),
         contentType: "application/json",
         success: function (r) {
             var response = JSON.parse(r);
@@ -428,7 +492,7 @@ function removeBalance(id) {
 
             if (response.Success) {
                 user = response.Object;
-                refreshBalances();
+                refreshCallBack();
                 refreshSummary();
             }
         },
