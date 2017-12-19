@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace FinanceLibrary.Classes
 {
@@ -17,6 +18,7 @@ namespace FinanceLibrary.Classes
         /// <summary>
         /// The salt of the amount. Used for encryption in the databse.
         /// </summary>
+        [JsonIgnore]
         public string AmountSalt { get; set; }
 
         /// <summary>

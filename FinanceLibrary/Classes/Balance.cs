@@ -1,4 +1,6 @@
-﻿namespace FinanceLibrary.Classes
+﻿using Newtonsoft.Json;
+
+namespace FinanceLibrary.Classes
 {
     public class Balance
     {
@@ -33,11 +35,13 @@
         /// <summary>
         /// Salt for the name of the balance. Used for encryption.
         /// </summary>
+        [JsonIgnore]
         public string NameSalt { get; set; }
 
         /// <summary>
         /// Salt for the amount of the balance. Used for encryption.
         /// </summary>
+        [JsonIgnore]
         public string BalanceAmountSalt { get; set; }
     }
 }

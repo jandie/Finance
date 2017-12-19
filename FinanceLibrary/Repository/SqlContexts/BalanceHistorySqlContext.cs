@@ -34,9 +34,9 @@ namespace FinanceLibrary.Repository.SqlContexts
                     return AddBalanceHistory(user);
 
                 const string query = "UPDATE `balancehistory` SET `BankAccountHistory` = @totalBalance, `BankAccountHistorySalt` = @totalBalanceSalt WHERE `ID` = @id";
-                string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(CultureInfo.InvariantCulture)));
+                string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(new CultureInfo("en-US"))));
                 string encryptedTotalBalance =
-                    _encryption.EncryptText(user.TotalBalance.ToString(CultureInfo.InvariantCulture), user.MasterPassword,
+                    _encryption.EncryptText(user.TotalBalance.ToString(new CultureInfo("en-US")), user.MasterPassword,
                         totalBalanceSalt);
                 BalanceHistory balanceHistory = new BalanceHistory(-1, user.TotalBalance, totalBalanceSalt);
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
@@ -103,9 +103,9 @@ namespace FinanceLibrary.Repository.SqlContexts
                     "INSERT INTO `balancehistory` (`UserId`, `BankAccountHistory`, `BankAccountHistorySalt`, `Date`) " +
                                      "VALUES (@userId, @totalBalance, @totalBalanceSalt, @date)";
 
-                string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(CultureInfo.InvariantCulture)));
+                string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(new CultureInfo("en-US"))));
                 string encryptedTotalBalance =
-                    _encryption.EncryptText(user.TotalBalance.ToString(CultureInfo.InvariantCulture), user.MasterPassword,
+                    _encryption.EncryptText(user.TotalBalance.ToString(new CultureInfo("en-US")), user.MasterPassword,
                         totalBalanceSalt);
 
                 BalanceHistory balanceHistory = new BalanceHistory(-1, user.TotalBalance, totalBalanceSalt);
@@ -160,7 +160,7 @@ namespace FinanceLibrary.Repository.SqlContexts
                         DateTime dateTime = Convert.ToDateTime(row[3]);
 
                         decimal decryptedBalance =
-                            Convert.ToDecimal(_encryption.DecryptText(encryptedBalance, user.MasterPassword, balanceSalt));
+                            Convert.ToDecimal(_encryption.DecryptText(encryptedBalance, user.MasterPassword, balanceSalt), new CultureInfo("en-US"));
 
                         BalanceHistory balanceHistory = new BalanceHistory(id, decryptedBalance, balanceSalt)
                         {

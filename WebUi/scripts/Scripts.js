@@ -1,4 +1,6 @@
-﻿$(document).ready(function () {
+﻿var graphData;
+
+$(document).ready(function () {
     $("#AddBalanceModal").on("shown.bs.modal", function () {
         $("#name").focus();
     });
@@ -10,7 +12,29 @@
     });
 });
 
-var drawGraph = function () {
+function convertGraphData() {
+    if (typeof user === 'undefined') return;
+
+    var size = user.BalanceHistories.length;
+    var data = new Array(size);
+
+    for (var i = 0; i < size; i++) {
+        data[i] = new Array(2);
+        data[i][1] = user.BalanceHistories[i].Amount;
+        data[i][0] = i;
+    }
+
+    graphData = [{
+            data: data,
+            color: '#71c73e'
+        }
+    ];
+}
+
+function drawGraph() {
+    convertGraphData();
+    if (typeof graphData === 'undefined') return;
+
     // Lines Graph
     $.plot('#graph-lines', graphData, {
         series: {
@@ -35,7 +59,7 @@ var drawGraph = function () {
     });
 }
 
-var onresize = function (e) {
+function onresize() {
     drawGraph();
 }
 
@@ -44,3 +68,11 @@ $(document).ready(function () {
     
     window.addEventListener("resize", onresize);
 });
+
+function showLoading() {
+    $("#loader").show();
+}
+
+function hideLoading() {
+    $("#loader").hide();
+}

@@ -1,7 +1,8 @@
 ﻿using System.Web.Mvc;
-using FinanceLibrary.Classes;
 using FinanceLibrary.Logic;
+using Finance_Website.Models;
 using Finance_Website.Models.Utilities;
+using Newtonsoft.Json;
 
 namespace Finance_Website.Controllers
 {
@@ -22,183 +23,205 @@ namespace Finance_Website.Controllers
         }
 
         #region Balance
-
-        [HttpGet]
-        public ActionResult Balance(int id = 0, string lastTab = null)
-        {
-            InitializeAction(lastTab);
-
-            if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
-
-            ViewBag.User = _userUtility.User;
-            ViewBag.Balance = _userUtility.User.GetBalance(id);
-
-            return View();
-        }
-
-        public ActionResult ChangeBalance(int id, string name, decimal balanceAmount)
+        [HttpPost]
+        public string ChangeBalance(int id, string name, decimal balanceAmount)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
             if (new ChangeLogic().ChangeBalance(_userUtility.User, id, name,
                     balanceAmount))
-            {
-                Session["Message"] = _userUtility.Language.GetText(51);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(51),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
 
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
-        [HttpGet]
-        public ActionResult DeleteBalance(int id, string lastTab = null)
+        [HttpPost]
+        public string DeleteBalance(int id)
         {
-            InitializeAction(lastTab);
+            InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
             if (new DeleteLogic().DeleteBalance(_userUtility.User, id))
-            {
-                Session["Message"] = _userUtility.Language.GetText(52);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(52),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
 
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
         #endregion
 
         #region Payment
 
-        [HttpGet]
-        public ActionResult Payment(int id = 0, string lastTab = null)
-        {
-            InitializeAction(lastTab);
-
-            if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
-
-            ViewBag.Payment = _userUtility.User.GetPayment(id);
-
-            return View();
-        }
-
-        public ActionResult ChangePayment(int id, string name, decimal amount)
+        [HttpPost]
+        public string ChangePayment(int id, string name, decimal amount)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
             if (new ChangeLogic().ChangePayment(_userUtility.User, id, name, amount))
-            {
-                Session["Message"] = _userUtility.Language.GetText(53);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(53),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
 
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
-        [HttpGet]
-        public ActionResult DeletePayment(int id, string lastTab = null)
+        [HttpPost]
+        public string DeletePayment(int id, string lastTab = null)
         {
             InitializeAction(lastTab);
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
             if (new DeleteLogic().DeletePayment(_userUtility.User, id))
-            {
-                Session["Message"] = _userUtility.Language.GetText(54);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(54),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
 
-            return RedirectToAction("Index", "Account");
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
         #endregion Payment
 
         #region Transaction
 
-        [HttpGet]
-        public ActionResult Transaction(int id = 0)
+        [HttpPost]
+        public string ChangeTransaction(int id, decimal amount, string description)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
-            IPayment payment = _userUtility.User.GetPaymentByTransaction(id);
+            if (new ChangeLogic().ChangeTransaction(_userUtility.User, id, amount, description))
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(55),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
 
-            ViewBag.Transaction = _userUtility.User.GetTransaction(id);
-            ViewBag.PaymentId = payment?.Id;
-            ViewBag.PaymentType = payment?.PaymentType.ToString();
-
-            return View();
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
         [HttpPost]
-        public ActionResult Transaction(int id, decimal amount, string description)
+        public string DeleteTransaction(int id)
         {
             InitializeAction();
 
             if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
-
-            if (new ChangeLogic().ChangeTransaction(_userUtility.User, id, amount, description))
-            {
-                Session["Message"] = _userUtility.Language.GetText(55);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
-
-            return RedirectToAction("Payment", "Manage",
-                new {id = _userUtility.User.GetPaymentByTransaction(id)?.Id, lastTab = Session["LastTab"]});
-        }
-
-        [HttpGet]
-        public ActionResult DeleteTransaction(int id, bool quick = false)
-        {
-            InitializeAction();
-
-            if (_userUtility.User == null)
-                return RedirectToAction("Login", "Account");
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(1),
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
 
             if (new DeleteLogic().DeleteTransaction(_userUtility.User, id))
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = _userUtility.Language.GetText(56),
+                    Success = true,
+                    LogOut = false,
+                    Object = _userUtility.User
+                });
+
+            return JsonConvert.SerializeObject(new Response
             {
-                Session["Message"] = _userUtility.Language.GetText(56);
-            }
-            else
-            {
-                Session["Exception"] = _userUtility.Language.GetText(47);
-            }
-
-            IPayment payment = _userUtility.User.GetPaymentByTransaction(id);
-
-            if (quick || payment == null)
-                return RedirectToAction("Index", "Account");
-
-            return RedirectToAction("Payment", "Manage",
-                new {id = payment.Id, lastTab = Session["LastTab"]});
+                Message = _userUtility.Language.GetText(47),
+                Success = false,
+                LogOut = false,
+                Object = _userUtility.User
+            });
         }
 
         #endregion Transaction

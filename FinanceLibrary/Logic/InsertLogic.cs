@@ -14,7 +14,7 @@ namespace FinanceLibrary.Logic
 
         public InsertLogic()
         {
-            _database =  new Database();
+            _database = new Database();
             _context = new InsertSqlContext(_database);
         }
 
@@ -24,7 +24,7 @@ namespace FinanceLibrary.Logic
         /// <param name="user">The user.</param>
         /// <param name="name">The name of the balance.</param>
         /// <param name="balance">The balance amount of the balance.</param>
-        public void AddBankAccount(User user, string name, decimal balance)
+        public bool AddBankAccount(User user, string name, decimal balance)
         {
             try
             {
@@ -41,7 +41,11 @@ namespace FinanceLibrary.Logic
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
+
+            return true;
         }
 
         /// <summary>
@@ -51,7 +55,7 @@ namespace FinanceLibrary.Logic
         /// <param name="name">The name of the payment.</param>
         /// <param name="amount">The amount of the payment.</param>
         /// <param name="type">The type of payment.</param>
-        public void AddPayment(User user, string name, decimal amount, PaymentType type)
+        public bool AddPayment(User user, string name, decimal amount, PaymentType type)
         {
             try
             {
@@ -75,14 +79,18 @@ namespace FinanceLibrary.Logic
 
                 dummyPayment.Id = id;
 
-                user.AddPayment((IPayment) dummyPayment);
+                user.AddPayment((IPayment)dummyPayment);
 
                 new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+
+                return false;
             }
+
+            return true;
         }
 
         /// <summary>
@@ -94,7 +102,7 @@ namespace FinanceLibrary.Logic
         /// <param name="amount">The amount of the transaction.</param>
         /// <param name="description">The description of the transaction.</param>
         /// <returns>Whether or not the action was a success.</returns>
-        public bool AddTransaction(User user, int paymentId, int balanceId, decimal amount, 
+        public bool AddTransaction(User user, int paymentId, int balanceId, decimal amount,
             string description)
         {
             try
@@ -128,11 +136,11 @@ namespace FinanceLibrary.Logic
                 switch (payment)
                 {
                     case MonthlyBill _:
-                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
+                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name,
                             balance.BalanceAmount - amount);
                         break;
                     case MonthlyIncome _:
-                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
+                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name,
                             balance.BalanceAmount + amount);
                         break;
                 }

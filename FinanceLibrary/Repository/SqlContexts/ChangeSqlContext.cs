@@ -34,12 +34,12 @@ namespace FinanceLibrary.Repository.SqlContexts
                                      "WHERE ID = @id";
 
                 balance.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(balance.Name));
-                balance.BalanceAmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(balance.BalanceAmount, CultureInfo.InvariantCulture)));
+                balance.BalanceAmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(balance.BalanceAmount, new CultureInfo("en-US"))));
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
                     {"name",  _encryption.EncryptText(balance.Name, password, balance.NameSalt)},
-                    {"balanceAmount",  _encryption.EncryptText(Convert.ToString(balance.BalanceAmount, CultureInfo.InvariantCulture), password, balance.BalanceAmountSalt)},
+                    {"balanceAmount",  _encryption.EncryptText(Convert.ToString(balance.BalanceAmount, new CultureInfo("en-US")), password, balance.BalanceAmountSalt)},
                     {"nameSalt",  balance.NameSalt},
                     {"balanceSalt",  balance.BalanceAmountSalt},
                     {"id", balance.Id},
@@ -69,12 +69,12 @@ namespace FinanceLibrary.Repository.SqlContexts
                                      "WHERE ID = @id";
 
                 payment.NameSalt = Hashing.ExtractSalt(Hashing.CreateHash(payment.Name));
-                payment.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(payment.Amount, CultureInfo.InvariantCulture)));
+                payment.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(payment.Amount, new CultureInfo("en-US"))));
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
                     {"name", _encryption.EncryptText(payment.Name, password, payment.NameSalt)},
-                    {"amount", _encryption.EncryptText(payment.Amount.ToString(CultureInfo.InvariantCulture), password, payment.AmountSalt)},
+                    {"amount", _encryption.EncryptText(payment.Amount.ToString(new CultureInfo("en-US")), password, payment.AmountSalt)},
                     {"nameSalt", payment.NameSalt},
                     {"amountSalt", payment.AmountSalt},
                     {"id", payment.Id}
@@ -103,12 +103,12 @@ namespace FinanceLibrary.Repository.SqlContexts
                                      "SET AMOUNT = @amount, DESCRIPTION = @description, AMOUNTSALT = @amountSalt, DESCRIPTIONSALT = @descriptionSalt " +
                                      "WHERE ID = @id";
 
-                transaction.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(transaction.Amount, CultureInfo.InvariantCulture)));
+                transaction.AmountSalt = Hashing.ExtractSalt(Hashing.CreateHash(Convert.ToString(transaction.Amount, new CultureInfo("en-US"))));
                 transaction.DescriptionSalt = Hashing.ExtractSalt(Hashing.CreateHash(transaction.Description));
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
-                    {"amount", _encryption.EncryptText(transaction.Amount.ToString(CultureInfo.InvariantCulture), password, transaction.AmountSalt)},
+                    {"amount", _encryption.EncryptText(transaction.Amount.ToString(new CultureInfo("en-US")), password, transaction.AmountSalt)},
                     {"description", _encryption.EncryptText(transaction.Description, password, transaction.DescriptionSalt)},
                     {"amountSalt", transaction.AmountSalt},
                     {"descriptionSalt", transaction.DescriptionSalt},

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace FinanceLibrary.Classes
 {
@@ -51,11 +52,13 @@ namespace FinanceLibrary.Classes
         /// <summary>
         /// Master password of the user, used for encryption.
         /// </summary>
+        [JsonIgnore]
         public string MasterPassword { get; set; }
 
         /// <summary>
         /// Salt of masterpassword used for encryption.
         /// </summary>
+        [JsonIgnore]
         public string MasterSalt { get; set; }
 
         /// <summary>
@@ -67,6 +70,10 @@ namespace FinanceLibrary.Classes
         /// Returns a copy of the List of Payment objects of the User.
         /// </summary>
         public List<IPayment> Payments => new List<IPayment>(_payments);
+
+        public List<MonthlyBill> Bills => new List<MonthlyBill>(_payments.OfType<MonthlyBill>());
+
+        public List<MonthlyIncome> Income => new List<MonthlyIncome>(_payments.OfType<MonthlyIncome>());
 
         /// <summary>
         /// The ID of the User.
@@ -106,6 +113,7 @@ namespace FinanceLibrary.Classes
         /// <summary>
         /// The salt of the User. Used for encryption.
         /// </summary>
+        [JsonIgnore]
         public string Salt { get; }
 
         /// <summary>

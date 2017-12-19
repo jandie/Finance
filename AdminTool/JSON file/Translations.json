@@ -427,14 +427,14 @@
          "ID":"61",
          "Translations":[
             "Balans beheer",
-            "Balance anagement"
+            "Balance management"
          ]
       },
       {
          "ID":"62",
          "Translations":[
             "Transactie beheer",
-            "Transaction anagement"
+            "Transaction management"
          ]
       },
       {
@@ -533,6 +533,27 @@
          "Translations":[
             "Gebruiker gegevens zijn aangepast",
             "User data has been changed"
+         ]
+      },
+	  {
+         "ID":"77",
+         "Translations":[
+            "Transactie verwijderen?",
+            "Delete transaction?"
+         ]
+      },
+	  {
+         "ID":"78",
+         "Translations":[
+            "Balans verwijderen?",
+            "Delete balance?"
+         ]
+      },
+	  {
+         "ID":"79",
+         "Translations":[
+            "Betaling verwijderen?",
+            "Delete payment?"
          ]
       }
    ]
