@@ -548,6 +548,13 @@
             "Balans verwijderen?",
             "Delete balance?"
          ]
+      },
+	  {
+         "ID":"79",
+         "Translations":[
+            "Betaling verwijderen?",
+            "Delete payment?"
+         ]
       }
    ]
 }

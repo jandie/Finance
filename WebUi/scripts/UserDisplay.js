@@ -318,6 +318,12 @@ function findPayment(id) {
     return undefined;
 }
 
+function showRemovePaymentConfirmation(id) {
+    $("#PaymentModal").modal("hide");
+    $("#DeletePaymentButton").attr("onclick", `removePayment(${id})`);
+    $("#DeletePaymentModal").modal("show");
+}
+
 function addBillLogic() {
     showLoading();
     $("#AddMonthlyBill").modal("hide");
@@ -383,7 +389,7 @@ function changePaymentLogic(id) {
 
 function removePayment(id) {
     showLoading();
-
+    $("#DeletePaymentModal").modal("hide");
     sendPostRequest("../Manage/DeletePayment", {
             id: id
         },
