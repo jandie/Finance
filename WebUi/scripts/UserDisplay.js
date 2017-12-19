@@ -5,6 +5,12 @@
     hideMessages();
 });
 
+//Logout after 10 minutes of inactivity
+$(document).mousemove(function () {
+    clearInterval(window.myVar);
+    window.myVar = setInterval(logOut, 10 * 60 * 1000); 
+});
+
 function refreshUser() {
     if (typeof user === "undefined") return;
 
