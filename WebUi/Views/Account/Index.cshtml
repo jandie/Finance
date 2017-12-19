@@ -4,8 +4,8 @@
 @using Newtonsoft.Json
 @{
     SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
-    User user = userUtility.User;
-    Language language = userUtility.Language;
+    User user = userUtility?.User ?? new User(0, "", "", "", 0, null, "", "");
+    Language language = userUtility?.Language ?? new Language(0, "", "");
 
     ViewBag.Title = $"{user.Name.Trim()}'s {language.GetText(11)}";
 }
