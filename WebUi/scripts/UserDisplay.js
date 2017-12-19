@@ -11,7 +11,6 @@ function refreshUser() {
     refreshSummary();
     refreshBalances();
     refreshPayments();
-    fillQuickTransactionOptions();
 
     hideLoading();
     hideMessages();
@@ -136,9 +135,6 @@ function buildPaymentUi(payment) {
                                 <a class="btn btn-primary btn-sm" role="button" onclick="showManagePayment(${id})">
                                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                 </a>
-                                <a class="btn btn-success btn-sm" role="button" href="../Action/Transaction?paymentId=${id}&lastTab=2">
-                                    <span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
-                                </a>
                             </div>
                         </td>
                     </tr>
@@ -162,6 +158,7 @@ function fillQuickTransactionOptions() {
     user.Bills.forEach(addBillOption);
     user.Income.forEach(addIncomeOption);
     user.Balances.forEach(addBalanceOption);
+    addBalanceOption({ Id: -1, Name: getTranslation(70) });
 }
 
 function addBillOption(bill) {
@@ -183,16 +180,28 @@ function addBalanceOption(balance) {
 }
 
 function getTranslation(id) {
-    return language.Translations[id - 1].TranslationText;
+    for (var i = 0; i < language.Translations.length; i++) {
+        if (language.Translations[i].Id === id)
+            return language.Translations[i].TranslationText;
+    }
+
+    return "";
 }
 
 function decideProgress(total, amount) {
-    return (amount === 0 ? 100 : total / amount * 100).toFixed(0);
+    var progress = (amount === 0 ? 100 : total / amount * 100).toFixed(0);
+
+    return progress > 100 ? 100 : progress;
 }
 
 function hideMessages() {
     $("#ErrorAlert").hide();
     $("#SuccessAlert").hide();
+}
+
+function showQuickTransactionModal() {
+    fillQuickTransactionOptions();
+    $("#QuickTransaction").modal("show");
 }
 
 function showSuccessMessage(message) {
@@ -415,7 +424,7 @@ function addTransactionLogic() {
         paymentId: paymentId, description: description,
         amount: amount, balanceId: balanceId
     },
-        refreshTransactions);
+        refreshPayments);
 
     $("#QuickTransDescription").val("");
     $("#QuickTransAmount").val("0.00");
@@ -431,7 +440,7 @@ function changeTransaction(id) {
     sendPostRequest("../Manage/ChangeTransaction", {
         id: id, amount: amount, description: description
     },
-        refreshTransactions);
+        refreshPayments);
 }
 
 function removeTransaction(id) {
@@ -441,7 +450,7 @@ function removeTransaction(id) {
     sendPostRequest("../Manage/DeleteTransaction", {
         id: id
     },
-        refreshTransactions);
+        refreshPayments);
 }
 
 function addBalanceLogic() {

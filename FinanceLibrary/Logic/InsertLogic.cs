@@ -14,7 +14,7 @@ namespace FinanceLibrary.Logic
 
         public InsertLogic()
         {
-            _database =  new Database();
+            _database = new Database();
             _context = new InsertSqlContext(_database);
         }
 
@@ -79,7 +79,7 @@ namespace FinanceLibrary.Logic
 
                 dummyPayment.Id = id;
 
-                user.AddPayment((IPayment) dummyPayment);
+                user.AddPayment((IPayment)dummyPayment);
 
                 new BalanceHistoryLogic(_database).UpdateBalance(user);
             }
@@ -102,7 +102,7 @@ namespace FinanceLibrary.Logic
         /// <param name="amount">The amount of the transaction.</param>
         /// <param name="description">The description of the transaction.</param>
         /// <returns>Whether or not the action was a success.</returns>
-        public bool AddTransaction(User user, int paymentId, int balanceId, decimal amount, 
+        public bool AddTransaction(User user, int paymentId, int balanceId, decimal amount,
             string description)
         {
             try
@@ -111,7 +111,7 @@ namespace FinanceLibrary.Logic
                 IPayment payment = user.GetPayment(paymentId);
                 Balance balance = user.GetBalance(balanceId);
 
-                if (payment == null || balance == null) return false;
+                if (payment == null) return false;
 
                 switch (payment.PaymentType)
                 {
@@ -131,14 +131,16 @@ namespace FinanceLibrary.Logic
 
                 payment.AddTransaction(dummyTransaction);
 
+                if (balance == null) return true;
+
                 switch (payment)
                 {
                     case MonthlyBill _:
-                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
+                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name,
                             balance.BalanceAmount - amount);
                         break;
                     case MonthlyIncome _:
-                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name, 
+                        new ChangeLogic().ChangeBalance(user, balance.Id, balance.Name,
                             balance.BalanceAmount + amount);
                         break;
                 }
