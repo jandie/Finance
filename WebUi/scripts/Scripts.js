@@ -13,7 +13,7 @@ $(document).ready(function () {
 });
 
 function convertGraphData() {
-    if (typeof user == 'undefined') return;
+    if (typeof user === 'undefined') return;
 
     var size = user.BalanceHistories.length;
     var data = new Array(size);
@@ -33,7 +33,7 @@ function convertGraphData() {
 
 function drawGraph() {
     convertGraphData();
-    if (typeof graphData == 'undefined') return;
+    if (typeof graphData === 'undefined') return;
 
     // Lines Graph
     $.plot('#graph-lines', graphData, {
@@ -59,7 +59,7 @@ function drawGraph() {
     });
 }
 
-var onresize = function (e) {
+function onresize() {
     drawGraph();
 }
 
