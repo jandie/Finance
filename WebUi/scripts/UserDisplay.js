@@ -311,7 +311,7 @@ function showManagePayment(id) {
 
     $("#PaymentModalTransactionList").empty();
 
-    for (var i = 0; i < payment.AllTransactions.length; i++) {
+    for (var i = payment.AllTransactions.length - 1; i > -1; i--) {
         $("#PaymentModalTransactionList").append(buildTransactionUi(
             payment.AllTransactions[i], "pmtl"));
     }
