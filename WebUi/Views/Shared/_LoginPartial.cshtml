@@ -16,7 +16,7 @@
             <li role="separator" class="divider"></li>
             <li>@Html.ActionLink($"{language.GetText(9)}", "MyAccount", "Account", new {area = ""}, new {@class = "primary-content primary-background"})</li>
             <li role="separator" class="divider"></li>
-            <li>@Html.ActionLink(language.GetText(10), "Loguit", "Account", new {area = ""}, new {@class = "primary-content primary-background"})</li>
+            <li onclick="logOut()"><a class="primary-content primary-background" href="#">@language.GetText(10)</a></li>
         }
         else
         {

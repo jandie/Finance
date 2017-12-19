@@ -525,6 +525,8 @@ function handleResponse(response) {
 }
 
 function logOut() {
+    delete user;
+
     $.ajax({
         type: "POST",
         url: "../Account/Loguit",
