@@ -22,6 +22,29 @@ namespace Finance_Website.Controllers
             return RedirectToAction("Index", "Account");
         }
 
+        [HttpPost]
+        public string CheckSession(string email)
+        {
+            InitializeAction();
+
+            if (_userUtility.User == null)
+                return JsonConvert.SerializeObject(new Response
+                {
+                    Message = "Session had ended",
+                    Success = false,
+                    LogOut = true,
+                    Object = null
+                });
+
+            return JsonConvert.SerializeObject(new Response
+            {
+                Message = "Session is still active",
+                Success = true,
+                LogOut = false,
+                Object = null
+            });
+        }
+
         #region Balance
         [HttpPost]
         public string ChangeBalance(int id, string name, decimal balanceAmount)

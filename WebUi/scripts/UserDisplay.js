@@ -3,12 +3,15 @@
 
     hideLoading();
     hideMessages();
+
+    checkSession();
+    window.checkSessionTimer = setInterval(checkSession, 1 * 60 * 1000);
 });
 
 //Logout after 10 minutes of inactivity
 $(document).mousemove(function () {
-    clearInterval(window.myVar);
-    window.myVar = setInterval(logOut, 10 * 60 * 1000); 
+    clearInterval(window.logOutTimer);
+    window.logOutTimer = setInterval(logOut, 10 * 60 * 1000); 
 });
 
 function refreshUser() {
@@ -509,6 +512,26 @@ function sendPostRequest(url, data) {
         error: function () {
             showErrorMessage("Something went wrong!");
             hideLoading();
+        }
+    });
+}
+
+function checkSession() {
+    if (typeof user === "undefined") return;
+
+    $.ajax({
+        type: "POST",
+        url: "../Manage/CheckSession",
+        contentType: "application/json",
+        success: function (r) {
+            var response = JSON.parse(r);
+            if (!response.Success) {
+                logOut();
+            }
+        },
+        error: function () {
+            console.log("Error!");
+            logOut();
         }
     });
 }
