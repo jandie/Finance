@@ -47,7 +47,7 @@ namespace Finance_Website.Models.Utilities
             return Language;
         }
 
-        public static SessionUtility InitializeUtil(Object util, string lastTab = null)
+        public static SessionUtility InitializeUtil(Object util)
         {
             SessionUtility userUtility = util as SessionUtility ?? new SessionUtility();
 

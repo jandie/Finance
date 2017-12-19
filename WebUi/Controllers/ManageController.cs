@@ -10,9 +10,9 @@ namespace Finance_Website.Controllers
     {
         private SessionUtility _userUtility;
 
-        public void InitializeAction(string lastTab = null)
+        public void InitializeAction()
         {
-            _userUtility = SessionUtility.InitializeUtil(Session["UserUtility"], lastTab);
+            _userUtility = SessionUtility.InitializeUtil(Session["UserUtility"]);
 
             Session["UserUtility"] = _userUtility;
         }
@@ -150,7 +150,7 @@ namespace Finance_Website.Controllers
         [HttpPost]
         public string DeletePayment(int id, string lastTab = null)
         {
-            InitializeAction(lastTab);
+            InitializeAction();
 
             if (_userUtility.User == null)
                 return JsonConvert.SerializeObject(new Response
