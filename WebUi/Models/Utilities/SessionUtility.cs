@@ -11,17 +11,12 @@ namespace Finance_Website.Models.Utilities
 
         public Language Language { get; private set; }
 
-        public string LastTab { get; set; }
-
         private string Email { get; set; }
 
         public string Password { get; private set; }
 
-        private void Refresh(string lastTab = null)
+        private void Refresh()
         {
-            if (string.IsNullOrWhiteSpace(LastTab) && lastTab != null)
-                LastTab = lastTab;
-
             User = User == null
                 ? new DataLogic().Login(Email, Password)
                 : new DataLogic().CheckUser(User, Password);
@@ -56,7 +51,7 @@ namespace Finance_Website.Models.Utilities
         {
             SessionUtility userUtility = util as SessionUtility ?? new SessionUtility();
 
-            userUtility.Refresh(lastTab);
+            userUtility.Refresh();
 
             return userUtility;
         }
