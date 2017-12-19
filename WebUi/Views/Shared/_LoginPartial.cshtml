@@ -1,9 +1,8 @@
 ﻿@using Finance_Website.Models.Utilities
-@using FinanceLibrary.Classes
 @using FinanceLibrary.Classes.Language
 @{
     SessionUtility userUtility = Session["UserUtility"] as SessionUtility;
-    Language language = userUtility.Language;
+    Language language = userUtility?.Language ?? new Language(0, "", "");
 
     ViewBag.Title = "_LoginPartial";
 }
@@ -11,10 +10,8 @@
 <li class="dropdown">
     <a href="#" class="dropdown-toggle primary-content primary-background" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account<span class="caret"></span></a>
     <ul class="dropdown-menu primary-background">
-        @if (userUtility.User != null)
+        @if (userUtility?.User != null)
         {
-            User user = Session["user"] as User;
-
             <li>@Html.ActionLink($"{language.GetText(11)}", "Index", "Account", new {area = ""}, new {@class = "primary-content primary-background"})</li>
             <li role="separator" class="divider"></li>
             <li>@Html.ActionLink($"{language.GetText(9)}", "MyAccount", "Account", new {area = ""}, new {@class = "primary-content primary-background"})</li>
