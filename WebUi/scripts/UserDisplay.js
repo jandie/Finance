@@ -11,9 +11,6 @@ function refreshUser() {
     refreshSummary();
     refreshBalances();
     refreshPayments();
-
-    hideLoading();
-    hideMessages();
 }
 
 function refreshSummary() {
@@ -264,6 +261,8 @@ function findTransaction(transactions, id) {
         if (transactions[i].Id === id)
             return transactions[i];
     }
+
+    return undefined;
 }
 
 function showManageBalance(id) {
@@ -348,8 +347,7 @@ function addBillLogic() {
 
     sendPostRequest("../Action/AddMonthlyBill", {
             name: name, amount: amount
-        },
-        refreshPayments);
+        });
 
     $("#AddBillName").val("");
     $("#AddBillAmount").val("");
@@ -370,8 +368,7 @@ function addIncomeLogic() {
 
     sendPostRequest("../Action/AddMonthlyIncome", {
             name: name, amount: amount
-        },
-        refreshPayments);
+        });
 
     $("#AddIncomeName").val("");
     $("#AddIncomeAmount").val("");
@@ -392,8 +389,7 @@ function changePaymentLogic(id) {
 
     sendPostRequest("../Manage/ChangePayment", {
             id: id, name: name, amount: amount
-        },
-        refreshPayments);
+        });
 }
 
 function removePayment(id) {
@@ -401,8 +397,7 @@ function removePayment(id) {
     $("#DeletePaymentModal").modal("hide");
     sendPostRequest("../Manage/DeletePayment", {
             id: id
-        },
-        refreshPayments);
+        });
 }
 
 function addTransactionLogic() {
@@ -423,8 +418,7 @@ function addTransactionLogic() {
     sendPostRequest("../Action/AddTransaction", {
         paymentId: paymentId, description: description,
         amount: amount, balanceId: balanceId
-    },
-        refreshPayments);
+    });
 
     $("#QuickTransDescription").val("");
     $("#QuickTransAmount").val("0.00");
@@ -439,8 +433,7 @@ function changeTransaction(id) {
 
     sendPostRequest("../Manage/ChangeTransaction", {
         id: id, amount: amount, description: description
-    },
-        refreshPayments);
+    });
 }
 
 function removeTransaction(id) {
@@ -449,8 +442,7 @@ function removeTransaction(id) {
 
     sendPostRequest("../Manage/DeleteTransaction", {
         id: id
-    },
-        refreshPayments);
+    });
 }
 
 function addBalanceLogic() {
@@ -468,8 +460,7 @@ function addBalanceLogic() {
 
     sendPostRequest("../Action/AddBalance", {
         name: name, balance: balance
-    },
-        refreshBalances);
+    });
 
     $("#QuickTransDescription").val("");
     $("#QuickTransAmount").val("0.00");
@@ -485,18 +476,16 @@ function changeBalance(id) {
     sendPostRequest("../Manage/ChangeBalance", {
         id: id, name: name,
         balanceAmount: amount
-    },
-        refreshBalances);
+    });
 }
 
 function removeBalance(id) {
     showLoading();
     $("#DeleteBalanceModal").modal("toggle");
-    sendPostRequest("../Manage/DeleteBalance", { id: id },
-        refreshBalances);
+    sendPostRequest("../Manage/DeleteBalance", { id: id });
 }
 
-function sendPostRequest(url, data, refreshCallBack) {
+function sendPostRequest(url, data) {
     $.ajax({
         type: "POST",
         url: url,
@@ -508,8 +497,7 @@ function sendPostRequest(url, data, refreshCallBack) {
 
             if (response.Success) {
                 user = response.Object;
-                refreshCallBack();
-                refreshSummary();
+                refreshUser();
             }
         },
         error: function () {
@@ -528,6 +516,9 @@ function handleResponse(response) {
         showSuccessMessage(response.Message);
     } else {
         showErrorMessage(response.Message);
+
+        if (response.LogOut)
+            logOut();
     }
 
     hideLoading();
