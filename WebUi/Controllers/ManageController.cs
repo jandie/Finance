@@ -23,11 +23,11 @@ namespace Finance_Website.Controllers
         }
 
         [HttpPost]
-        public string CheckSession(string email)
+        public string CheckSession()
         {
-            InitializeAction();
+            _userUtility = Session["UserUtility"] as SessionUtility;
 
-            if (_userUtility.User == null)
+            if (_userUtility?.User == null)
                 return JsonConvert.SerializeObject(new Response
                 {
                     Message = "Session had ended",
@@ -148,7 +148,7 @@ namespace Finance_Website.Controllers
         }
 
         [HttpPost]
-        public string DeletePayment(int id, string lastTab = null)
+        public string DeletePayment(int id)
         {
             InitializeAction();
 
