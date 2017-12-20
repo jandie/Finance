@@ -63,7 +63,7 @@ function buildTransactionUi(transaction, divId) {
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-2 pull-right">
+                                    <div class="col-md-2">
                                         <div class="btn-group">
                                             <a class="btn btn-primary btn-sm" role="button" onclick="showManageTransaction(${id})">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
@@ -555,6 +555,7 @@ function handleResponse(response) {
 
 function logOut() {
     delete user;
+    delete graphData;
 
     $.ajax({
         type: "POST",

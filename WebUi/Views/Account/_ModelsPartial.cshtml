@@ -15,18 +15,18 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="AddBalanceName">@language.GetText(19)</label>
                             <div class="input-group">
-                                <input id="AddBalanceName" type="text" class="form-control" aria-describedby="basic-addon3" required>
+                                <input id="AddBalanceName" type="text" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="AddBalanceBalance">@language.GetText(22)</label>
                             <div class="input-group">
-                                <input id="AddBalanceBalance" type="number" step="any" class="form-control" aria-describedby="basic-addon3" required>
+                                <input id="AddBalanceBalance" type="number" step="any" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
@@ -56,18 +56,18 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="AddBillName">@language.GetText(19)</label>
                             <div class="input-group">
-                                <input id="AddBillName" type="text" class="form-control" aria-describedby="basic-addon3" required>
+                                <input id="AddBillName" type="text" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="AddBillAmount">@language.GetText(17)</label>
                             <div class="input-group">
-                                <input id="AddBillAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" required>
+                                <input id="AddBillAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
@@ -97,18 +97,18 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="AddIncomeName">@language.GetText(19)</label>
                             <div class="input-group">
-                                <input id="AddIncomeName" type="text" class="form-control" aria-describedby="basic-addon3" required>
+                                <input id="AddIncomeName" type="text" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="AddIncomeAmount">@language.GetText(17)</label>
                             <div class="input-group">
-                                <input id="AddIncomeAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" required>
+                                <input id="AddIncomeAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
@@ -138,28 +138,28 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="BalanceOption">@language.GetText(21)</label>
-                            <select class="form-control" name="balanceId" id="BalanceOption"></select>
+                            <select class="form-control" name="balanceId" id="BalanceOption" style="width: 200px;"></select>
                         </div>
 
                         <div class="form-group">
                             <label for="PaymentOption">@language.GetText(23)</label>
-                            <select class="form-control" name="paymentId" id="PaymentOption"></select>
+                            <select class="form-control" name="paymentId" id="PaymentOption" style="width: 200px;"></select>
                         </div>
 
                         <div class="form-group">
                             <label for="QuickTransDescription">@language.GetText(18)</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="QuickTransDescription" name="description" aria-describedby="basic-addon3">
+                                <input type="text" class="form-control" id="QuickTransDescription" name="description" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="QuickTransAmount">@language.GetText(17)</label>
                             <div class="input-group">
-                                <input type="number" step="any" class="form-control" id="QuickTransAmount" name="amount" aria-describedby="basic-addon3" value="0">
+                                <input type="number" step="any" class="form-control" id="QuickTransAmount" name="amount" aria-describedby="basic-addon3" value="0" style="width: 200px;">
                             </div>
                         </div>
 
@@ -190,7 +190,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <button id="DeleteTransactionButton" class="btn btn-danger" style="width: 100%;" onclick="">
+                        <button id="DeleteTransactionButton" class="btn-lg btn-danger" style="width: 100%;" onclick="">
                             @language.GetText(30)
                         </button>
                     </div>
@@ -214,18 +214,18 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="EditTransactionDescription">@language.GetText(18)</label>
                             <div class="input-group">
-                                <input id="EditTransactionDescription" type="text" class="form-control" aria-describedby="basic-addon3" value="">
+                                <input id="EditTransactionDescription" type="text" class="form-control" aria-describedby="basic-addon3" value="" style="width: 200px;">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="EditTransactionAmount">@language.GetText(22)</label>
                             <div class="input-group">
-                                <input id="EditTransactionAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" value="">
+                                <input id="EditTransactionAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" value="" style="width: 200px;">
                             </div>
                         </div>
 
@@ -253,18 +253,18 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="EditBalanceName">@language.GetText(19)</label>
                             <div class="input-group">
-                                <input id="EditBalanceName" type="text" class="form-control" aria-describedby="basic-addon3">
+                                <input id="EditBalanceName" type="text" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="EditBalanceAmount">@language.GetText(22)</label>
                             <div class="input-group">
-                                <input id="EditBalanceAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3">
+                                <input id="EditBalanceAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
@@ -296,7 +296,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <button id="DeleteBalanceModalButton" class="btn btn-danger" style="width: 100%;" onclick="">
+                        <button id="DeleteBalanceModalButton" class="btn-lg btn-danger" style="width: 100%;" onclick="">
                             @language.GetText(30)
                         </button>
                     </div>
@@ -324,14 +324,14 @@
                         <div class="form-group">
                             <label for="EditPaymentName">@language.GetText(19)</label>
                             <div class="input-group">
-                                <input id="EditPaymentName" type="text" class="form-control" aria-describedby="basic-addon3" style="width: 200px">
+                                <input id="EditPaymentName" type="text" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="EditPaymentAmount">@language.GetText(17)</label>
                             <div class="input-group">
-                                <input id="EditPaymentAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" style="width: 200px">
+                                <input id="EditPaymentAmount" type="number" step="any" class="form-control" aria-describedby="basic-addon3" style="width: 200px;">
                             </div>
                         </div>
 
@@ -367,7 +367,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <button id="DeletePaymentButton" class="btn btn-danger" style="width: 100%;" onclick="">
+                        <button id="DeletePaymentButton" class="btn-lg btn-danger" style="width: 100%;" onclick="">
                             @language.GetText(30)
                         </button>
                     </div>

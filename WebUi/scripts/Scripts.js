@@ -1,6 +1,4 @@
-﻿var graphData;
-
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $("#AddBalanceModal").on("shown.bs.modal", function () {
         $("#name").focus();
     });
@@ -24,7 +22,7 @@ function convertGraphData() {
         data[i][0] = i;
     }
 
-    graphData = [{
+    window.graphData = [{
             data: data,
             color: '#71c73e'
         }
