@@ -505,7 +505,7 @@ function sendPostRequest(url, data) {
             handleResponse(response);
 
             if (response.Success) {
-                user = response.Object;
+                window.user = response.Object;
                 refreshUser();
             }
         },
@@ -541,7 +541,7 @@ function handleResponse(response) {
     console.log(response.Message);
 
     if (response.Success) {
-        user = response.Object;
+        window.user = response.Object;
         showSuccessMessage(response.Message);
     } else {
         showErrorMessage(response.Message);
