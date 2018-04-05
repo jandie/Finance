@@ -1,2 +1,4 @@
 language: csharp
 solution: Finance.sln
+script:
+    - msbuild ./FinanceLibrary/FinanceLibrary.csproj
