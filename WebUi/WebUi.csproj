@@ -138,6 +138,7 @@
     <None Include="Properties\PublishProfiles\Finance.pubxml" />
     <Content Include="scripts\bootstrap.js" />
     <Content Include="scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="scripts\jquery-3.2.1.js" />
     <Content Include="scripts\jquery-3.2.1.min.js" />

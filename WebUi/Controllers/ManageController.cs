@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Globalization;
+using System.Web.Mvc;
 using FinanceLibrary.Logic;
 using Finance_Website.Models;
 using Finance_Website.Models.Utilities;
@@ -47,8 +49,9 @@ namespace Finance_Website.Controllers
 
         #region Balance
         [HttpPost]
-        public string ChangeBalance(int id, string name, decimal balanceAmount)
+        public string ChangeBalance(int id, string name, string balanceAmount)
         {
+            decimal balanceAmountD = Convert.ToDecimal(balanceAmount, new CultureInfo("en-US"));
             InitializeAction();
 
             if (_userUtility.User == null)
@@ -61,7 +64,7 @@ namespace Finance_Website.Controllers
                 });
 
             if (new ChangeLogic().ChangeBalance(_userUtility.User, id, name,
-                    balanceAmount))
+                    balanceAmountD))
                 return JsonConvert.SerializeObject(new Response
                 {
                     Message = _userUtility.Language.GetText(51),
@@ -116,8 +119,9 @@ namespace Finance_Website.Controllers
         #region Payment
 
         [HttpPost]
-        public string ChangePayment(int id, string name, decimal amount)
+        public string ChangePayment(int id, string name, string amount)
         {
+            decimal amountD = Convert.ToDecimal(amount, new CultureInfo("en-US"));
             InitializeAction();
 
             if (_userUtility.User == null)
@@ -129,7 +133,7 @@ namespace Finance_Website.Controllers
                     Object = null
                 });
 
-            if (new ChangeLogic().ChangePayment(_userUtility.User, id, name, amount))
+            if (new ChangeLogic().ChangePayment(_userUtility.User, id, name, amountD))
                 return JsonConvert.SerializeObject(new Response
                 {
                     Message = _userUtility.Language.GetText(53),
@@ -184,8 +188,9 @@ namespace Finance_Website.Controllers
         #region Transaction
 
         [HttpPost]
-        public string ChangeTransaction(int id, decimal amount, string description)
+        public string ChangeTransaction(int id, string amount, string description)
         {
+            decimal amountD = Convert.ToDecimal(amount, new CultureInfo("en-US"));
             InitializeAction();
 
             if (_userUtility.User == null)
@@ -197,7 +202,7 @@ namespace Finance_Website.Controllers
                     Object = null
                 });
 
-            if (new ChangeLogic().ChangeTransaction(_userUtility.User, id, amount, description))
+            if (new ChangeLogic().ChangeTransaction(_userUtility.User, id, amountD, description))
                 return JsonConvert.SerializeObject(new Response
                 {
                     Message = _userUtility.Language.GetText(55),

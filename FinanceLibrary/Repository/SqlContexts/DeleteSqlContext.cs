@@ -135,7 +135,7 @@ namespace FinanceLibrary.Repository.SqlContexts
             DeletePaymentsFromUser(email);
             DeleteBalancesFromUser(email);
 
-            const string query = "DELETE FROM user WHERE email = @email";
+            const string query = "DELETE FROM USER WHERE email = @email";
 
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
 
@@ -150,7 +150,7 @@ namespace FinanceLibrary.Repository.SqlContexts
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
 
-            _db.Execute("DELETE t FROM transaction t INNER JOIN payment p ON p.Id = t.Payment_Id INNER JOIN `user` u ON u.Id = p.User_Id WHERE u.Email = @email", 
+            _db.Execute("DELETE t FROM TRANSACTION t INNER JOIN PAYMENT p ON p.Id = t.Payment_Id INNER JOIN USER u ON u.Id = p.User_Id WHERE u.Email = @email", 
                 parameters, Database.QueryType.NonQuery);
         }
 
@@ -162,7 +162,7 @@ namespace FinanceLibrary.Repository.SqlContexts
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
 
-            _db.Execute("DELETE p FROM payment p INNER JOIN `user` u ON u.Id = p.User_Id WHERE u.Email = @email", 
+            _db.Execute("DELETE p FROM PAYMENT p INNER JOIN USER u ON u.Id = p.User_Id WHERE u.Email = @email", 
                 parameters, Database.QueryType.NonQuery);
         }
 
@@ -174,9 +174,9 @@ namespace FinanceLibrary.Repository.SqlContexts
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "email", email } };
 
-            _db.Execute("DELETE bh FROM balancehistory bh INNER JOIN `user` u ON u.Id = bh.UserId WHERE u.Email = @email", 
+            _db.Execute("DELETE bh FROM BALANCEHISTORY bh INNER JOIN USER u ON u.Id = bh.UserId WHERE u.Email = @email", 
                 parameters, Database.QueryType.NonQuery);
-            _db.Execute("DELETE ba FROM bankaccount ba INNER JOIN `user` u ON u.Id = ba.User_Id WHERE u.Email = @email",
+            _db.Execute("DELETE ba FROM BANKACCOUNT ba INNER JOIN USER u ON u.Id = ba.User_Id WHERE u.Email = @email",
                 parameters, Database.QueryType.NonQuery);
         }
     }

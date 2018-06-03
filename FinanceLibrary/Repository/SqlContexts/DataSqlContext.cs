@@ -146,7 +146,7 @@ namespace FinanceLibrary.Repository.SqlContexts
         private string UpdateToken(string email)
         {
             string ranString = RanUtil.RandomString(10);
-            const string query = "UPDATE user SET Token = @ranString WHERE email = @email";
+            const string query = "UPDATE USER SET Token = @ranString WHERE email = @email";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>()
             {

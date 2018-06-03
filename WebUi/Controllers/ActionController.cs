@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Globalization;
+using System.Web.Mvc;
 using FinanceLibrary.Enums;
 using FinanceLibrary.Logic;
 using Finance_Website.Models;
@@ -23,8 +25,9 @@ namespace Finance_Website.Controllers
             Session["UserUtility"] = _userUtility;
         }
 
-        public string AddBalance(string name, decimal balance)
+        public string AddBalance(string name, string balance)
         {
+            decimal balanceD = Convert.ToDecimal(balance, new CultureInfo("en-US"));
             InitializeAction();
 
             if (_userUtility.User == null)
@@ -37,7 +40,7 @@ namespace Finance_Website.Controllers
                 });
 
             if (!new InsertLogic().AddBankAccount(_userUtility.User, name.Trim(), 
-                balance))
+                balanceD))
                 return JsonConvert.SerializeObject(new Response
                 {
                     Message = _userUtility.Language.GetText(47),
@@ -54,8 +57,9 @@ namespace Finance_Website.Controllers
             });
         }
 
-        public string AddMonthlyBill(string name, decimal amount)
+        public string AddMonthlyBill(string name, string amount)
         {
+            decimal amountD = Convert.ToDecimal(amount, new CultureInfo("en-US"));
             InitializeAction();
 
             if (_userUtility.User == null)
@@ -68,7 +72,7 @@ namespace Finance_Website.Controllers
                 });
 
             if (!new InsertLogic().AddPayment(_userUtility.User, name.Trim(),
-                amount, PaymentType.MonthlyBill))
+                amountD, PaymentType.MonthlyBill))
                 return JsonConvert.SerializeObject(new Response
                 {
                     Message = _userUtility.Language.GetText(47),
@@ -85,8 +89,9 @@ namespace Finance_Website.Controllers
             });
         }
 
-        public string AddMonthlyIncome(string name, decimal amount)
+        public string AddMonthlyIncome(string name, string amount)
         {
+            decimal amountD = Convert.ToDecimal(amount, new CultureInfo("en-US"));
             InitializeAction();
 
             if (_userUtility.User == null)
@@ -99,7 +104,7 @@ namespace Finance_Website.Controllers
                 });
 
             if (!new InsertLogic().AddPayment(_userUtility.User, name.Trim(),
-                amount, PaymentType.MonthlyIncome))
+                amountD, PaymentType.MonthlyIncome))
                 return JsonConvert.SerializeObject(new Response
                 {
                     Message = _userUtility.Language.GetText(47),
@@ -116,9 +121,10 @@ namespace Finance_Website.Controllers
             });
         }
 
-        public string AddTransaction(int paymentId, string description, decimal amount,
+        public string AddTransaction(int paymentId, string description, string amount,
             int balanceId)
         {
+            decimal amountD = Convert.ToDecimal(amount, new CultureInfo("en-US"));
             InitializeAction();
 
             if (_userUtility.User == null)
@@ -131,7 +137,7 @@ namespace Finance_Website.Controllers
                 });
 
             if (!new InsertLogic().AddTransaction(_userUtility.User, paymentId,
-                balanceId, amount, description.Trim()))
+                balanceId, amountD, description.Trim()))
                 return JsonConvert.SerializeObject(new Response
                 {
                     Message = _userUtility.Language.GetText(47),

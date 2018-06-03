@@ -33,7 +33,7 @@ namespace FinanceLibrary.Repository.SqlContexts
                 if (exsistingId < 0)
                     return AddBalanceHistory(user);
 
-                const string query = "UPDATE `balancehistory` SET `BankAccountHistory` = @totalBalance, `BankAccountHistorySalt` = @totalBalanceSalt WHERE `ID` = @id";
+                const string query = "UPDATE BALANCEHISTORY SET `BankAccountHistory` = @totalBalance, `BankAccountHistorySalt` = @totalBalanceSalt WHERE `ID` = @id";
                 string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(new CultureInfo("en-US"))));
                 string encryptedTotalBalance =
                     _encryption.EncryptText(user.TotalBalance.ToString(new CultureInfo("en-US")), user.MasterPassword,
@@ -67,7 +67,7 @@ namespace FinanceLibrary.Repository.SqlContexts
             try
             {
                 int id = -1;
-                const string query = "SELECT ID FROM balancehistory WHERE UserId = @userId AND Date LIKE (@month)";
+                const string query = "SELECT ID FROM BALANCEHISTORY WHERE UserId = @userId AND Date LIKE (@month)";
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
                 {
@@ -99,8 +99,8 @@ namespace FinanceLibrary.Repository.SqlContexts
         {
             try
             {
-                const string query = 
-                    "INSERT INTO `balancehistory` (`UserId`, `BankAccountHistory`, `BankAccountHistorySalt`, `Date`) " +
+                const string query =
+                    "INSERT INTO BALANCEHISTORY (`UserId`, `BankAccountHistory`, `BankAccountHistorySalt`, `Date`) " +
                                      "VALUES (@userId, @totalBalance, @totalBalanceSalt, @date)";
 
                 string totalBalanceSalt = Hashing.ExtractSalt(Hashing.CreateHash(user.TotalBalance.ToString(new CultureInfo("en-US"))));
@@ -140,7 +140,7 @@ namespace FinanceLibrary.Repository.SqlContexts
         {
             try
             {
-                const string query = "SELECT ID, BankAccountHistory, BankAccountHistorySalt, Date FROM balancehistory WHERE UserId = @userId AND Date > @month";
+                const string query = "SELECT ID, BankAccountHistory, BankAccountHistorySalt, Date FROM BALANCEHISTORY WHERE UserId = @userId AND Date > @month";
                 List<BalanceHistory> balanceHistories = new List<BalanceHistory>();
 
                 Dictionary<string, object> parameters = new Dictionary<string, object>()
