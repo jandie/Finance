@@ -18,6 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class BalanceSerializer(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Balance
         fields = ('id', 'name', 'amount')
@@ -32,6 +34,8 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Transaction
         fields = ('id', 'description', 'amount')
