@@ -24,12 +24,14 @@ class BalanceSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Payment
-        field = ('id', 'name', 'amount', 'outgoing')
+        fields = ('id', 'name', 'amount', 'outgoing')
 
 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        field = ('id', 'description', 'amount')
+        fields = ('id', 'description', 'amount')

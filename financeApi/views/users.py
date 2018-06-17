@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
 
-from financeApi.serializers import UserSerializer
+from financeApi.serializers import UserSerializer, PaymentSerializer
 
 
 @api_view(['POST'])
@@ -23,4 +23,4 @@ def users_creation(request):
         token = jwt_encode_handler(jwt_payload_handler(user))
         return Response({
             'token': token
-        }, status=status.HTTP_201_CREATED )
+        }, status=status.HTTP_201_CREATED)
