@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^api-token-refresh/', refresh_jwt_token),
 
     url(r'^users/$', users.users_creation),
+    url(r'^users/overview/$', users.UserOverview.as_view()),
 
     url(r'^payments/$', payments.PaymentList.as_view()),
     url(r'^payments/(?P<pk>[0-9]+)/$', payments.PaymentDetail.as_view()),

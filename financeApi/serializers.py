@@ -42,3 +42,16 @@ class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = ('id', 'name', 'amount', 'paid', 'transactions', 'outgoing')
+
+
+class OverviewSerializer(serializers.Serializer):
+    balance = serializers.DecimalField(max_digits=12, decimal_places=2)
+    endBalance = serializers.DecimalField(max_digits=12, decimal_places=2)
+    toPay = serializers.DecimalField(max_digits=12, decimal_places=2)
+    toGet = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
