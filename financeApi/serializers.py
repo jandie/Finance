@@ -25,17 +25,18 @@ class BalanceSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'amount')
 
 
-class PaymentSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(read_only=True)
-
-    class Meta:
-        model = Payment
-        fields = ('id', 'name', 'amount', 'outgoing')
-
-
 class TransactionSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Transaction
         fields = ('id', 'description', 'amount')
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
+    monthly_transactions = serializers.ListField(child=TransactionSerializer())
+
+    class Meta:
+        model = Payment
+        fields = ('id', 'name', 'amount', 'amount_paid', 'monthly_transactions', 'outgoing')
