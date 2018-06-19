@@ -1,4 +1,5 @@
-from django.db.models import Sum
+import datetime
+from django.db.models import Sum, Q
 
 
 def generate_user_overview(user):
@@ -20,9 +21,7 @@ def get_total_balance(user):
 
 
 def get_to_pay(user):
-    paid = 0
-    for payment in user.payment_set.filter(outgoing=True):
-        paid += payment.amount_paid['amount__sum']
+    paid = get_paid(user, True)
 
     total_to_pay = user.payment_set.filter(outgoing=True) \
         .aggregate(Sum('amount'))['amount__sum']
@@ -39,9 +38,7 @@ def get_to_pay(user):
 
 
 def get_to_get(user):
-    gotten = 0
-    for payment in user.payment_set.filter(outgoing=False):
-        gotten += payment.amount_paid['amount__sum']
+    gotten = get_paid(user, False)
 
     total_to_get = user.payment_set.filter(outgoing=False) \
         .aggregate(Sum('amount'))['amount__sum']
@@ -55,3 +52,19 @@ def get_to_get(user):
         to_get = 0
 
     return to_get
+
+
+def get_paid(user, outgoing):
+    year = datetime.date.today().year
+    month = datetime.date.today().month
+    paid = user.payment_set.filter(outgoing=outgoing).values('name') \
+        .annotate(
+        amount_paid=Sum('transaction__amount',
+                        filter=Q(transaction__created__year=year,
+                                 transaction__created__month=month))
+    )
+
+    if paid.count() == 0:
+        return 0
+
+    return paid[0]['amount_paid']
