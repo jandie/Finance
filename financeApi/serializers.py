@@ -35,8 +35,10 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 class PaymentSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(read_only=True)
-    monthly_transactions = serializers.ListField(child=TransactionSerializer())
+    transactions = serializers.ListField(child=TransactionSerializer(),
+                                         source='monthly_transactions')
+    paid = serializers.CharField(source='amount_paid.amount__sum')
 
     class Meta:
         model = Payment
-        fields = ('id', 'name', 'amount', 'amount_paid', 'monthly_transactions', 'outgoing')
+        fields = ('id', 'name', 'amount', 'paid', 'transactions', 'outgoing')
