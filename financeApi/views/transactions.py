@@ -19,8 +19,8 @@ class TransactionList(APIView):
         year = datetime.date.today().year
         month = datetime.date.today().month
         transactions = Transaction.objects.filter(payment__user__id=user.id,
-                                       created__year=year,
-                                       created__month=month)
+                                                  created__year=year,
+                                                  created__month=month)
         transaction_serializer = \
             TransactionSerializer(transactions, many=True)
         return Response(transaction_serializer.data, status=status.HTTP_200_OK)
