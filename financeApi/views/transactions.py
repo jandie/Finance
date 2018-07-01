@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import permissions
@@ -7,9 +8,25 @@ from django.http import Http404
 from financeApi.serializers import TransactionSerializer
 from financeApi.permissions import IsTransactionOwner, IsPaymentOwner
 from financeApi.models import Transaction, Payment
+import datetime
 
 
 class TransactionList(APIView):
+    permission_classes = (permissions.IsAuthentickated,)
+
+    def get(self, request, format=None):
+        user = User.objects.get(pk=request.user.id)
+        year = datetime.date.today().year
+        month = datetime.date.today().month
+        transactions = Transaction.objects.filter(payment__user__id=user.id,
+                                       created__year=year,
+                                       created__month=month)
+        transaction_serializer = \
+            TransactionSerializer(transactions, many=True)
+        return Response(transaction_serializer.data, status=status.HTTP_200_OK)
+
+
+class PaymentTransactionList(APIView):
     permission_classes = (permissions.IsAuthenticated,
                           IsPaymentOwner)
 

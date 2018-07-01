@@ -19,7 +19,9 @@ urlpatterns = [
     url(r'^balances/(?P<pk>[0-9]+)/$', balances.BalanceDetail.as_view()),
 
     url(r'^transactions/(?P<pk>[0-9]+)/$', transactions.TransactionDetail.as_view()),
-    url(r'^payments/(?P<pk>[0-9]+)/transactions/$', transactions.TransactionList.as_view()),
+    url(r'^payments/(?P<pk>[0-9]+)/transactions/$', transactions.PaymentTransactionList.as_view()),
+
+    url(r'^transactions/$', transactions.TransactionList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
