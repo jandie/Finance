@@ -51,5 +51,9 @@ class Transaction(models.Model):
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     created = models.DateField(default=datetime.date.today)
 
+    @property
+    def outgoing(self):
+        return self.payment.outgoing;
+
     def __str__(self):
         return self.description
