@@ -12,7 +12,7 @@ import datetime
 
 
 class TransactionList(APIView):
-    permission_classes = (permissions.IsAuthentickated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, format=None):
         user = User.objects.get(pk=request.user.id)
