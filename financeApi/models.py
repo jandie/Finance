@@ -29,6 +29,9 @@ class Payment(models.Model):
                                            created__month=month) \
             .aggregate(Sum('amount'))
 
+        if paid['amount__sum'] is None:
+            paid['amount__sum'] = 0
+
         return paid
 
     @property
