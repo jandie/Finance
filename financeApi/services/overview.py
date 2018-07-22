@@ -4,6 +4,8 @@ from django.db.models import Sum, Q
 
 def generate_user_overview(user):
     total_balance = get_total_balance(user)
+    if total_balance is None:
+        total_balance = 0
     to_pay = get_to_pay(user)
     to_get = get_to_get(user)
     end_balance = total_balance - to_pay + to_get
