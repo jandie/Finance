@@ -69,9 +69,10 @@ def get_paid(user, outgoing):
     if paid.count() == 0:
         return 0
 
-    amountPaid = paid[0]['amount_paid']
+    amountPaid = 0
 
-    if amountPaid is None:
-        amountPaid = 0
+    for paymentAmount in paid:
+        if not paymentAmount['amount_paid'] is None:
+            amountPaid += paymentAmount['amount_paid']
 
     return amountPaid

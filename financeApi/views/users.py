@@ -21,7 +21,6 @@ def users_creation(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         user = serializer.data
-        print(user['username'])
         user = User.objects.get(username=user['username'])
         token = jwt_encode_handler(jwt_payload_handler(user))
         return Response({

@@ -14,7 +14,6 @@ class IsBalanceOwner(permissions.BasePermission):
 class IsTransactionOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         count = request.user.payment_set.filter(id=obj.payment.id).count()
-        print(count)
         return count > 0
 
 
