@@ -59,7 +59,7 @@ def get_to_get(user):
 def get_paid(user, outgoing):
     year = datetime.date.today().year
     month = datetime.date.today().month
-    paid = user.payment_set.filter(outgoing=outgoing).values('name') \
+    paid = user.payment_set.filter(outgoing=outgoing).values('name', 'amount') \
         .annotate(
         amount_paid=Sum('transaction__amount',
                         filter=Q(transaction__created__year=year,
@@ -72,7 +72,12 @@ def get_paid(user, outgoing):
     amountPaid = 0
 
     for paymentAmount in paid:
-        if not paymentAmount['amount_paid'] is None:
-            amountPaid += paymentAmount['amount_paid']
+        if paymentAmount['amount_paid'] is None:
+            paymentAmount['amount_paid'] = 0
+
+        if paymentAmount['amount_paid'] > paymentAmount['amount']:
+            paymentAmount['amount_paid'] = paymentAmount['amount']
+
+        amountPaid += paymentAmount['amount_paid']
 
     return amountPaid
