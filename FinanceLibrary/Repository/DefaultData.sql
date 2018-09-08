@@ -1,1 +1,0 @@
-INSERT INTO `currency` VALUES (1,'EUR','Euro','EUR'),(2,'USD','US Dollar','USD');
