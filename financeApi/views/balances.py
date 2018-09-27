@@ -4,10 +4,12 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.views import APIView
 from django.http import Http404
+import datetime
 
 from financeApi.serializers import BalanceSerializer
 from financeApi.permissions import IsBalanceOwner
 from financeApi.models import Balance
+from financeApi.services.overview import get_total_balance
 
 
 class BalanceList(APIView):
@@ -25,6 +27,10 @@ class BalanceList(APIView):
             user.balance_set.create(
                 name=serializer.data['name'],
                 amount=serializer.data['amount']
+            )
+            user.balanceHistory_set.create(
+                amount = get_total_balance(user),
+                date = datetime.datetime.now()
             )
             return Response(BalanceSerializer(user.balance_set.last()).data,
                             status=status.HTTP_201_CREATED)
