@@ -14,6 +14,16 @@ class Balance(models.Model):
         return self.name
 
 
+class BalanceHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    amount = models.DecimalField(max_digits=32, decimal_places=2)
+    date = models.DateField()
+
+    def __str__(self):
+        return self.amount
+
+
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
