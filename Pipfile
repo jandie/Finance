@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+certifi = "*"
+chardet = "*"
+colorama = "*"
+dj-database-url = "*"
+django-cors-headers = "*"
+djangorestframework = "*"
+djangorestframework-jwt = "*"
+gunicorn = "*"
+idna = "*"
+"psycopg2" = "*"
+pytz = "*"
+requests = "*"
+"urllib3" = "*"
+whitenoise = "*"
+Django = "*"
+Pygments = "*"
+PyJWT = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
