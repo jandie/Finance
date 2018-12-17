@@ -17,8 +17,8 @@ class Balance(models.Model):
 class BalanceHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    amount = models.DecimalField(max_digits=32, decimal_places=2)
-    date = models.DateField()
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    date = models.DateField(db_index=True, auto_now_add=True)
 
     def __str__(self):
         return self.amount
