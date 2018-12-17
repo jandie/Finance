@@ -21,7 +21,7 @@ class BalanceHistory(models.Model):
     date = models.DateField(db_index=True, auto_now_add=True)
 
     def __str__(self):
-        return self.amount
+        return str(self.amount)
 
 
 class Payment(models.Model):
