@@ -28,6 +28,7 @@ DEBUG = os.environ['VHE_AUTH_DEBUG'] == 'True'
 SECRET_KEY = os.environ['SECRET_KEY']
 SESSION_EXPIRE_AT_BROWSER_CLOSE = not DEBUG
 CORS_ORIGIN_ALLOW_ALL = True
+
 ALLOWED_HOSTS = ['finance-api.cfapps.io', '127.0.0.1', 'testserver', 'localhost']
 
 # Application definition

@@ -14,6 +14,16 @@ class Balance(models.Model):
         return self.name
 
 
+class BalanceHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    date = models.DateField(db_index=True, auto_now_add=True)
+
+    def __str__(self):
+        return str(self.amount)
+
+
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -52,7 +62,7 @@ class Transaction(models.Model):
 
     description = models.CharField(max_length=1024)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    created = models.DateField(default=datetime.date.today)
+    created = models.DateField(default=datetime.date.today, db_index=True)
 
     @property
     def outgoing(self):
