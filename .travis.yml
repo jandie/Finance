@@ -4,7 +4,7 @@ python:
 env:
   global:
     - VHE_AUTH_DEBUG=True
-    - SECRET_KEY=THIS_IS_A_VERY_SECRET_KEY_;)
+    - SECRET_KEY='THIS_IS_A_VERY_SECRET_KEY_;)'
 install:
   - pip install -r requirements.txt
 script:
