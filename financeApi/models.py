@@ -62,7 +62,7 @@ class Transaction(models.Model):
 
     description = models.CharField(max_length=1024)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    created = models.DateField(default=datetime.date.today)
+    created = models.DateField(default=datetime.date.today, db_index=True)
 
     @property
     def outgoing(self):
