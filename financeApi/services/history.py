@@ -22,7 +22,7 @@ def get_todays_balance_history(user):
 def log_transaction_history(transaction):
     user = get_user_of_transaction(transaction)
     new_th = user.transactionhistory_set \
-        .create(transactionId=transaction.id,
+        .create(transaction_id=transaction.id,
                 payment_id=transaction.payment.id,
                 payment_name=transaction.payment.name,
                 transaction_description=transaction.description,
@@ -56,8 +56,8 @@ def deactivate_transaction_history(transaction):
 def get_create_transaction_history(transaction):
     found_th = \
         get_user_of_transaction(transaction) \
-            .transactionhistory_set.get(
-            transaction_id=transaction.id)
+            .transactionhistory_set.filter(
+            transaction_id=transaction.id).first()
 
     if found_th is None:
         found_th = log_transaction_history(transaction)
@@ -73,3 +73,8 @@ def update_transaction_history_by_payment(payment):
     payment.user.transactionhistory_set.filter(payment_id=payment.id)\
         .update(payment_amount=payment.amount,
                 payment_name=payment.name)
+
+
+def deactivate_transaction_history_by_payment(payment):
+    payment.user.transactionhistory_set.filter(payment_id=payment.id)\
+        .update(transaction_exists=False)

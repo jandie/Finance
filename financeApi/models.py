@@ -38,7 +38,8 @@ class TransactionHistory(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{} - {}".format(self.name, self.description)
+        return "{} - {}".format(self.payment_name,
+                                self.transaction_description)
 
 
 class Payment(models.Model):

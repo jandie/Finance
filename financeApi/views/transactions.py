@@ -8,6 +8,10 @@ from django.http import Http404
 from financeApi.serializers import TransactionSerializer
 from financeApi.permissions import IsTransactionOwner, IsPaymentOwner
 from financeApi.models import Transaction, Payment
+from financeApi.services.history import log_transaction_history, \
+    update_transaction_history, \
+    deactivate_transaction_history
+
 import datetime
 
 
@@ -51,7 +55,9 @@ class PaymentTransactionList(APIView):
                 description=serializer.data['description'],
                 amount=serializer.data['amount']
             )
-            return Response(TransactionSerializer(payment.transaction_set.last()).data,
+            transaction = payment.transaction_set.last()
+            log_transaction_history(transaction)
+            return Response(TransactionSerializer(transaction).data,
                             status=status.HTTP_201_CREATED)
 
 
@@ -77,10 +83,12 @@ class TransactionDetail(APIView):
         serializer = TransactionSerializer(transaction, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            update_transaction_history(transaction)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
         transaction = self.get_object(pk)
+        deactivate_transaction_history(transaction)
         transaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
