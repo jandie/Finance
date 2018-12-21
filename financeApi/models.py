@@ -29,10 +29,11 @@ class TransactionHistory(models.Model):
 
     transaction_id = models.IntegerField(unique=True, default=-1)
     payment_id = models.IntegerField(default=-1)
-    name = models.CharField(max_length=256)
-    description = models.CharField(max_length=1024)
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
-    exists = models.BooleanField(default=True)
+    payment_name = models.CharField(max_length=256, default="")
+    transaction_description = models.CharField(max_length=1024, default="")
+    transaction_amount = models.DecimalField(max_digits=12, decimal_places=2, default=-1)
+    payment_amount = models.DecimalField(max_digits=12, decimal_places=2, default=-1)
+    transaction_exists = models.BooleanField(default=True)
     date = models.DateTimeField(db_index=True, auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 

@@ -24,36 +24,36 @@ def log_transaction_history(transaction):
     new_th = user.transactionhistory_set \
         .create(transactionId=transaction.id,
                 payment_id=transaction.payment.id,
-                name=transaction.payment.name,
-                description=transaction.description,
-                amount=transaction.amount)
+                payment_name=transaction.payment.name,
+                transaction_description=transaction.description,
+                transaction_amount=transaction.amount,
+                payment_amount=transaction.payment.amount)
 
     return new_th
 
 
 def update_transaction_history(transaction):
-    th = get_user_of_transaction(transaction) \
-        .transactionhistory_set.get(transaction_id=transaction.id)
+    th = get_create_transaction_history(transaction)
 
-    th.name = transaction.payment.name
-    th.description = transaction.description
-    th.amount = transaction.amount
+    th.payment_name = transaction.payment.name
+    th.transaction_description = transaction.description
+    th.transaction_amount = transaction.amount
+    th.payment_amount = transaction.payment.amount
     th.save()
 
     return th
 
 
 def deactivate_transaction_history(transaction):
-    th = get_user_of_transaction(transaction) \
-        .transactionhistory_set.get(transaction_id=transaction.id)
+    th = get_create_transaction_history(transaction)
 
-    th.exists = False
+    th.transaction_exists = False
     th.save()
 
     return th
 
 
-def get_transaction_history(transaction):
+def get_create_transaction_history(transaction):
     found_th = \
         get_user_of_transaction(transaction) \
             .transactionhistory_set.get(
@@ -68,5 +68,8 @@ def get_transaction_history(transaction):
 def get_user_of_transaction(transaction):
     return transaction.payment.user
 
-# TODO: Update transaction history name when payment changes
-# Example User.objects.filter(id=data['id']).update(email=data['email'], phone=data['phone'])
+
+def update_transaction_history_by_payment(payment):
+    payment.user.transactionhistory_set.filter(payment_id=payment.id)\
+        .update(payment_amount=payment.amount,
+                payment_name=payment.name)
