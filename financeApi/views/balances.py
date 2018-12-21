@@ -9,8 +9,7 @@ import datetime
 from financeApi.serializers import BalanceSerializer
 from financeApi.permissions import IsBalanceOwner
 from financeApi.models import Balance
-from financeApi.services.overview import get_total_balance
-from financeApi.services.balance_history import update_balance_history
+from financeApi.services.history import update_balance_history
 
 
 class BalanceList(APIView):
