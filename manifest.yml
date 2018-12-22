@@ -7,8 +7,6 @@ applications:
   command: python manage.py collectstatic --noinput && gunicorn finance.wsgi:application
   services:
   - finance-api-db
-  env:
-    VHE_AUTH_DEBUG: False
 
 # Creating superuser from pws task
 # echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@myproject.com', 'password')" | python manage.py shell
