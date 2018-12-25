@@ -111,6 +111,27 @@ class BalanceTests(TestCase):
         self.assertEqual(response.data['name'], 'test balance34')
         self.assertEqual(response.data['amount'], '108.36')
 
+    def test_edit_balance_security(self):
+        balance = self.user2.balance_set.create(name='testing balance',
+                                               amount=563.93)
+        self.user.balance_set.create(name='testing balance',
+                                      amount=563.93)
+
+        self.assertEqual(self.user2.balance_set.first().name,
+                         'testing balance')
+        self.assertEqual(self.user2.balance_set.first().amount,
+                         Decimal('563.93'))
+
+        client = APIClient()
+        client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
+        response = client.put('http://testserver/balances/1/',
+                              json.dumps({'id': balance.id,
+                                          'name': 'test balance34',
+                                          'amount': 108.36}),
+                              content_type='application/json')
+
+        self.assertEqual(response.status_code, 403)
+
     def test_balance_security(self):
         balance = self.user2.balance_set.create(name='testing balance',
                                                amount=563.93)
