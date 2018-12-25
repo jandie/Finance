@@ -20,7 +20,7 @@ class BalanceTests(TestCase):
                                                amount=563.93)
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
-        url = 'http://testserver/balances/{}/'.format(balance.id)
+        url = '/balances/{}/'.format(balance.id)
         response = client.get(url, content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
@@ -34,7 +34,7 @@ class BalanceTests(TestCase):
                                                amount=563.03)
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
-        url = 'http://testserver/balances/'
+        url = '/balances/'
         response = client.get(url, content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
@@ -101,7 +101,7 @@ class BalanceTests(TestCase):
 
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
-        response = client.put('http://testserver/balances/1/',
+        response = client.put('/balances/1/',
                               json.dumps({'id': balance.id,
                                           'name': 'test balance34',
                                           'amount': 108.36}),
@@ -124,7 +124,7 @@ class BalanceTests(TestCase):
 
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
-        response = client.put('http://testserver/balances/1/',
+        response = client.put('/balances/1/',
                               json.dumps({'id': balance.id,
                                           'name': 'test balance34',
                                           'amount': 108.36}),
@@ -137,7 +137,7 @@ class BalanceTests(TestCase):
                                                amount=563.93)
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
-        url = 'http://testserver/balances/{}/'.format(balance.id)
+        url = '/balances/{}/'.format(balance.id)
         response = client.get(url, content_type='application/json')
 
         self.assertEqual(response.status_code, 403)
@@ -149,7 +149,7 @@ class BalanceTests(TestCase):
                                                amount=563.03)
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
-        url = 'http://testserver/balances/'
+        url = '/balances/'
         response = client.get(url, content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
