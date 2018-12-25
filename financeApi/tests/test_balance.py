@@ -10,6 +10,7 @@ from rest_framework.test import APIClient
 
 class BalanceTests(TestCase):
     def setUp(self):
+        self.client = APIClient()
         self.token = None
         self.user = None
         self.user2 = None
@@ -18,10 +19,9 @@ class BalanceTests(TestCase):
     def test_get_balance(self):
         balance = self.user.balance_set.create(name='testing balance',
                                                amount=563.93)
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
         url = '/balances/{}/'.format(balance.id)
-        response = client.get(url, content_type='application/json')
+        response = self.client.get(url, content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['name'], 'testing balance')
@@ -32,10 +32,10 @@ class BalanceTests(TestCase):
                                                amount=563.93)
         self.user.balance_set.create(name='testing balance2',
                                                amount=563.03)
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
+
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
         url = '/balances/'
-        response = client.get(url, content_type='application/json')
+        response = self.client.get(url, content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data[0]['name'], 'testing balance')
@@ -99,9 +99,8 @@ class BalanceTests(TestCase):
         self.assertEqual(self.user.balance_set.first().amount,
                          Decimal('563.93'))
 
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
-        response = client.put('/balances/1/',
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
+        response = self.client.put('/balances/1/',
                               json.dumps({'id': balance.id,
                                           'name': 'test balance34',
                                           'amount': 108.36}),
@@ -122,9 +121,8 @@ class BalanceTests(TestCase):
         self.assertEqual(self.user2.balance_set.first().amount,
                          Decimal('563.93'))
 
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
-        response = client.put('/balances/1/',
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
+        response = self.client.put('/balances/1/',
                               json.dumps({'id': balance.id,
                                           'name': 'test balance34',
                                           'amount': 108.36}),
@@ -135,10 +133,10 @@ class BalanceTests(TestCase):
     def test_balance_security(self):
         balance = self.user2.balance_set.create(name='testing balance',
                                                amount=563.93)
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
+
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
         url = '/balances/{}/'.format(balance.id)
-        response = client.get(url, content_type='application/json')
+        response = self.client.get(url, content_type='application/json')
 
         self.assertEqual(response.status_code, 403)
 
@@ -147,10 +145,10 @@ class BalanceTests(TestCase):
                                                amount=563.93)
         self.user2.balance_set.create(name='testing balance2',
                                                amount=563.03)
-        client = APIClient()
-        client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
+
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
         url = '/balances/'
-        response = client.get(url, content_type='application/json')
+        response = self.client.get(url, content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data[0]['name'], 'testing balance')
