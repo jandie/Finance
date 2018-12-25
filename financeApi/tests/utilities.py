@@ -5,9 +5,12 @@ from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 
 
 def create_user(self):
-    User.objects.create_user(username='tester',
-                             email='tester@pm.me',
-                             password='supersecure')
+    self.user = User.objects.create_user(username='tester',
+                                         email='tester@pm.me',
+                                         password='supersecure')
+    self.user2 = User.objects.create_user(username='tester2',
+                                          email='tester2@pm.me',
+                                          password='supersecure')
     view = obtain_jwt_token
     factory = APIRequestFactory()
     request = factory.post('/api-token-auth',
@@ -18,4 +21,3 @@ def create_user(self):
     response = view(request)
     self.token = response.data['token']
     self.assertEquals(response.status_code, 200)
-
