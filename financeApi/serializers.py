@@ -56,3 +56,27 @@ class OverviewSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         pass
+
+
+class BalancePredictionSerializer(serializers.Serializer):
+    balance = serializers.DecimalField(max_digits=12, decimal_places=2)
+    predictedBalance = serializers.DecimalField(max_digits=12, decimal_places=2)
+    date = serializers.DateField()
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+
+class BalancePredictionsSerializer(serializers.Serializer):
+    predictions = serializers.ListField(child=BalancePredictionSerializer(),
+                                        source='predictions',
+                                        read_only=True)
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass

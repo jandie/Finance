@@ -3,7 +3,6 @@ python:
   - "3.6"
 env:
   global:
-    - VHE_AUTH_DEBUG=True
     - SECRET_KEY='THIS_IS_A_VERY_SECRET_KEY_;)'
 install:
   - pip install -r requirements.txt
