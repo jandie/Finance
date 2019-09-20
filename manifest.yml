@@ -1,7 +1,7 @@
 ---
 applications:
 - name: finance-api
-  memory: 64M
+  memory: 70M
   instances: 1
   buildpack: python_buildpack
   command: python manage.py collectstatic --noinput && gunicorn finance.wsgi:application
