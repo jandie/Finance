@@ -12,7 +12,7 @@ idna==2.8
 pip-tools==4.1.0
 psycopg2==2.8.3
 Pygments==2.4.2
-PyJWT==1.7.1
+PyJWT==2.4.0
 pytz==2019.2
 requests==2.22.0
 six==1.12.0
